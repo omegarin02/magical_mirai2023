@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>思いが届くバーチャル歌姫</title>
+    <title>ここにタイトルを入れます</title>
+    <!-- faviconの読み込み-->
+    <link rel="icon" href="./favicon/favicon.ico" />
     <!-- Live2D -->
     <script src="src/live2dcubismcore.js"></script>
     <script src="src/live2dcubismcore.js.map"></script>
     <script src="//cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
-
+    <!--Text Alive Api-->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/textalive-app-api/dist/index.js"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"
-      integrity="sha512-N4kV7GkNv7QR7RX9YF/olywyIgIwNvfEe2nZtfyj73HdjCUkAfOBDbcuJ/cTaN04JKRnw1YG1wnUyNKMsNgg3g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/gh/molleindustria/p5.play/lib/p5.play.js "></script>
+    <!--jquery-->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <!-- PixiJS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
     <!-- Kalidokit -->
     <script src="//cdn.jsdelivr.net/npm/kalidokit@1.1/dist/kalidokit.umd.js"></script>
-    
+    <!-- style-->
     <link rel="stylesheet" href="css/globale.css">
     
   </head>
@@ -31,32 +27,31 @@
     
     <!-- 音源 / Audio souce -->
 
-    <!-- アーティストと楽曲の情報 / Artist and song info -->
-    <div id="media" style="width:0; height:0;"></div>
-
+    <!-- アーティストと楽曲の情報の表示/ Artist and song info -->
+    <div id="media" style="width:100; height:20;"></div>
+    <!-- 再生とストップボタンの定義 -->
     <div id="header">
       <div id="control" class="far">
         <a href="#" id="play" class="disabled" style="font-size: x-large">▶️Play</a>
         <a href="#" id="stop" class="disabled" style="font-size: x-large">⏹️stop</a>
       </div>
     </div>
-
+    <!--このボタンは後で消す-->
     <div>
       <button onclick="Motion(0);">モーション1</button>
     </div>
+    <!--live2dを描くためのキャンバス-->
     <div>
       <canvas id="my-live2d"></canvas>
     </div>
-
-
-  <div id="canvas"></div>
-  <!-- シークバー -->
-  <div id="seekbar">
-    <div></div>
-  </div>
-
+    <!-- シークバー -->
+    <div id="seekbar">
+      <div></div>
+    </div>
+    <!--live2dの動作を決めるスクリプト-->>
     <script src="src/live2d.js"></script>
     <script src="src/index.js"></script> 
+    <!--text alive apiの動作を制御するスクリプト-->>
     <script src="src/controlTextAliveApi.js"></script>
     <svg display="none">
       <symbol id="s-text1">
