@@ -1,0 +1,25 @@
+.textalive-media-wrapper{
+    height: 0px;
+    width: 0px;
+}
+  
+  
+@import "https://use.fontawesome.com/releases/v5.13.0/css/all.css";
+  
+  
+  
+#seekbar {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: rgba(0 255 255 / 40%);
+  width: 1280px;
+}
+#seekbar > div {
+  width: 0;
+  height: 100%;
+  background: rgba(0 255 255 / 80%);
+}
+  
