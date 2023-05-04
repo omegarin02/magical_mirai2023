@@ -30,6 +30,11 @@ app = new PIXI.Application({
   width: width,
   height: height
 });
+//ボタンの定義
+let startButton = document.getElementById("startButtonDiv")
+let exitButton = document.getElementById("exitButtonDiv")
+let homeButton = document.getElementById("homeButtonDiv")
+
 
 async function setStartScene(){
   const startScene = new PIXI.Container()
@@ -42,6 +47,14 @@ async function setStartScene(){
   startScene.addChild(background)
   app.stage.addChild(startScene);
   scenes["startScene"] = startScene
+
+  //let startButton = document.getElementById('startButton');
+  //ボタンを作る
+  let button = document.createElement("button")
+  button.innerHTML = "start"
+  startButton.appendChild(button)
+  button.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
+  button.setAttribute("id","startButton")
 }
 
 async function setMainScene(){
@@ -65,6 +78,12 @@ async function setMainScene(){
   mainScene.addChild(currentModel)
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
+
+  let button = document.createElement("button")
+  button.innerHTML = "exit"
+  exitButton.appendChild(button)
+  button.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
+  button.setAttribute("id","exitButton")
 }
 
 async function setEndScene(){
@@ -78,6 +97,13 @@ async function setEndScene(){
   endScene.addChild(background)
   app.stage.addChild(endScene);
   scenes["endScene"] = endScene
+
+  let button = document.createElement("button")
+  button.innerHTML = "home"
+  homeButton.appendChild(button)
+  button.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
+  button.setAttribute("id","homeButton")
+
 }
 //アプリの読み込み
 async function setup() { 
@@ -85,8 +111,8 @@ async function setup() {
   await setStartScene()//startSceneの定義
   await setMainScene()
   await setEndScene()
-  scenes["startScene"].visible = false
-  scenes["mainScene"].visible = true
+  scenes["startScene"].visible = true
+  scenes["mainScene"].visible = false
   scenes["endScene"].visible = false
 }
 
@@ -111,4 +137,17 @@ function screenResize() {
 }
 //画面サイズがリサイズされると発火する関数の定義
 window.addEventListener('resize',screenResize,false);
+
+function changeScene(e){
+  for (let scene in scenes){
+    if(scene == this.scene){
+      scenes[this.scene].visible = true
+    }else{
+      scenes[scene].visible = false
+    }
+  }
+}
+
+
+//画面情報をセットアップ
 setup()
