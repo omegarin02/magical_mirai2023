@@ -22,4 +22,17 @@
   height: 100%;
   background: rgba(0 255 255 / 80%);
 }
-  
+
+body{
+  position:relative
+}
+.startButton{
+  margin-top: 50vh;
+  margin-left: 50vw;
+}
+
+.canvas{
+  position: relative;
+  margin-top: -50vh;
+  z-index: -2
+}

@@ -73,6 +73,16 @@ player.addListener({
       paintedSeekbar.style.width = `${
         parseInt((position * 1000) / player.video.duration) / 10
       }%`;
+      //beat情報の取得
+      beat = player.findBeat(position)
+      chord = player.findChord(position)
+      iVideo = player.video
+      fPhrase = iVideo.firstPhrase
+      word = iVideo.findWord(position)
+      //console.log("beat",beat)
+      //console.log("chord",chord)
+      //console.log("fPhrase",fPhrase)
+      //console.log("word",word)
     }
   
   });
