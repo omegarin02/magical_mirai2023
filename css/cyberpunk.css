@@ -904,7 +904,7 @@ Note: Inline svg shit doesnt work sometimes. Make sure to optimize it with https
     color: transparent;
     position: absolute;
     display: block;
-    width: var(--input-width);
+    width: 100%;
     padding: var(--input-padding-top) var(--input-padding-right) var(--input-padding-bot) var(--input-padding-left);
     clip-path: polygon(0 calc(100% - 10px), 10px 100%, 100% 100%, 100% calc(100% - 8px), calc(100% - 20px) calc(100% - 8px), calc(100% - 20px - 8px) calc(100% - 2px), 11px calc(100% - 2px), 0 calc(100% - 13px));
     background-color: var(--ac);

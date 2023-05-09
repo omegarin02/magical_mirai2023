@@ -34,6 +34,7 @@ app = new PIXI.Application({
 let startButtonDiv = document.getElementById("startButtonDiv")
 let exitButtonDiv = document.getElementById("exitButtonDiv")
 let homeButtonDiv = document.getElementById("homeButtonDiv")
+let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 
 
 async function setStartScene(){
@@ -156,10 +157,14 @@ function changeScene(e){
     exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
     let exitButton = document.getElementById("exitButton")
     exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
+    inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
+    
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let exitButton = document.getElementById("exitButton")
+    let inputChatBox = document.getElementById("inputChatBox")
     exitButton.remove()
+    inputChatBox.remove()
 
     homeButtonDiv.insertAdjacentHTML('afterbegin', homeButtonHtml);
     let homeButton = document.getElementById("homeButton")

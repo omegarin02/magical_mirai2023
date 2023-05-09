@@ -15,7 +15,8 @@
   right: 0;
   height: 10px;
   background: rgba(0 255 255 / 40%);
-  width: 1280px;
+  width: 100pw;
+  margin-top: -10px;
 }
 #seekbar > div {
   width: 0;
@@ -24,15 +25,37 @@
 }
 
 body{
-  position:relative
+  position:absolute
 }
 .startButton{
   margin-top: 50vh;
   margin-left: 50vw;
+  position:absolute
+}
+
+.homeButton{
+  margin-top: 50vh;
+  margin-left: 50vw;
+  position:absolute
+
+}
+
+.mediaInfo{
+  position:absolute;
+  width:100px; 
+  height:20px;
+  margin-top: -45px;
+  margin-left: 80vw;
+}
+
+.inputChatBox{
+  position:absolute;
+  width: 70vw;
+  margin-top:-45px;
+  margin-left:20px;
 }
 
 .canvas{
   position: relative;
-  margin-top: -50vh;
   z-index: -2
 }

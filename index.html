@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="css/cyberpunk.css">
     <!-- parts-->
     <script src="src/buttonParts.js"></script>
+    <script src="src/textInputParts.js"></script>
   </head>
   <body>
 
@@ -41,21 +42,29 @@
         </div>
       </div>
       <!--このボタンは後で消す-->
+      <!--
       <div>
         <button onclick="Motion(0);">モーション1</button>
       </div>
+      -->
       <!--start button-->
       <div id="startButtonDiv" class="startButton"></div>
-      <div id="exitButtonDiv"></div>
-      <div id="homeButtonDiv"></div>
+      <div id="exitButtonDiv" class="exitButton"></div>
+      <div id="homeButtonDiv" class="homeButton"></div>
       <!--live2dを描くためのキャンバス-->
       <div class="canvas">
         <canvas id="my-live2d" ></canvas>
       </div>
-    </div>
-    <!-- シークバー -->
-    <div id="seekbar">
-      <div></div>
+      <!-- アーティストと楽曲の情報の表示/ Artist and song info -->
+      <div class="mediaInfo">
+        <div id="media"></div>
+      </div>
+      <!--input text box-->
+      <div id="inputChatboxDiv" class="inputChatBox"></div>
+      <!-- シークバー -->
+      <div id="seekbar">
+        <div></div>
+      </div>
     </div>
     <!--live2dの動作を決めるスクリプト-->
     <script src="src/controlScrean.js"></script>
