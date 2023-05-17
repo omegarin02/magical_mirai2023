@@ -1,5 +1,6 @@
 //index.jsで使うのでスコープを外す
 let app;
+lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
 
 // PixiJS
 let {
@@ -75,10 +76,10 @@ async function setMainScene(){
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
   mainScene.addChild(currentModel)
+  mainScene.addChild( lyricText );
+
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
-
-
 }
 
 async function setEndScene(){
