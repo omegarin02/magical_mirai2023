@@ -26,47 +26,46 @@ app = new PIXI.Application({
   view: document.getElementById("my-live2d"),
   autoStart: true,
   backgroundAlpha: 0,
-  backgroundColor: 0x0000ff,
+  backgroundColor: 0x000000,
   width: width,
   height: height
 });
 //ボタンの定義
-let startButton = document.getElementById("startButtonDiv")
-let exitButton = document.getElementById("exitButtonDiv")
-let homeButton = document.getElementById("homeButtonDiv")
+let startButtonDiv = document.getElementById("startButtonDiv")
+let exitButtonDiv = document.getElementById("exitButtonDiv")
+let homeButtonDiv = document.getElementById("homeButtonDiv")
+let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 
 
 async function setStartScene(){
   const startScene = new PIXI.Container()
+  /*
   let background = PIXI.Sprite.fromImage('img/start.png');
   background.anchor.set(0.5);
   background.x = app.screen.width / 2;
   background.y = app.screen.height / 2;
   background.height = app.screen.height;
   background.width = app.screen.width;
-  startScene.addChild(background)
-  app.stage.addChild(startScene);
+  //startScene.addChild(background)
+  //app.stage.addChild(startScene);
+  */
   scenes["startScene"] = startScene
 
   //let startButton = document.getElementById('startButton');
   //ボタンを作る
-  let button = document.createElement("button")
-  button.innerHTML = "start"
-  startButton.appendChild(button)
-  button.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
-  button.setAttribute("id","startButton")
+
 }
 
 async function setMainScene(){
   const mainScene = new PIXI.Container()
-  // 3, Live2Dモデルをロードする
+  //Live2Dモデルをロードする
   currentModel = await Live2DModel.from(modelUrl, { autoInteract: false });
   currentModel.scale.set(0.2);//モデルの大きさ★
   currentModel.interactive = true;
   currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
   currentModel.position.set(window.innerWidth/3, window.innerHeight/3);//モデルの位置★
 
-  //背景を設定./background.jpgを画像のパスに書きかえて下さい
+  //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.jpg');
   background.anchor.set(0.5);
   background.x = app.screen.width / 2;
@@ -79,15 +78,12 @@ async function setMainScene(){
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
 
-  let button = document.createElement("button")
-  button.innerHTML = "exit"
-  exitButton.appendChild(button)
-  button.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
-  button.setAttribute("id","exitButton")
+
 }
 
 async function setEndScene(){
   const endScene = new PIXI.Container()
+  /*
   let background = PIXI.Sprite.fromImage('img/end.png');
   background.anchor.set(0.5);
   background.x = app.screen.width / 2;
@@ -96,13 +92,9 @@ async function setEndScene(){
   background.width = app.screen.width;
   endScene.addChild(background)
   app.stage.addChild(endScene);
+  */
   scenes["endScene"] = endScene
 
-  let button = document.createElement("button")
-  button.innerHTML = "home"
-  homeButton.appendChild(button)
-  button.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
-  button.setAttribute("id","homeButton")
 
 }
 //アプリの読み込み
@@ -114,6 +106,17 @@ async function setup() {
   scenes["startScene"].visible = true
   scenes["mainScene"].visible = false
   scenes["endScene"].visible = false
+
+  startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
+  let startButton = document.getElementById("startButton")
+  startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
+  /*
+  let startButton = document.createElement("button")
+  startButton.innerHTML = "start"
+  startButtonDiv.appendChild(startButton)
+  startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
+  startButton.setAttribute("id","startButton")
+  */
 }
 
 //画面サイズを自動的にリサイズ
@@ -139,12 +142,42 @@ function screenResize() {
 window.addEventListener('resize',screenResize,false);
 
 function changeScene(e){
-  for (let scene in scenes){
+  for (let scene in scenes){//画面の切り替え
     if(scene == this.scene){
       scenes[this.scene].visible = true
     }else{
       scenes[scene].visible = false
     }
+  }
+  //画面に表示するパーツ類の切り替え
+  if(this.scene == "mainScene"){//メイン画面に切り替えたとき
+    let startButton = document.getElementById("startButton")
+    startButton.remove()
+
+    exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
+    let exitButton = document.getElementById("exitButton")
+    exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
+    inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
+    
+  }
+  else if (this.scene == "endScene"){//end画面に切り替えたとき
+    let exitButton = document.getElementById("exitButton")
+    let inputChatBox = document.getElementById("inputChatBox")
+    exitButton.remove()
+    inputChatBox.remove()
+
+    homeButtonDiv.insertAdjacentHTML('afterbegin', homeButtonHtml);
+    let homeButton = document.getElementById("homeButton")
+    homeButton.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
+
+  }else if(this.scene == "startScene"){
+    let homeButton = document.getElementById("homeButton")
+    homeButton.remove()
+
+    startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
+    let startButton = document.getElementById("startButton")
+    startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
+  
   }
 }
 

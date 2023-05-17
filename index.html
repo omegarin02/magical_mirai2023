@@ -21,36 +21,50 @@
     <script src="//cdn.jsdelivr.net/npm/kalidokit@1.1/dist/kalidokit.umd.js"></script>
     <!-- style-->
     <link rel="stylesheet" href="css/globale.css">
-    
+    <link rel="stylesheet" href="css/cyberpunk.css">
+    <!-- parts-->
+    <script src="src/buttonParts.js"></script>
+    <script src="src/textInputParts.js"></script>
   </head>
   <body>
-    
-    <!-- 音源 / Audio souce -->
 
-    <!-- アーティストと楽曲の情報の表示/ Artist and song info -->
-    <div id="media" style="width:100; height:20;"></div>
-    <!-- 再生とストップボタンの定義 -->
-    <div id="header">
-      <div id="control" class="far">
-        <a href="#" id="play" class="disabled" style="font-size: x-large">▶️Play</a>
-        <a href="#" id="stop" class="disabled" style="font-size: x-large">⏹️stop</a>
+    
+    <div>
+      <!-- 音源 / Audio souce -->
+
+      <!-- アーティストと楽曲の情報の表示/ Artist and song info -->
+      <div id="media" style="width:100; height:20;"></div>
+      <!-- 再生とストップボタンの定義 -->
+      <div id="header">
+        <div id="control" class="far">
+          <a href="#" id="play" class="disabled" style="font-size: x-large">▶️Play</a>
+          <a href="#" id="stop" class="disabled" style="font-size: x-large">⏹️stop</a>
+        </div>
       </div>
-    </div>
-    <!--このボタンは後で消す-->
-    <div>
-      <button onclick="Motion(0);">モーション1</button>
-    </div>
-    <!--start button-->
-    <div id="startButtonDiv"></div>
-    <div id="exitButtonDiv"></div>
-    <div id="homeButtonDiv"></div>
-    <!--live2dを描くためのキャンバス-->
-    <div>
-      <canvas id="my-live2d"></canvas>
-    </div>
-    <!-- シークバー -->
-    <div id="seekbar">
-      <div></div>
+      <!--このボタンは後で消す-->
+      <!--
+      <div>
+        <button onclick="Motion(0);">モーション1</button>
+      </div>
+      -->
+      <!--start button-->
+      <div id="startButtonDiv" class="startButton"></div>
+      <div id="exitButtonDiv" class="exitButton"></div>
+      <div id="homeButtonDiv" class="homeButton"></div>
+      <!--live2dを描くためのキャンバス-->
+      <div class="canvas">
+        <canvas id="my-live2d" ></canvas>
+      </div>
+      <!-- アーティストと楽曲の情報の表示/ Artist and song info -->
+      <div class="mediaInfo">
+        <div id="media"></div>
+      </div>
+      <!--input text box-->
+      <div id="inputChatboxDiv" class="inputChatBox"></div>
+      <!-- シークバー -->
+      <div id="seekbar">
+        <div></div>
+      </div>
     </div>
     <!--live2dの動作を決めるスクリプト-->
     <script src="src/controlScrean.js"></script>
