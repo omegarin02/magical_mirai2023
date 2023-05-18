@@ -32,7 +32,7 @@ player.addListener({
         document.querySelector("#media").className = "disabled";
   
         // Loading Memories / せきこみごはん feat. 初音ミク
-        player.createFromSongUrl("https://piapro.jp/t/RoPB/20220122172830");
+        player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
     },
   
@@ -73,6 +73,16 @@ player.addListener({
       paintedSeekbar.style.width = `${
         parseInt((position * 1000) / player.video.duration) / 10
       }%`;
+      //beat情報の取得
+      beat = player.findBeat(position)
+      chord = player.findChord(position)
+      iVideo = player.video
+      fPhrase = iVideo.firstPhrase
+      word = iVideo.findWord(position)
+      //console.log("beat",beat)
+      //console.log("chord",chord)
+      //console.log("fPhrase",fPhrase)
+      //console.log("word",word)
     }
   
   });
