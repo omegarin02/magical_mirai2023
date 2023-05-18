@@ -59,3 +59,128 @@ body{
   position: relative;
   z-index: -2
 }
+
+
+.sendButton {
+  font-family: inherit;
+  background: #2CA0D9;
+  color: white;
+  padding: 0.35em 0;
+  font-size: 17px;
+  border: none;
+  border-radius: 0.7em;
+  letter-spacing: 0.08em;
+  position: relative;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: 2.5em;
+  padding-left: 2.8em;
+  padding-right: 0.92em;
+}
+
+.sendButton .sendIcon {
+  background: #fff;
+  height: 2em;
+  width: 2em;
+  border-radius: 2em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 0.4em;
+  transition: all 0.5s;
+}
+
+.sendIcon svg {
+  margin-left: 0.1em;
+  transition: all 0.5s;
+  color: #2CA0D9;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.sendButton:hover .sendIcon svg {
+  transform: rotate(360deg);
+}
+
+.sendButton:hover .sendIcon {
+  width: calc(100% - 0.85rem);
+  border-radius: 0.5em;
+}
+
+
+.exitButtonBody {
+  --black: #000000;
+  --ch-black: #141414;
+  --eer-black: #1b1b1b;
+  --night-rider: #2e2e2e;
+  --white: #ffffff;
+  --af-white: #f3f3f3;
+  --ch-white: #e1e1e1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: var(--night-rider);
+}
+
+/* plus sign */
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 17px;
+}
+
+.sign svg path {
+  fill: var(--af-white);
+}
+/* text */
+.exitButtonText {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: var(--af-white);
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+/* hover effect on button width */
+.exitButtonBody:hover {
+  width: 125px;
+  border-radius: 5px;
+  transition-duration: .3s;
+}
+
+.exitButtonBody:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 20px;
+}
+/* hover effect button's text */
+.exitButtonBody:hover .exitButtonText {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-right: 10px;
+}
+/* button click effect*/
+.exitButtonBody:active {
+  transform: translate(2px ,2px);
+}

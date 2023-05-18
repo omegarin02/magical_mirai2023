@@ -15,8 +15,8 @@ let {
 // 1, Live2Dモデルへのパスを指定する
 let modelUrl = "miku2023/miku2023.model3.json";
 let currentModel;
-let width = Math.floor(window.innerWidth);
-let height = Math.floor(window.innerHeight);
+let width = Math.floor(window.innerWidth*0.98);
+let height = Math.floor(window.innerHeight*0.98);
 //scenes
 let scenes = {}
 
@@ -35,6 +35,7 @@ let startButtonDiv = document.getElementById("startButtonDiv")
 let exitButtonDiv = document.getElementById("exitButtonDiv")
 let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
+let sendButtonDiv = document.getElementById("sendButtonDiv")
 
 
 async function setStartScene(){
@@ -141,6 +142,14 @@ function screenResize() {
 //画面サイズがリサイズされると発火する関数の定義
 window.addEventListener('resize',screenResize,false);
 
+function sendButtonOnClick(){
+  console.log("send")
+  let inputText = document.getElementById("inputText")
+  console.log(inputText.value)//入力したテキストを取得
+  inputText.value = ""
+}
+
+
 function changeScene(e){
   for (let scene in scenes){//画面の切り替え
     if(scene == this.scene){
@@ -159,16 +168,24 @@ function changeScene(e){
     exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
     inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
     
+    sendButtonDiv.insertAdjacentHTML('afterbegin', commentSendButtonHtml);
+    let sendButton = document.getElementById("commentSendButton")
+    sendButton.addEventListener("click",sendButtonOnClick)
+    
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let exitButton = document.getElementById("exitButton")
     let inputChatBox = document.getElementById("inputChatBox")
+    let sendButton = document.getElementById("commentSendButton")
     exitButton.remove()
     inputChatBox.remove()
+    sendButton.remove()
 
     homeButtonDiv.insertAdjacentHTML('afterbegin', homeButtonHtml);
     let homeButton = document.getElementById("homeButton")
     homeButton.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
+
+
 
   }else if(this.scene == "startScene"){
     let homeButton = document.getElementById("homeButton")
