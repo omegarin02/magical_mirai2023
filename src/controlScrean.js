@@ -189,6 +189,7 @@ function changeScene(e){
     homeButton.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
 
     musicStartStopButtonDiv.style.zIndex=-3
+    mediaInfoDiv.style.zIndex=-3
     
 
   }else if(this.scene == "startScene"){

@@ -30,8 +30,6 @@ player.addListener({
       }
       if (!app.songUrl) {
         document.querySelector("#media").className = "disabled";
-  
-        // Loading Memories / せきこみごはん feat. 初音ミク
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
     },
