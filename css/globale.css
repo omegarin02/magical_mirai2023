@@ -46,6 +46,13 @@ body{
   height:20px;
   margin-top: -45px;
   margin-left: 80vw;
+  z-index:-3
+}
+
+.musicStartStopButtonDiv{
+  position:absolute;
+  margin-top: -50vh;
+  z-index:-3
 }
 
 .inputChatBox{

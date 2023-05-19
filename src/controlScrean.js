@@ -36,7 +36,8 @@ let exitButtonDiv = document.getElementById("exitButtonDiv")
 let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 let sendButtonDiv = document.getElementById("sendButtonDiv")
-
+let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
+let mediaInfoDiv = document.getElementById("mediaInfo")
 
 async function setStartScene(){
   const startScene = new PIXI.Container()
@@ -171,7 +172,9 @@ function changeScene(e){
     sendButtonDiv.insertAdjacentHTML('afterbegin', commentSendButtonHtml);
     let sendButton = document.getElementById("commentSendButton")
     sendButton.addEventListener("click",sendButtonOnClick)
-    
+
+    musicStartStopButtonDiv.style.zIndex=3
+    mediaInfoDiv.style.zIndex=3
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let exitButton = document.getElementById("exitButton")
@@ -185,7 +188,8 @@ function changeScene(e){
     let homeButton = document.getElementById("homeButton")
     homeButton.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
 
-
+    musicStartStopButtonDiv.style.zIndex=-3
+    
 
   }else if(this.scene == "startScene"){
     let homeButton = document.getElementById("homeButton")
