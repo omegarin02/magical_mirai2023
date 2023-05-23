@@ -15,8 +15,8 @@ let {
 // 1, Live2Dモデルへのパスを指定する
 let modelUrl = "miku2023/miku2023.model3.json";
 let currentModel;
-let width = Math.floor(window.innerWidth*0.98);
-let height = Math.floor(window.innerHeight*0.98);
+let width = Math.floor(window.innerWidth);
+let height = Math.floor(window.innerHeight);
 //scenes
 let scenes = {}
 
@@ -175,6 +175,7 @@ function changeScene(e){
 
     musicStartStopButtonDiv.style.zIndex=3
     mediaInfoDiv.style.zIndex=3
+    exitButtonDiv.style.zIndex=3
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let exitButton = document.getElementById("exitButton")
@@ -190,6 +191,7 @@ function changeScene(e){
 
     musicStartStopButtonDiv.style.zIndex=-3
     mediaInfoDiv.style.zIndex=-3
+    player.requestStop();
     
 
   }else if(this.scene == "startScene"){
