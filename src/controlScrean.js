@@ -15,8 +15,21 @@ let {
 // 1, Live2Dモデルへのパスを指定する
 let modelUrl = "miku2023/miku2023.model3.json";
 let currentModel;
+const default_width = 1920
+const default_height = 1080
+let compression_width = window.innerWidth/default_width
+let compression_height = window.innerHeight/default_height
 let width = Math.floor(window.innerWidth);
 let height = Math.floor(window.innerHeight);
+let compression_square = 1
+if(compression_width > compression_height){//幅と比べて高さの方が圧縮率が高い場合
+  width = (16*height/9)
+  compression_square = compression_height 
+}else if (compression_width < compression_height){
+  height = (9*width/16)
+  compression_square = compression_width
+}
+
 //scenes
 let scenes = {}
 
@@ -62,16 +75,18 @@ async function setMainScene(){
   const mainScene = new PIXI.Container()
   //Live2Dモデルをロードする
   currentModel = await Live2DModel.from(modelUrl, { autoInteract: false });
-  currentModel.scale.set(0.2);//モデルの大きさ★
+
+  currentModel.scale.set(0.2*compression_square);//モデルの大きさ★
   currentModel.interactive = true;
   currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
   currentModel.position.set(window.innerWidth/3, window.innerHeight/3);//モデルの位置★
 
   //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.jpg');
-  background.anchor.set(0.5);
-  background.x = app.screen.width / 2;
-  background.y = app.screen.height / 2;
+  background.width = app.screen.width
+  background.height = app.screen.height
+  background.x = 0;
+  background.y = 0
   background.height = app.screen.height;
   background.width = app.screen.width;
   mainScene.addChild(background)
@@ -136,12 +151,16 @@ function screenResize() {
       y = height*resizeRatio; 
       app.stage.scale.x = resizeRatio;
       app.stage.scale.y = resizeRatio;
+      scenes["mainScene"].children[1].scale.x = resizeRaito
+      scenes["mainScene"].children[1].scale.y = resizeRaito
+      scenes["mainScene"].children[1].scale.x = resizeRaito
+      scenes["mainScene"].children[1].scale.y = resizeRaito
   }
   
   app.renderer.resize(x, y);//レンダラーをリサイズ
 }
 //画面サイズがリサイズされると発火する関数の定義
-window.addEventListener('resize',screenResize,false);
+//window.addEventListener('resize',screenResize,false);
 
 function sendButtonOnClick(){
   console.log("send")
