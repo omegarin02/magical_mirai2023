@@ -11,25 +11,37 @@ let {
   Face, Vector: { lerp }, Utils: { clamp }
 } = Kalidokit;
 
+//ボタンの定義
+let startButtonDiv = document.getElementById("startButtonDiv")
+let exitButtonDiv = document.getElementById("exitButtonDiv")
+let homeButtonDiv = document.getElementById("homeButtonDiv")
+let inputChatboxDiv = document.getElementById("inputChatboxDiv")
+let sendButtonDiv = document.getElementById("sendButtonDiv")
+let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
+let mediaInfoDiv = document.getElementById("mediaInfo")
+let canvasDiv = document.getElementById("canvasDiv")
 
 // 1, Live2Dモデルへのパスを指定する
 let modelUrl = "miku2023/miku2023.model3.json";
 let currentModel;
-const default_width = 1920
-const default_height = 1080
-let compression_width = window.innerWidth/default_width
-let compression_height = window.innerHeight/default_height
-let width = Math.floor(window.innerWidth);
-let height = Math.floor(window.innerHeight);
-let compression_square = 1
-if(compression_width > compression_height){//幅と比べて高さの方が圧縮率が高い場合
-  width = (16*height/9)
-  compression_square = compression_height 
-}else if (compression_width < compression_height){
-  height = (9*width/16)
-  compression_square = compression_width
-}
 
+
+//スクリーンのパディング調整
+canvasDiv.style.paddingLeft = ((window.innerWidth-width)/2).toString()+"px"
+canvasDiv.style.paddingTop = ((Math.floor(window.innerHeight)-height)/2).toString()+"px"
+console.log(canvasDiv.style.paddingLeft)
+//startbuttonのサイズ調整
+  //buttonParts.jsで実施
+//入力欄のサイズ・位置調整
+let inputTextWidth = 1200*compressionSquare
+inputChatboxDiv.style.width = inputTextWidth.toString()+"px"
+inputChatboxDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
+inputChatboxDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+//送信ボタンの位置調整
+sendButtonDiv.style.marginLeft = (leftMarginNum+10+inputTextWidth+60).toString()+"px"
+sendButtonDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+//media infoの位置調整
+mediaInfoDiv.style.marginLeft = (leftMarginNum+width-260).toString()+"px"
 //scenes
 let scenes = {}
 
@@ -43,27 +55,9 @@ app = new PIXI.Application({
   width: width,
   height: height
 });
-//ボタンの定義
-let startButtonDiv = document.getElementById("startButtonDiv")
-let exitButtonDiv = document.getElementById("exitButtonDiv")
-let homeButtonDiv = document.getElementById("homeButtonDiv")
-let inputChatboxDiv = document.getElementById("inputChatboxDiv")
-let sendButtonDiv = document.getElementById("sendButtonDiv")
-let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
-let mediaInfoDiv = document.getElementById("mediaInfo")
 
 async function setStartScene(){
   const startScene = new PIXI.Container()
-  /*
-  let background = PIXI.Sprite.fromImage('img/start.png');
-  background.anchor.set(0.5);
-  background.x = app.screen.width / 2;
-  background.y = app.screen.height / 2;
-  background.height = app.screen.height;
-  background.width = app.screen.width;
-  //startScene.addChild(background)
-  //app.stage.addChild(startScene);
-  */
   scenes["startScene"] = startScene
 
   //let startButton = document.getElementById('startButton');
@@ -76,7 +70,7 @@ async function setMainScene(){
   //Live2Dモデルをロードする
   currentModel = await Live2DModel.from(modelUrl, { autoInteract: false });
 
-  currentModel.scale.set(0.2*compression_square);//モデルの大きさ★
+  currentModel.scale.set(0.2*compressionSquare);//モデルの大きさ★
   currentModel.interactive = true;
   currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
   currentModel.position.set(window.innerWidth/3, window.innerHeight/3);//モデルの位置★
@@ -127,6 +121,7 @@ async function setup() {
   startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
   let startButton = document.getElementById("startButton")
   startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
+
   /*
   let startButton = document.createElement("button")
   startButton.innerHTML = "start"
@@ -138,6 +133,7 @@ async function setup() {
 
 //画面サイズを自動的にリサイズ
 function screenResize() {
+  canvasDiv.style.paddingLeft = (Math.floor(window.innerWidth)-width)/2
   let wid = window.innerWidth;//ゲームを表示できる最大横幅
   let hei = window.innerHeight;//ゲームを表示できる最大縦幅
   let x =  window.innerWidth;
