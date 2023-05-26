@@ -21,7 +21,7 @@ let timing_id = 0;
 let monitor_timing_id=0;
 let miku_position = 1;
 
-console.log("read controle text alive api")
+
 player.addListener({
     /* APIの準備ができたら呼ばれる */
     onAppReady(app) {
@@ -43,25 +43,27 @@ player.addListener({
   
     /* 再生コントロールができるようになったら呼ばれる */
     onTimerReady() {
-      document.querySelector("#control > a#play").className = "";
-      document.querySelector("#control > a#stop").className = "";
+      //document.querySelector("#control > a#play").className = "";
+      //document.querySelector("#control > a#stop").className = "";
     },
   
   
     /* 楽曲の再生が始まったら呼ばれる */
     onPlay() {
-      const a = document.querySelector("#control > a#play");
+      const a = document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
-      a.appendChild(document.createTextNode("⏸️Pause"));
-      playFlag = true;  
-    },
+
+      a.appendChild(document.createTextNode("⏸️"));
+      play_flag = true;      },
   
     /* 楽曲の再生が止まったら呼ばれる */
     onPause() {
-      const a = document.querySelector("#control > a#play");
+      const a =  document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
-      a.appendChild(document.createTextNode("▶️Start"));
-      playFlag = false;
+
+      a.appendChild(document.createTextNode("▶️"));
+      play_flag = false;
+
     },
     onStop: () => {
       ;
@@ -93,7 +95,7 @@ player.addListener({
     return false;
   });
   /* 再生・一時停止ボタン */
-  document.querySelector("#control > a#play").addEventListener("click", (e) => {
+  document.getElementById("musicStartButton").addEventListener("click", (e) => {
     e.preventDefault();
     if (player) {
       if (player.isPlaying) {
@@ -112,7 +114,7 @@ player.addListener({
   });
   
   /* 停止ボタン */
-  document.querySelector("#control > a#stop").addEventListener("click", (e) => {
+  document.getElementById("musicStopButton").addEventListener("click", (e) => {
     e.preventDefault();
     if (player) {
       player.requestStop();
