@@ -26,22 +26,26 @@
 
 body{
   position:absolute;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
-.startButton{
+
+.startButtonDiv{
   margin-top: 48vh;
   margin-left: 40vw;
   position:absolute
 }
+.startButton{
+  width: 350px;
+}
 
-.homeButton{
+.homeButtonDiv{
   margin-top: 47vh;
   margin-left: 43vw;
   position:absolute
 }
 
 
-.exitButton{
+.exitButtonDiv{
   margin-top: 0vh;
   margin-left: 0vw;
   position:absolute;
@@ -52,37 +56,32 @@ body{
   position:absolute;
   width:5%; 
   height:1%;
-  margin-top: -6vh;
   margin-left: 86.3vw;
   z-index:-3
 }
 
 .musicStartStopButtonDiv{
   position:absolute;
-  margin-top: -50vh;
   z-index:-3
 }
 
 .inputChatBoxTool{
   position:absolute;
   width: 68vw;
-  margin-top:-4.4vh;
   margin-left:20px;
 }
 
 .inputChatBox{
   width: 70%;
-  margin-top:-45px;
 }
 .sendButton{
   height: 15px;
-  margin-left:73vw;
-  margin-top:-6vh;
   position:absolute;
 }
 
 .canvas{
-  position: relative;
+  position: absolute;
+  margin-top: 3%;
   z-index: -2
 }
 
