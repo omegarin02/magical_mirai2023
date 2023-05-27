@@ -1,6 +1,7 @@
 //index.jsで使うのでスコープを外す
 let app;
 let lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
+let chatTextBox = new PIXI.Text( "", { fill: 0xffffff,fontSize: 36*compressionSquare } );
 
 // PixiJS
 let {
@@ -174,6 +175,7 @@ function sendButtonOnClick(){
   console.log("send")
   let inputText = document.getElementById("inputText")
   console.log(inputText.value)//入力したテキストを取得
+  showChatLog(inputText.value,chatTextBox)
   inputText.value = ""
 }
 
