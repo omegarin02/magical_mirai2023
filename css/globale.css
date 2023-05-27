@@ -9,14 +9,13 @@
   
   
 #seekbar {
-  position: relative;
+  position:absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 10px;
   background: rgba(0 255 255 / 40%);
-  width: 100pw;
-  margin-top: -10px;
+  width: 0px;
 }
 #seekbar > div {
   width: 0;
@@ -25,40 +24,69 @@
 }
 
 body{
+  position:absolute;
+  /*overflow: hidden;*/
+}
+
+.startButtonDiv{
+  margin-top: 48vh;
+  margin-left: 40vw;
   position:absolute
 }
 .startButton{
-  margin-top: 50vh;
-  margin-left: 50vw;
+  width: 350px;
+}
+
+.homeButtonDiv{
+  margin-top: 47vh;
+  margin-left: 43vw;
   position:absolute
 }
 
-.homeButton{
-  margin-top: 50vh;
-  margin-left: 50vw;
-  position:absolute
 
+.exitButtonDiv{
+  margin-top: 0vh;
+  margin-left: 0vw;
+  position:absolute;
+  z-index:-3;
 }
 
 .mediaInfo{
   position:absolute;
-  width:100px; 
-  height:20px;
-  margin-top: -45px;
-  margin-left: 80vw;
+  width:5%; 
+  height:1%;
+  margin-left: 86.3vw;
+  z-index:-3
+}
+
+.musicStartStopButtonDiv{
+  position:absolute;
+  z-index:-3
+}
+
+.inputChatBoxTool{
+  position:absolute;
+  width: 68vw;
+  margin-left:20px;
 }
 
 .inputChatBox{
   position:absolute;
-  width: 70vw;
-  margin-top:-45px;
-  margin-left:20px;
+  width: 70%;
+}
+.sendButton{
+  height: 15px;
+  position:absolute;
+}
+.sendButtonTool{
+  position:absolute;
 }
 
 .canvas{
-  position: relative;
+  position: absolute;
   z-index: -2
 }
+
 
 
 .sendButton {

@@ -10,10 +10,11 @@ const player = new Player({
 const overlay = document.querySelector("#overlay");
 const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
-const seekbar = document.querySelector("#seekbar");
+let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
+//seekbar.style.width = (width).toString()+"px"
 let b, c;
-let play_flag = false;
+let playFlag = false;
 let lyrics_id = 0;
 let start_latest = 0;
 let monitor_start_time = 0;
@@ -21,7 +22,7 @@ let timing_id = 0;
 let monitor_timing_id=0;
 let miku_position = 1;
 
-console.log("read controle text alive api")
+
 player.addListener({
     /* APIの準備ができたら呼ばれる */
     onAppReady(app) {
@@ -30,8 +31,6 @@ player.addListener({
       }
       if (!app.songUrl) {
         document.querySelector("#media").className = "disabled";
-  
-        // Loading Memories / せきこみごはん feat. 初音ミク
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
     },
@@ -45,44 +44,39 @@ player.addListener({
   
     /* 再生コントロールができるようになったら呼ばれる */
     onTimerReady() {
-      document.querySelector("#control > a#play").className = "";
-      document.querySelector("#control > a#stop").className = "";
+      //document.querySelector("#control > a#play").className = "";
+      //document.querySelector("#control > a#stop").className = "";
     },
   
   
     /* 楽曲の再生が始まったら呼ばれる */
     onPlay() {
-      const a = document.querySelector("#control > a#play");
+      const a = document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
-      a.appendChild(document.createTextNode("⏸️Pause"));
-      play_flag = true;  
+
+      a.appendChild(document.createTextNode("⏸️"));
+      playFlag = true;
     },
   
     /* 楽曲の再生が止まったら呼ばれる */
     onPause() {
-      const a = document.querySelector("#control > a#play");
+      const a =  document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
-      a.appendChild(document.createTextNode("▶️Start"));
-      play_flag = false;
+
+      a.appendChild(document.createTextNode("▶️"));
+      playFlag = false;
+
     },
     onStop: () => {
       ;
     },
-    onTimeUpdate(position) {
+    async onTimeUpdate(position) {
       // シークバーの表示を更新
       paintedSeekbar.style.width = `${
         parseInt((position * 1000) / player.video.duration) / 10
       }%`;
-      //beat情報の取得
-      beat = player.findBeat(position)
-      chord = player.findChord(position)
-      iVideo = player.video
-      fPhrase = iVideo.firstPhrase
-      word = iVideo.findWord(position)
-      //console.log("beat",beat)
-      //console.log("chord",chord)
-      //console.log("fPhrase",fPhrase)
-      //console.log("word",word)
+      //歌詞情報の更新
+      await displayLyric(position,playFlag);
     }
   
   });
@@ -103,7 +97,7 @@ player.addListener({
     return false;
   });
   /* 再生・一時停止ボタン */
-  document.querySelector("#control > a#play").addEventListener("click", (e) => {
+  document.getElementById("musicStartButton").addEventListener("click", (e) => {
     e.preventDefault();
     if (player) {
       if (player.isPlaying) {
@@ -122,7 +116,7 @@ player.addListener({
   });
   
   /* 停止ボタン */
-  document.querySelector("#control > a#stop").addEventListener("click", (e) => {
+  document.getElementById("musicStopButton").addEventListener("click", (e) => {
     e.preventDefault();
     if (player) {
       player.requestStop();
