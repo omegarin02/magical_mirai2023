@@ -10,8 +10,9 @@ const player = new Player({
 const overlay = document.querySelector("#overlay");
 const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
-const seekbar = document.querySelector("#seekbar");
+let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
+//seekbar.style.width = (width).toString()+"px"
 let b, c;
 let playFlag = false;
 let lyrics_id = 0;

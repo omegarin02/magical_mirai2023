@@ -19,8 +19,10 @@ let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 let sendButtonDiv = document.getElementById("sendButtonDiv")
 let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
+//その他のdivの定義
 let mediaInfoDiv = document.getElementById("mediaInfo")
 let canvasDiv = document.getElementById("canvasDiv")
+//seekbarの定義はcontrolTextAliveApi.jsで実施
 
 // 1, Live2Dモデルへのパスを指定する
 let modelUrl = "miku2023/miku2023.model3.json";
@@ -30,7 +32,7 @@ let currentModel;
 //スクリーンのパディング調整
 canvasDiv.style.paddingLeft = ((window.innerWidth-width)/2).toString()+"px"
 canvasDiv.style.paddingTop = ((Math.floor(window.innerHeight)-height)/2).toString()+"px"
-console.log(canvasDiv.style.paddingLeft)
+
 //startbuttonのサイズ調整
   //buttonParts.jsで実施
 //入力欄のサイズ・位置調整
@@ -43,6 +45,10 @@ sendButtonDiv.style.marginLeft = (leftMarginNum+10+inputTextWidth+60).toString()
 sendButtonDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
 //media infoの位置調整
 mediaInfoDiv.style.marginLeft = (leftMarginNum+width-260).toString()+"px"
+//seekbar
+seekbar.style.marginLeft = (leftMarginNum).toString()+"px"
+seekbar.style.marginTop = (maxmMarginTopNum-10 ).toString()+"px"
+
 //scenes
 let scenes = {}
 
@@ -192,6 +198,7 @@ function changeScene(e){
     musicStartStopButtonDiv.style.zIndex=3
     mediaInfoDiv.style.zIndex=3
     exitButtonDiv.style.zIndex=3
+    seekbar.style.width = (width).toString()+"px"
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let exitButton = document.getElementById("exitButton")
@@ -207,6 +214,8 @@ function changeScene(e){
 
     musicStartStopButtonDiv.style.zIndex=-3
     mediaInfoDiv.style.zIndex=-3
+    seekbar.style.Zindex=-3
+    seekbar.style.width = (0).toString()+"px"
     player.requestStop();
     
 
