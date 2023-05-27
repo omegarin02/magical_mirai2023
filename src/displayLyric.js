@@ -39,7 +39,7 @@ async function displayLyric(position,playFlag){
   console.log(position,playFlag)
   if(playFlag){
     //ビート情報の取り方
-      //beatInfoにはpositionで指定した時間の情報が全ては言っている
+      //beatInfoにはpositionで指定した時間の情報が全て入っている
       //console.log(beatInfo)
         //次の情報(次のbeatInfoが見れる)
           //console.log(beatInfo.next)
@@ -52,7 +52,7 @@ async function displayLyric(position,playFlag){
         //何小節目か(多分？)
           //console.log(beatInfo.index)
     //コードの取り方
-      //chordtInfoにはpositionで指定した時間の情報が全ては言っている
+      //chordtInfoにはpositionで指定した時間の情報が全て入っている
       //console.log(chordInfo)
       //次の情報を取る(ない場合はnull)
         //onsole.log(chordInfo.next)
