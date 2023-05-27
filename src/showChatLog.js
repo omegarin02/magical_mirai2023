@@ -16,8 +16,6 @@ async function showChatLog(input,textBox){
     }else{//ミクの発言
       textBox.text = "MIKU > "+chatLog[i] +'\n'+ textBox.text
     }
-    
-    console.log(chatLog[i],i)
     i--
   }
 }
