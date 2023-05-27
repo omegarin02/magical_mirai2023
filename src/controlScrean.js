@@ -1,5 +1,6 @@
 //index.jsで使うのでスコープを外す
 let app;
+let lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
 
 // PixiJS
 let {
@@ -11,12 +12,48 @@ let {
   Face, Vector: { lerp }, Utils: { clamp }
 } = Kalidokit;
 
+//ボタンの定義
+let startButtonDiv = document.getElementById("startButtonDiv")
+let exitButtonDiv = document.getElementById("exitButtonDiv")
+let homeButtonDiv = document.getElementById("homeButtonDiv")
+let inputChatboxDiv = document.getElementById("inputChatboxDiv")
+let sendButtonDiv = document.getElementById("sendButtonDiv")
+let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
+//その他のdivの定義
+let mediaInfoDiv = document.getElementById("mediaInfo")
+let canvasDiv = document.getElementById("canvasDiv")
+//seekbarの定義はcontrolTextAliveApi.jsで実施
 
 // 1, Live2Dモデルへのパスを指定する
 let modelUrl = "miku2023/miku2023.model3.json";
 let currentModel;
-let width = Math.floor(window.innerWidth);
-let height = Math.floor(window.innerHeight);
+
+
+//スクリーンのパディング調整
+canvasDiv.style.paddingLeft = ((window.innerWidth-width)/2).toString()+"px"
+canvasDiv.style.paddingTop = ((Math.floor(window.innerHeight)-height)/2).toString()+"px"
+
+//startbuttonのサイズ調整
+  //buttonParts.jsで実施
+//入力欄のサイズ・位置調整
+let inputTextWidth = 1200*compressionSquare
+inputChatboxDiv.style.width = inputTextWidth.toString()+"px"
+inputChatboxDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
+inputChatboxDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+//送信ボタンの位置調整
+sendButtonDiv.style.marginLeft = (leftMarginNum+10+inputTextWidth+60).toString()+"px"
+sendButtonDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+//再生ボタンとかの位置調整
+musicStartStopButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
+musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
+//exitボタンの位置調整
+exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
+//media infoの位置調整
+mediaInfoDiv.style.marginLeft = (leftMarginNum+width-260).toString()+"px"
+//seekbar
+seekbar.style.marginLeft = (leftMarginNum).toString()+"px"
+seekbar.style.marginTop = (maxmMarginTopNum-10 ).toString()+"px"
+
 //scenes
 let scenes = {}
 
@@ -30,27 +67,9 @@ app = new PIXI.Application({
   width: width,
   height: height
 });
-//ボタンの定義
-let startButtonDiv = document.getElementById("startButtonDiv")
-let exitButtonDiv = document.getElementById("exitButtonDiv")
-let homeButtonDiv = document.getElementById("homeButtonDiv")
-let inputChatboxDiv = document.getElementById("inputChatboxDiv")
-let sendButtonDiv = document.getElementById("sendButtonDiv")
-let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
-let mediaInfoDiv = document.getElementById("mediaInfo")
 
 async function setStartScene(){
   const startScene = new PIXI.Container()
-  /*
-  let background = PIXI.Sprite.fromImage('img/start.png');
-  background.anchor.set(0.5);
-  background.x = app.screen.width / 2;
-  background.y = app.screen.height / 2;
-  background.height = app.screen.height;
-  background.width = app.screen.width;
-  //startScene.addChild(background)
-  //app.stage.addChild(startScene);
-  */
   scenes["startScene"] = startScene
 
   //let startButton = document.getElementById('startButton');
@@ -62,25 +81,27 @@ async function setMainScene(){
   const mainScene = new PIXI.Container()
   //Live2Dモデルをロードする
   currentModel = await Live2DModel.from(modelUrl, { autoInteract: false });
-  currentModel.scale.set(0.2);//モデルの大きさ★
+
+  currentModel.scale.set(0.2*compressionSquare);//モデルの大きさ★
   currentModel.interactive = true;
   currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
   currentModel.position.set(window.innerWidth/3, window.innerHeight/3);//モデルの位置★
 
   //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.jpg');
-  background.anchor.set(0.5);
-  background.x = app.screen.width / 2;
-  background.y = app.screen.height / 2;
+  background.width = app.screen.width
+  background.height = app.screen.height
+  background.x = 0;
+  background.y = 0
   background.height = app.screen.height;
   background.width = app.screen.width;
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
   mainScene.addChild(currentModel)
+  mainScene.addChild( lyricText );
+
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
-
-
 }
 
 async function setEndScene(){
@@ -112,6 +133,7 @@ async function setup() {
   startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
   let startButton = document.getElementById("startButton")
   startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
+
   /*
   let startButton = document.createElement("button")
   startButton.innerHTML = "start"
@@ -123,6 +145,7 @@ async function setup() {
 
 //画面サイズを自動的にリサイズ
 function screenResize() {
+  canvasDiv.style.paddingLeft = (Math.floor(window.innerWidth)-width)/2
   let wid = window.innerWidth;//ゲームを表示できる最大横幅
   let hei = window.innerHeight;//ゲームを表示できる最大縦幅
   let x =  window.innerWidth;
@@ -136,12 +159,16 @@ function screenResize() {
       y = height*resizeRatio; 
       app.stage.scale.x = resizeRatio;
       app.stage.scale.y = resizeRatio;
+      scenes["mainScene"].children[1].scale.x = resizeRaito
+      scenes["mainScene"].children[1].scale.y = resizeRaito
+      scenes["mainScene"].children[1].scale.x = resizeRaito
+      scenes["mainScene"].children[1].scale.y = resizeRaito
   }
   
   app.renderer.resize(x, y);//レンダラーをリサイズ
 }
 //画面サイズがリサイズされると発火する関数の定義
-window.addEventListener('resize',screenResize,false);
+//window.addEventListener('resize',screenResize,false);
 
 function sendButtonOnClick(){
   console.log("send")
@@ -176,6 +203,7 @@ function changeScene(e){
     musicStartStopButtonDiv.style.zIndex=3
     mediaInfoDiv.style.zIndex=3
     exitButtonDiv.style.zIndex=3
+    seekbar.style.width = (width).toString()+"px"
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let exitButton = document.getElementById("exitButton")
@@ -191,6 +219,8 @@ function changeScene(e){
 
     musicStartStopButtonDiv.style.zIndex=-3
     mediaInfoDiv.style.zIndex=-3
+    seekbar.style.Zindex=-3
+    seekbar.style.width = (0).toString()+"px"
     player.requestStop();
     
 

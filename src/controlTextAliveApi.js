@@ -10,10 +10,11 @@ const player = new Player({
 const overlay = document.querySelector("#overlay");
 const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
-const seekbar = document.querySelector("#seekbar");
+let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
+//seekbar.style.width = (width).toString()+"px"
 let b, c;
-let play_flag = false;
+let playFlag = false;
 let lyrics_id = 0;
 let start_latest = 0;
 let monitor_start_time = 0;
@@ -52,35 +53,30 @@ player.addListener({
     onPlay() {
       const a = document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
+
       a.appendChild(document.createTextNode("⏸️"));
-      play_flag = true;  
+      playFlag = true;
     },
   
     /* 楽曲の再生が止まったら呼ばれる */
     onPause() {
       const a =  document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
+
       a.appendChild(document.createTextNode("▶️"));
-      play_flag = false;
+      playFlag = false;
+
     },
     onStop: () => {
       ;
     },
-    onTimeUpdate(position) {
+    async onTimeUpdate(position) {
       // シークバーの表示を更新
       paintedSeekbar.style.width = `${
         parseInt((position * 1000) / player.video.duration) / 10
       }%`;
-      //beat情報の取得
-      beat = player.findBeat(position)
-      chord = player.findChord(position)
-      iVideo = player.video
-      fPhrase = iVideo.firstPhrase
-      word = iVideo.findWord(position)
-      //console.log("beat",beat)
-      //console.log("chord",chord)
-      //console.log("fPhrase",fPhrase)
-      //console.log("word",word)
+      //歌詞情報の更新
+      await displayLyric(position,playFlag);
     }
   
   });

@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="css/cyberpunk.css">
     <link rel="stylesheet" href="https://unpkg.com/knopf.css/knopf.min.css">
     <!-- parts-->
+    <script src="src/culcCompressionRaito.js"></script>
     <script src="src/buttonParts.js"></script>
     <script src="src/textInputParts.js"></script>
 
@@ -42,21 +43,17 @@
       </div>
       -->
       <!--start button-->
-      <div id="startButtonDiv" class="startButton"></div>
-      <div id="exitButtonDiv" class="exitButton"></div>
-      <div id="homeButtonDiv" class="homeButton"></div>
+      <div id="startButtonDiv" class="startButtonDiv"></div>
+      <div id="exitButtonDiv" class="exitButtonDiv"></div>
+      <div id="homeButtonDiv" class="homeButtonDiv"></div>
       
       <!--live2dを描くためのキャンバス-->
-      <div class="canvas">
+      <div class="canvas" id="canvasDiv">
         <canvas id="my-live2d" ></canvas>
       </div>
       <!-- アーティストと楽曲の情報の表示/ Artist and song info -->
       <div class="mediaInfo" id="mediaInfo">
         <div id="media"></div>
-      </div>
-      <!-- シークバー -->
-      <div id="seekbar">
-        <div></div>
       </div>
       <!-- 再生とストップボタンの定義 -->
       <div class="musicStartStopButtonDiv" id="musicStartStopButtonDiv">
@@ -73,9 +70,16 @@
       <!--input text box-->
       <div id="inputChatboxDiv" class="inputChatBoxTool"></div>
       <div id="sendButtonDiv" class="sendButtonTool"></div>
+      <!-- シークバー -->
+      <div  id="seekbarDiv">
+        <div id="seekbar" class="seekbar">
+          <div></div>
+        </div>
+      </div>
     </div>
     <!--live2dの動作を決めるスクリプト-->
     <script src="src/controlScrean.js"></script>
+    <script src="src/displayLyric.js"></script>
     <script src="src/index.js"></script> 
     <!--text alive apiの動作を制御するスクリプト-->
     <script src="src/controlTextAliveApi.js"></script>
