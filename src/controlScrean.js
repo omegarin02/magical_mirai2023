@@ -1,6 +1,7 @@
 //index.jsで使うのでスコープを外す
 let app;
 let lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
+let chatTextBox = new PIXI.Text( "", { fill: 0xffffff,fontSize: 36*compressionSquare } );
 
 // PixiJS
 let {
@@ -88,17 +89,51 @@ async function setMainScene(){
   currentModel.position.set(window.innerWidth/3, window.innerHeight/3);//モデルの位置★
 
   //背景を設定
-  let background = PIXI.Sprite.fromImage('img/stage.jpg');
+  let background = PIXI.Sprite.fromImage('img/stage.png');
   background.width = app.screen.width
   background.height = app.screen.height
   background.x = 0;
   background.y = 0
   background.height = app.screen.height;
   background.width = app.screen.width;
+  chatTextBox.x = 1000 //TODO 後で治す
+  chatTextBox.y = 200 //TODO 後で治す
+
+  //デバッグ用のグリッド線
+  const gridHorizontalArray = []
+  const gridVerticalArray  = []
+  for (let i = 0 ; i*compressionSquare*50 < height ; i++){
+    gridHorizontalArray.push(new PIXI.Graphics())
+    if( (i*50) % 250 == 0 ){
+      gridHorizontalArray[i].lineStyle(1, 0xFF0000);
+    }else{
+      gridHorizontalArray[i].lineStyle(1, 0x00FFFF);
+    }
+    gridHorizontalArray[i].moveTo(0,i*compressionSquare*50)
+    gridHorizontalArray[i].lineTo(width,i*compressionSquare*50);
+  }
+  for (let i = 0 ; i*compressionSquare*50 < width ; i++){
+    gridVerticalArray.push(new PIXI.Graphics())
+    if( (i*50) % 250 == 0 ){
+      gridVerticalArray[i].lineStyle(1, 0xFF0000);
+    }else{
+      gridVerticalArray[i].lineStyle(1, 0x00FFFF);
+    }
+    gridVerticalArray[i].moveTo(i*compressionSquare*50,0)
+    gridVerticalArray[i].lineTo(i*compressionSquare*50,height);
+  }
+  //背景を配置する
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
   mainScene.addChild(currentModel)
   mainScene.addChild( lyricText );
+  mainScene.addChild(chatTextBox)
+  for (let i = 0 ; i < gridHorizontalArray.length ; i++){
+    mainScene.addChild(gridHorizontalArray[i])
+  }
+  for (let i = 0 ; i < gridVerticalArray.length ; i++){
+    mainScene.addChild(gridVerticalArray[i])
+  }
 
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
@@ -106,19 +141,7 @@ async function setMainScene(){
 
 async function setEndScene(){
   const endScene = new PIXI.Container()
-  /*
-  let background = PIXI.Sprite.fromImage('img/end.png');
-  background.anchor.set(0.5);
-  background.x = app.screen.width / 2;
-  background.y = app.screen.height / 2;
-  background.height = app.screen.height;
-  background.width = app.screen.width;
-  endScene.addChild(background)
-  app.stage.addChild(endScene);
-  */
   scenes["endScene"] = endScene
-
-
 }
 //アプリの読み込み
 async function setup() { 
@@ -174,6 +197,7 @@ function sendButtonOnClick(){
   console.log("send")
   let inputText = document.getElementById("inputText")
   console.log(inputText.value)//入力したテキストを取得
+  showChatLog(inputText.value,chatTextBox)
   inputText.value = ""
 }
 
