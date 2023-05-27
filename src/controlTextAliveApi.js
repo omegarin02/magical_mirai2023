@@ -55,7 +55,8 @@ player.addListener({
       while (a.firstChild) a.removeChild(a.firstChild);
 
       a.appendChild(document.createTextNode("⏸️"));
-      play_flag = true;      },
+      playFlag = true;
+    },
   
     /* 楽曲の再生が止まったら呼ばれる */
     onPause() {
@@ -63,7 +64,7 @@ player.addListener({
       while (a.firstChild) a.removeChild(a.firstChild);
 
       a.appendChild(document.createTextNode("▶️"));
-      play_flag = false;
+      playFlag = false;
 
     },
     onStop: () => {

@@ -43,6 +43,11 @@ inputChatboxDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//
 //送信ボタンの位置調整
 sendButtonDiv.style.marginLeft = (leftMarginNum+10+inputTextWidth+60).toString()+"px"
 sendButtonDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+//再生ボタンとかの位置調整
+musicStartStopButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
+musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
+//exitボタンの位置調整
+exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
 //media infoの位置調整
 mediaInfoDiv.style.marginLeft = (leftMarginNum+width-260).toString()+"px"
 //seekbar
