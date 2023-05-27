@@ -36,7 +36,7 @@ async function displayLyric(position,playFlag){
   let onePhrase = ""
   let endPhraseTime = 0
   //音楽が再生されているときの処理
-  console.log(position,playFlag)
+  //console.log(position,playFlag)
   if(playFlag){
     //ビート情報の取り方
       //beatInfoにはpositionで指定した時間の情報が全て入っている

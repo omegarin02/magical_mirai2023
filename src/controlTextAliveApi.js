@@ -31,6 +31,7 @@ player.addListener({
       }
       if (!app.songUrl) {
         document.querySelector("#media").className = "disabled";
+        // king妃jack躍 / 宮守文学 feat. 初音ミク
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
     },
@@ -123,3 +124,7 @@ player.addListener({
     }
     return false;
   });
+
+function changeMusic(url){
+  player.createFromSongUrl(url);
+}
