@@ -9,14 +9,13 @@
   
   
 #seekbar {
-  position: relative;
+  position:absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 10px;
   background: rgba(0 255 255 / 40%);
-  width: 100pw;
-  margin-top: -2vh;
+  width: 0px;
 }
 #seekbar > div {
   width: 0;
@@ -72,16 +71,19 @@ body{
 }
 
 .inputChatBox{
+  position:absolute;
   width: 70%;
 }
 .sendButton{
   height: 15px;
   position:absolute;
 }
+.sendButtonTool{
+  position:absolute;
+}
 
 .canvas{
   position: absolute;
-  margin-top: 3%;
   z-index: -2
 }
 

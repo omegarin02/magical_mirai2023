@@ -10,8 +10,9 @@ const player = new Player({
 const overlay = document.querySelector("#overlay");
 const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
-const seekbar = document.querySelector("#seekbar");
+let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
+//seekbar.style.width = (width).toString()+"px"
 let b, c;
 let playFlag = false;
 let lyrics_id = 0;
@@ -54,7 +55,8 @@ player.addListener({
       while (a.firstChild) a.removeChild(a.firstChild);
 
       a.appendChild(document.createTextNode("⏸️"));
-      play_flag = true;      },
+      playFlag = true;
+    },
   
     /* 楽曲の再生が止まったら呼ばれる */
     onPause() {
@@ -62,7 +64,7 @@ player.addListener({
       while (a.firstChild) a.removeChild(a.firstChild);
 
       a.appendChild(document.createTextNode("▶️"));
-      play_flag = false;
+      playFlag = false;
 
     },
     onStop: () => {

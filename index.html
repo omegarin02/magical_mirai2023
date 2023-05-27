@@ -55,10 +55,6 @@
       <div class="mediaInfo" id="mediaInfo">
         <div id="media"></div>
       </div>
-      <!-- シークバー -->
-      <div id="seekbar">
-        <div></div>
-      </div>
       <!-- 再生とストップボタンの定義 -->
       <div class="musicStartStopButtonDiv" id="musicStartStopButtonDiv">
         <div>
@@ -74,10 +70,16 @@
       <!--input text box-->
       <div id="inputChatboxDiv" class="inputChatBoxTool"></div>
       <div id="sendButtonDiv" class="sendButtonTool"></div>
+      <!-- シークバー -->
+      <div  id="seekbarDiv">
+        <div id="seekbar" class="seekbar">
+          <div></div>
+        </div>
+      </div>
     </div>
     <!--live2dの動作を決めるスクリプト-->
-    <script src="src/displayLyric.js"></script>
     <script src="src/controlScrean.js"></script>
+    <script src="src/displayLyric.js"></script>
     <script src="src/index.js"></script> 
     <!--text alive apiの動作を制御するスクリプト-->
     <script src="src/controlTextAliveApi.js"></script>
