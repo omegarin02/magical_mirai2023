@@ -1,4 +1,25 @@
-let lyric = "hoge"
+let lyric = ""
+//画面サイズの変動に伴って圧縮率を掛ける
+//ベースとなる画面の大きさは1920x1080
+//ベースのサイズで40pxサイズの文字を書いていて、縦幅と横幅が半分になったときは
+//40 x 0.5 = 20 px を設定すると思うが毎回それをすると面倒なので
+//40 x compressionSquare で求める。
+//一般化すると、「ベースの時指定したい大きさ×compressionSquare」で必ず計算すること
+
+//新しいテキストボックスの定義の方法
+//let テキストボックス名（変数名） = new PIXI.Text( "デフォルトの文字", { 色の設定など } );
+/* 色の設定などはこんな感じで書く
+{
+  fontFamily: 'Arial',
+  fontSize: 36,
+  fill: ['#000000'],
+}
+*/
+//作ったテキストボックスを追加するとき
+//scenes["mainScene"].addChild(テキストボックス名)
+//作ったテキストボックスを追加するとき
+//scenes["mainScene"].removeChild(テキストボックス名)
+
 async function displayLyric(position,playFlag){
   //歌詞の表示を行うための関数
   //positionは再生位置が今どのへんか（ミリ秒)
@@ -16,7 +37,7 @@ async function displayLyric(position,playFlag){
   let endPhraseTime = 0
   //音楽が再生されているときの処理
   console.log(position,playFlag)
-  if(true){
+  if(playFlag){
     //ビート情報の取り方
       //beatInfoにはpositionで指定した時間の情報が全ては言っている
       //console.log(beatInfo)
@@ -91,6 +112,10 @@ async function displayLyric(position,playFlag){
         lyric = onePhrase
         //表示位置の調整とかはpixi.jsのホームページ見て（英語）
         lyricText.text = lyric
+        lyricText.x = 300//画面右上からx軸方向300pxの位置移動する
+        lyricText.y = 500//画面右上からy軸下方向500pxの位置移動する
+        lyricText.style.fill = "red" //色を変更
+        lyricText.rotation = 30 // 傾きを調整
     }
   }
 

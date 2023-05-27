@@ -1,6 +1,6 @@
 //index.jsで使うのでスコープを外す
 let app;
-lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
+let lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
 
 // PixiJS
 let {
