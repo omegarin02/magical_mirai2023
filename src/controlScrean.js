@@ -1,7 +1,8 @@
 //index.jsで使うのでスコープを外す
 let app;
-let lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
-let chatTextBox = new PIXI.Text( "", { fill: 0xffffff,fontSize: 36*compressionSquare } );
+let fontSize = 25*compressionSquare
+let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
+let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize } );
 
 // PixiJS
 let {
@@ -96,31 +97,32 @@ async function setMainScene(){
   background.y = 0
   background.height = app.screen.height;
   background.width = app.screen.width;
-  chatTextBox.x = 1000 //TODO 後で治す
-  chatTextBox.y = 200 //TODO 後で治す
+  chatTextBox.x = 1080 * compressionSquare  //TODO 後で治す
+  chatTextBox.y = 360 *compressionSquare - fontSize//TODO 後で治す
+  chatTextBox.angle = 2.5
 
   //デバッグ用のグリッド線
   const gridHorizontalArray = []
   const gridVerticalArray  = []
-  for (let i = 0 ; i*compressionSquare*50 < height ; i++){
+  for (let i = 0 ; i*50*compressionSquare < height ; i++){
     gridHorizontalArray.push(new PIXI.Graphics())
     if( (i*50) % 250 == 0 ){
       gridHorizontalArray[i].lineStyle(1, 0xFF0000);
     }else{
       gridHorizontalArray[i].lineStyle(1, 0x00FFFF);
     }
-    gridHorizontalArray[i].moveTo(0,i*compressionSquare*50)
-    gridHorizontalArray[i].lineTo(width,i*compressionSquare*50);
+    gridHorizontalArray[i].moveTo(0,i*50*compressionSquare)
+    gridHorizontalArray[i].lineTo(width,i*50*compressionSquare);
   }
-  for (let i = 0 ; i*compressionSquare*50 < width ; i++){
+  for (let i = 0 ; i*50*compressionSquare < width ; i++){
     gridVerticalArray.push(new PIXI.Graphics())
     if( (i*50) % 250 == 0 ){
       gridVerticalArray[i].lineStyle(1, 0xFF0000);
     }else{
       gridVerticalArray[i].lineStyle(1, 0x00FFFF);
     }
-    gridVerticalArray[i].moveTo(i*compressionSquare*50,0)
-    gridVerticalArray[i].lineTo(i*compressionSquare*50,height);
+    gridVerticalArray[i].moveTo(i*50*compressionSquare,0)
+    gridVerticalArray[i].lineTo(i*50*compressionSquare,height);
   }
   //背景を配置する
   mainScene.addChild(background)
