@@ -1,5 +1,7 @@
 const { Player } = TextAliveApp;
 const DICT_PATH = "./dict"
+//楽曲load用のタイマー
+const sleep = waitTime => new Promise( resolve => setTimeout(resolve, waitTime) );
 // プレイヤーの初期化 / Initialize TextAlive Player
 const player = new Player({
   // トークンは https://developer.textalive.jp/profile で取得したものを使う
@@ -31,6 +33,7 @@ player.addListener({
       }
       if (!app.songUrl) {
         document.querySelector("#media").className = "disabled";
+        // king妃jack躍 / 宮守文学 feat. 初音ミク
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
     },
@@ -123,3 +126,121 @@ player.addListener({
     }
     return false;
   });
+
+function changeMusic(url){
+  player.createFromSongUrl(url);
+}
+
+
+function checkChangeMusic(input){//TODO検索エンジンの強化
+  musicUrlTitle = []
+  maxScoreIndex = []
+  maxScore = 0
+  for(let i = 0; i < musicList.length ; i++){
+    let score = 0
+    //タイトル一致するか
+    if(input.indexOf(musicList[i].title) !== -1){
+      musicUrlTitle.push([musicList[i].title,musicList[i].url])
+      maxScoreIndex = []
+      break
+    }
+    if(input.indexOf(musicList[i].artist) !== -1){
+      score++
+    }
+    if(input.indexOf(musicList[i].Voc) !== -1){
+      score++
+    }
+    
+    for(let j = 0 ; j < musicList[i].keyWord.length ; j++){     
+      if(input.indexOf(musicList[i].keyWord[j]) !== -1){
+        score++
+      }
+    }
+    if(maxScore < score){
+      maxScore = score
+      maxScoreIndex = []
+      maxScoreIndex.push(i)
+    }else if (maxScore == score && score > 0 ){
+      maxScoreIndex.push(i)
+    }
+  }
+  if(musicUrlTitle.length == 0){//タイトルで曲が決まらなかった場合
+    for(let i = 0 ; i < maxScoreIndex.length ; i++){
+      index = maxScoreIndex[i]
+      musicUrlTitle.push([musicList[index].title,musicList[index].url])
+    }
+  }
+  if(musicUrlTitle.length == 0){
+    return [[],false]
+  }else{
+    return [musicUrlTitle[Math.floor(Math.random() * musicUrlTitle.length)],true]
+  }
+}
+
+const musicStartWord = [
+  ["音楽","再生"],
+  ["音楽","流して"],
+  ["音楽","ながして"],
+  ["音楽","かけて"],
+  ["音楽","スタート"],
+  ["曲","再生"],
+  ["曲","流して"],
+  ["曲","ながして"],
+  ["曲","かけて"],
+  ["曲","スタート"],
+  ["ミュージック","スタート"],
+  ["再生","スタート"],
+]
+const musicStopWord = [
+  ["音楽","止めて"],
+  ["音楽","とめて"],
+  ["音楽","停止"],
+  ["音楽","ストップ"],
+  ["曲","止めて"],
+  ["曲","とめて"],
+  ["曲","停止"],
+  ["曲","ストップ"],
+  ["再生","ストップ"],
+]
+
+async function checkStartStopWord(input,checkWordList){
+  let checkFlag = false
+  for (let i = 0 ; i < checkWordList.length ; i++){
+    let rule = checkWordList[i]
+    for (let j = 0 ; j < rule.length; j++){
+      if(input.indexOf(rule[j]) !== -1){
+        checkFlag = true
+      }else{
+        checkFlag = false
+        break
+      }
+    }
+    if(checkFlag){
+      break
+    }
+  }
+  return checkFlag
+}
+
+async function checkWantStatStopMusic(input){
+  response = ""
+  if(await checkStartStopWord(input,musicStartWord)){//再生コマンドのバリエーションを増やす
+    if(playFlag && !player.isLoading){
+      response = musicStartedResponse[Math.floor(Math.random() * musicStartedResponse.length)]
+    }else{
+      response = musicStartResponse[Math.floor(Math.random() * musicStartResponse.length)]
+      while(player.isLoading){
+        await sleep( 1000 );
+      }
+      player.requestPlay();
+    }
+  }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
+    if(playFlag){
+      response = musicStopResponse[Math.floor(Math.random() * musicStopResponse.length)]
+      player.requestStop();
+    }else{
+      response = musicStopedResponse[Math.floor(Math.random() * musicStopedResponse.length)]
+    }
+  }
+  return response
+}
