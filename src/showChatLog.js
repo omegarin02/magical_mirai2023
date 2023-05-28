@@ -60,8 +60,6 @@ async function checkWantStatStopMusic(input){
     }else{
       response = "OK!再生するよ！"
       console.log(player.isLoading,player.isVideoSeeking)
-      await sleep( 5000 );//5秒待たせてみる
-      
       while(player.isLoading){
         await sleep( 1000 );
         console.log(player.isLoading,player.isVideoSeeking)
