@@ -103,17 +103,19 @@ async function getMikuChat(input){//chatbotの推論に置き換える
 }
 
 async function showChatLog(input,textBox){
-  chatLog.push(input)
-  let mikuChat = await getMikuChat(input)
-  chatLog.push(mikuChat)
-  let i = chatLog.length-1
-  textBox.text=""
-  while( i >= 0 && i > chatLog.length - maxLog ){
-    if(i % 2 == 0){//自分の発言
-      textBox.text = "YOU > "+chatLog[i] +'\n'+ textBox.text
-    }else{//ミクの発言
-      textBox.text = "MIKU > "+chatLog[i] +'\n'+ textBox.text
+  if(input!=""){
+    chatLog.push(input)
+    let mikuChat = await getMikuChat(input)
+    chatLog.push(mikuChat)
+    let i = chatLog.length-1
+    textBox.text=""
+    while( i >= 0 && i > chatLog.length - maxLog ){
+      if(i % 2 == 0){//自分の発言
+        textBox.text = "YOU > "+chatLog[i] +'\n'+ textBox.text
+      }else{//ミクの発言
+        textBox.text = "MIKU > "+chatLog[i] +'\n'+ textBox.text
+      }
+      i--
     }
-    i--
   }
 }
