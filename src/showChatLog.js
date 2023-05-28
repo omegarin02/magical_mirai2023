@@ -1,6 +1,8 @@
 let chatLog = []
 let checkMusicStartFlag = false
 let tmpMusicUrl = []
+//楽曲load用のタイマー
+const sleep = waitTime => new Promise( resolve => setTimeout(resolve, waitTime) );
 const maxLog = 10
 
 function checkChangeMusic(input){//TODO検索エンジンの強化
@@ -41,64 +43,60 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
       musicUrlTitle.push([musicList[index].title,musicList[index].url])
     }
   }
-  return musicUrlTitle
+  console.log(musicUrlTitle)
+  if(musicUrlTitle.length == 0){
+    return [[],false]
+  }else{
+    return [musicUrlTitle[Math.floor(Math.random() * musicUrlTitle.length)],true]
+  }
+}
+
+async function checkWantStatStopMusic(input){
+  response = ""
+  if(input.indexOf("再生") !== -1){//再生コマンドのバリエーションを増やす
+    if(playFlag){
+      response = "もう再生してるよ！"
+      console.log(player.isLoading,player.isVideoSeeking)
+    }else{
+      response = "OK!再生するよ！"
+      console.log(player.isLoading,player.isVideoSeeking)
+      await sleep( 5000 );//5秒待たせてみる
+      
+      while(player.isLoading){
+        await sleep( 1000 );
+        console.log(player.isLoading,player.isVideoSeeking)
+      }
+      player.requestPlay();
+    }
+  }else if(input.indexOf("停止")!== -1){//停止コマンドのバリエーションを増やす
+    if(playFlag){
+      response = "聴いてくれてありがと～"
+      player.requestStop();
+    }else{
+      response = "あれ？まだ音楽再生していないよ？"
+    }
+  }
+  return response
 }
 
 async function getMikuChat(input){//chatbotの推論に置き換える
   //楽曲を再生してほしいとき
   let response = ""
-  let musicUrl = checkChangeMusic(input)
+  //楽曲変更の希望があるか
+  let musicUrl = checkChangeMusic(input)//複数候補がある場合ランダムで１曲選ぶ
+  //変更の希望があるときは、楽曲を変更する
   console.log(musicUrl)
-  //楽曲に関連する情報をを言っていない時
-  if(musicUrl.length == 0){
-    if(input.indexOf("再生") !== -1){
-      if(playFlag){
-        response = "もう再生してるよ！"
-      }else{
-        response = "OK!再生するよ！"
-        player.requestPlay();
-      }
-    }else if(input.indexOf("停止")!== -1){
-      if(playFlag){
-        response = "聴いてくれてありがと～"
-        player.requestStop();
-      }else{
-        response = "あれ？まだ音楽再生していないよ？"
-      }
-    }else{
-      checkMusicStartFlag=false
-      response = input
-    }
-  //楽曲に関連する情報を１つ言ったとき
-  }else if(musicUrl.length == 1){
-    //再生と言われた時
-    if(input.indexOf("再生") !== -1){
-      if(playFlag){
-        response = "再生する曲を変えるね"
-        player.requestStop();
-      }else{
-        response = musicUrl[0][0] + "を流すね"
-      }
-      changeMusic(musicUrl[0][1])
-      player.requestPlay();
-    }if(!checkMusicStartFlag){
-      changeMusic(musicUrl[0][1])
-      response = musicUrl[0][0] + "を再生する？"
-      checkMusicStartFlag=true
-    }else{
-      changeMusic(musicUrl[0][1])
-      player.requestPlay();
-      checkMusicStartFlag=false
-    }
-  //楽曲に関連する情報を2つ以上言ったとき
-  }else if(musicUrl.length >= 2){
-    response = "どの楽曲を再生再生する?\n"
-    for(let i = 0 ; i<musicUrl.length; i++){
-      response += musicUrl[i][0] + "?\n"
-    }
-    checkMusicStartFlag=true
-    tmpMusicUrl = musicUrl
+  if(musicUrl[1]){
+    changeMusic(musicUrl[0][1])
   }
+  //楽曲を流してほしいのか
+  response = checkWantStatStopMusic(input)//楽曲を流してほしい時は流す
+  console.log(response)
+  //楽曲再生等を行ってない場合は、ミクさんとチャット
+  if(response == ""){
+    response = input
+  }
+
   return response
 }
 
