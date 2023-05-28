@@ -112,10 +112,10 @@ async function displayLyric(position,playFlag){
         lyric = onePhrase
         //表示位置の調整とかはpixi.jsのホームページ見て（英語）
         lyricText.text = lyric
-        lyricText.x = 300//画面右上からx軸方向300pxの位置移動する
-        lyricText.y = 500//画面右上からy軸下方向500pxの位置移動する
+        lyricText.x = 100*compressionSquare//画面右上からx軸方向300pxの位置移動する
+        lyricText.y = 100*compressionSquare//画面右上からy軸下方向500pxの位置移動する
         lyricText.style.fill = "red" //色を変更
-        lyricText.rotation = 30 // 傾きを調整
+        lyricText.angle = 30 // 時計回りを正方向とした角度（単位：度）
     }
   }
 
