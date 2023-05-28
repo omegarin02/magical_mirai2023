@@ -1,5 +1,7 @@
 const { Player } = TextAliveApp;
 const DICT_PATH = "./dict"
+//楽曲load用のタイマー
+const sleep = waitTime => new Promise( resolve => setTimeout(resolve, waitTime) );
 // プレイヤーの初期化 / Initialize TextAlive Player
 const player = new Player({
   // トークンは https://developer.textalive.jp/profile で取得したものを使う
@@ -127,4 +129,77 @@ player.addListener({
 
 function changeMusic(url){
   player.createFromSongUrl(url);
+}
+
+
+function checkChangeMusic(input){//TODO検索エンジンの強化
+  musicUrlTitle = []
+  maxScoreIndex = []
+  maxScore = 0
+  for(let i = 0; i < musicList.length ; i++){
+    let score = 0
+    //タイトル一致するか
+    if(input.indexOf(musicList[i].title) !== -1){
+      musicUrlTitle.push([musicList[i].title,musicList[i].url])
+      maxScoreIndex = []
+      break
+    }
+    if(input.indexOf(musicList[i].artist) !== -1){
+      score++
+    }
+    if(input.indexOf(musicList[i].Voc) !== -1){
+      score++
+    }
+    
+    for(let j = 0 ; j < musicList[i].keyWord.length ; j++){     
+      if(input.indexOf(musicList[i].keyWord[j]) !== -1){
+        score++
+      }
+    }
+    if(maxScore < score){
+      maxScore = score
+      maxScoreIndex = []
+      maxScoreIndex.push(i)
+    }else if (maxScore == score && score > 0 ){
+      maxScoreIndex.push(i)
+    }
+  }
+  if(musicUrlTitle.length == 0){//タイトルで曲が決まらなかった場合
+    for(let i = 0 ; i < maxScoreIndex.length ; i++){
+      index = maxScoreIndex[i]
+      musicUrlTitle.push([musicList[index].title,musicList[index].url])
+    }
+  }
+  console.log(musicUrlTitle)
+  if(musicUrlTitle.length == 0){
+    return [[],false]
+  }else{
+    return [musicUrlTitle[Math.floor(Math.random() * musicUrlTitle.length)],true]
+  }
+}
+
+async function checkWantStatStopMusic(input){
+  response = ""
+  if(input.indexOf("再生") !== -1){//再生コマンドのバリエーションを増やす
+    if(playFlag && !player.isLoading){
+      response = "もう再生してるよ！"
+      console.log(player.isLoading,player.isVideoSeeking)
+    }else{
+      response = "OK!再生するよ！"
+      console.log(player.isLoading,player.isVideoSeeking)
+      while(player.isLoading){
+        await sleep( 1000 );
+        console.log(player.isLoading,player.isVideoSeeking)
+      }
+      player.requestPlay();
+    }
+  }else if(input.indexOf("停止")!== -1){//停止コマンドのバリエーションを増やす
+    if(playFlag){
+      response = "聴いてくれてありがと～"
+      player.requestStop();
+    }else{
+      response = "あれ？まだ音楽再生していないよ？"
+    }
+  }
+  return response
 }
