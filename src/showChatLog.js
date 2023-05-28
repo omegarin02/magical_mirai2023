@@ -54,7 +54,7 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
 async function checkWantStatStopMusic(input){
   response = ""
   if(input.indexOf("再生") !== -1){//再生コマンドのバリエーションを増やす
-    if(playFlag){
+    if(playFlag && !player.isLoading){
       response = "もう再生してるよ！"
       console.log(player.isLoading,player.isVideoSeeking)
     }else{
