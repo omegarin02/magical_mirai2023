@@ -170,7 +170,6 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
       musicUrlTitle.push([musicList[index].title,musicList[index].url])
     }
   }
-  console.log(musicUrlTitle)
   if(musicUrlTitle.length == 0){
     return [[],false]
   }else{
@@ -227,9 +226,9 @@ async function checkWantStatStopMusic(input){
   response = ""
   if(await checkStartStopWord(input,musicStartWord)){//再生コマンドのバリエーションを増やす
     if(playFlag && !player.isLoading){
-      response = "もう再生してるよ！"
+      response = musicStartedResponse[Math.floor(Math.random() * musicStartedResponse.length)]
     }else{
-      response = "OK!再生するよ！"
+      response = musicStartResponse[Math.floor(Math.random() * musicStartResponse.length)]
       while(player.isLoading){
         await sleep( 1000 );
       }
@@ -237,10 +236,10 @@ async function checkWantStatStopMusic(input){
     }
   }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
     if(playFlag){
-      response = "聴いてくれてありがと～"
+      response = musicStopResponse[Math.floor(Math.random() * musicStopResponse.length)]
       player.requestStop();
     }else{
-      response = "あれ？まだ音楽再生していないよ？"
+      response = musicStopedResponse[Math.floor(Math.random() * musicStopedResponse.length)]
     }
   }
   return response
