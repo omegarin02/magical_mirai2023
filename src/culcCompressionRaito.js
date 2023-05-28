@@ -7,9 +7,11 @@ let height = Math.floor(window.innerHeight);//ステージの縦のサイズ
 let compressionSquare = 1//画面の圧縮率
 if(compressionWidth > compressionHeight){//幅と比べて高さの方が圧縮率が高い場合
   width = (16*height/9)
+  compressionWidth = width/default_width
   compressionSquare = compressionHeight 
 }else if (compressionWidth < compressionHeight){
   height = (9*width/16)
+  compressionHeight = height/default_height
   compressionSquare = compressionWidth
 }
 let leftMarginNum = ((window.innerWidth-width)/2)
