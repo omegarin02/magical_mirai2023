@@ -27,6 +27,9 @@ body{
   position:absolute;
   /*overflow: hidden;*/
 }
+::placeholder {
+  color: pink;
+}
 
 .startButtonDiv{
   margin-top: 48vh;

@@ -84,10 +84,10 @@ async function setMainScene(){
   //Live2Dモデルをロードする
   currentModel = await Live2DModel.from(modelUrl, { autoInteract: false });
 
-  currentModel.scale.set(0.2*compressionSquare);//モデルの大きさ★
+  currentModel.scale.set(0.3*compressionSquare);//モデルの大きさ★
   currentModel.interactive = true;
-  currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
-  currentModel.position.set(window.innerWidth/3, window.innerHeight/3);//モデルの位置★
+  //currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
+  currentModel.position.set(650*compressionSquare,250*compressionSquare)//window.innerWidth/3, window.innerHeight/3);//モデルの位置★
 
   //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.png');
