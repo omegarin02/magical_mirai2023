@@ -178,22 +178,64 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
   }
 }
 
+const musicStartWord = [
+  ["音楽","再生"],
+  ["音楽","流して"],
+  ["音楽","ながして"],
+  ["音楽","かけて"],
+  ["音楽","スタート"],
+  ["曲","再生"],
+  ["曲","流して"],
+  ["曲","ながして"],
+  ["曲","かけて"],
+  ["曲","スタート"],
+  ["ミュージック","スタート"],
+  ["再生","スタート"],
+]
+const musicStopWord = [
+  ["音楽","止めて"],
+  ["音楽","とめて"],
+  ["音楽","停止"],
+  ["音楽","ストップ"],
+  ["曲","止めて"],
+  ["曲","とめて"],
+  ["曲","停止"],
+  ["曲","ストップ"],
+  ["再生","ストップ"],
+]
+
+async function checkStartStopWord(input,checkWordList){
+  let checkFlag = false
+  for (let i = 0 ; i < checkWordList.length ; i++){
+    let rule = checkWordList[i]
+    for (let j = 0 ; j < rule.length; j++){
+      if(input.indexOf(rule[j]) !== -1){
+        checkFlag = true
+      }else{
+        checkFlag = false
+        break
+      }
+    }
+    if(checkFlag){
+      break
+    }
+  }
+  return checkFlag
+}
+
 async function checkWantStatStopMusic(input){
   response = ""
-  if(input.indexOf("再生") !== -1){//再生コマンドのバリエーションを増やす
+  if(await checkStartStopWord(input,musicStartWord)){//再生コマンドのバリエーションを増やす
     if(playFlag && !player.isLoading){
       response = "もう再生してるよ！"
-      console.log(player.isLoading,player.isVideoSeeking)
     }else{
       response = "OK!再生するよ！"
-      console.log(player.isLoading,player.isVideoSeeking)
       while(player.isLoading){
         await sleep( 1000 );
-        console.log(player.isLoading,player.isVideoSeeking)
       }
       player.requestPlay();
     }
-  }else if(input.indexOf("停止")!== -1){//停止コマンドのバリエーションを増やす
+  }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
     if(playFlag){
       response = "聴いてくれてありがと～"
       player.requestStop();

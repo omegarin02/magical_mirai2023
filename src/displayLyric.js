@@ -67,7 +67,7 @@ async function displayLyric(position,playFlag){
     //歌詞情報の取りかた
     //wordInfoがnullの時はデータがないのでエラーが出る
     if(wordInfo != null){
-      console.log(wordInfo)
+      //console.log(wordInfo)
         //ワンフレーズのデータ
           //console.log(wordInfo._children)
         //前のワンフレーズのデータ
