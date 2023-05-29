@@ -14,7 +14,8 @@ const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
 let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
-//seekbar.style.width = (width).toString()+"px"
+seekbar.style.height = (10*compressionSquare).toString()+"px"
+//seekbar.style.marginTop = (height - 10*compressionSquare).toString()+"px"
 let b, c;
 let playFlag = false;
 let lyrics_id = 0;
@@ -242,5 +243,6 @@ async function checkWantStatStopMusic(input){
       response = musicStopedResponse[Math.floor(Math.random() * musicStopedResponse.length)]
     }
   }
+  console.log(response)
   return response
 }
