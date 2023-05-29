@@ -21,6 +21,8 @@ let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 let sendButtonDiv = document.getElementById("sendButtonDiv")
 let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
+let musicStartButton = document.getElementById("musicStartButton")
+let musicStopButton = document.getElementById("musicStopButton")
 //その他のdivの定義
 let mediaInfoDiv = document.getElementById("mediaInfo")
 let canvasDiv = document.getElementById("canvasDiv")
@@ -37,24 +39,34 @@ canvasDiv.style.paddingTop = ((Math.floor(window.innerHeight)-height)/2).toStrin
 
 //startbuttonのサイズ調整
   //buttonParts.jsで実施
+//homebuttonのサイズ調整
+  //buttonParts.jsで実施
 //入力欄のサイズ・位置調整
 let inputTextWidth = 1200*compressionSquare
 inputChatboxDiv.style.width = inputTextWidth.toString()+"px"
 inputChatboxDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
-inputChatboxDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+inputChatboxDiv.style.marginTop = (maxmMarginTopNum-(18+28+30)*compressionSquare ).toString()+"px"//18pxはフォントサイズ
 //送信ボタンの位置調整
-sendButtonDiv.style.marginLeft = (leftMarginNum+10+inputTextWidth+60).toString()+"px"
-sendButtonDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+  //大きさ調整はbuttonParts.js
+sendButtonDiv.style.marginLeft = (leftMarginNum+inputTextWidth+(20+75)*compressionSquare).toString()+"px"
+sendButtonDiv.style.marginTop = (maxmMarginTopNum-(18+28+25)*compressionSquare ).toString()+"px"//18pxはフォントサイズ
+
 //再生ボタンとかの位置調整
 musicStartStopButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
 musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
+musicStartButton.style.fontSize = (20*compressionSquare).toString()+"px"
+musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
 //exitボタンの位置調整
+  //大きさ調整はbuttonParts.js
 exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
+
 //media infoの位置調整
 mediaInfoDiv.style.marginLeft = (leftMarginNum+width-260).toString()+"px"
 //seekbar
+  //一部はcontrolTextAliveApi.jsで実施
 seekbar.style.marginLeft = (leftMarginNum).toString()+"px"
-seekbar.style.marginTop = (maxmMarginTopNum-10 ).toString()+"px"
+seekbar.style.marginTop = (maxmMarginTopNum-10*compressionSquare ).toString()+"px"
+
 
 //scenes
 let scenes = {}
@@ -221,7 +233,8 @@ function changeScene(e){
     let exitButton = document.getElementById("exitButton")
     exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
     inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
-    
+
+
     sendButtonDiv.insertAdjacentHTML('afterbegin', commentSendButtonHtml);
     let sendButton = document.getElementById("commentSendButton")
     sendButton.addEventListener("click",sendButtonOnClick)
