@@ -33,7 +33,6 @@ player.addListener({
         document.querySelector("#control").className = "disabled";
       }
       if (!app.songUrl) {
-        document.querySelector("#media").className = "disabled";
         // king妃jack躍 / 宮守文学 feat. 初音ミク
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
@@ -44,6 +43,7 @@ player.addListener({
     onVideoReady(video) {
       // 最後に表示した文字の情報をリセット
       c = null;
+      setMusicInfo()
     },
   
     /* 再生コントロールができるようになったら呼ばれる */
@@ -204,6 +204,11 @@ const musicStopWord = [
   ["再生","ストップ"],
 ]
 
+async function setMusicInfo(){
+  artistTextBox.text = "✎："+player.data.song.artist.name
+  titleTextBox.text = "♬："+player.data.song.name
+}
+
 async function checkStartStopWord(input,checkWordList){
   let checkFlag = false
   for (let i = 0 ; i < checkWordList.length ; i++){
@@ -233,6 +238,7 @@ async function checkWantStatStopMusic(input){
       while(player.isLoading){
         await sleep( 1000 );
       }
+      setMusicInfo()
       player.requestPlay();
     }
   }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす

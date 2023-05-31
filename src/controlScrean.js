@@ -3,6 +3,8 @@ let app;
 let fontSize = 25*compressionSquare
 let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
 let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize } );
+let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize } );
+let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize } );
 
 // PixiJS
 let {
@@ -48,7 +50,7 @@ inputChatboxDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
 inputChatboxDiv.style.marginTop = (maxmMarginTopNum-(18+28+30)*compressionSquare ).toString()+"px"//18pxはフォントサイズ
 //送信ボタンの位置調整
   //大きさ調整はbuttonParts.js
-sendButtonDiv.style.marginLeft = (leftMarginNum+inputTextWidth+(20+75)*compressionSquare).toString()+"px"
+sendButtonDiv.style.marginLeft = (leftMarginNum+inputTextWidth+(20+95)*compressionSquare).toString()+"px"
 sendButtonDiv.style.marginTop = (maxmMarginTopNum-(18+28+25)*compressionSquare ).toString()+"px"//18pxはフォントサイズ
 
 //再生ボタンとかの位置調整
@@ -60,8 +62,6 @@ musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
   //大きさ調整はbuttonParts.js
 exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
 
-//media infoの位置調整
-mediaInfoDiv.style.marginLeft = (leftMarginNum+width-260).toString()+"px"
 //seekbar
   //一部はcontrolTextAliveApi.jsで実施
 seekbar.style.marginLeft = (leftMarginNum).toString()+"px"
@@ -113,6 +113,11 @@ async function setMainScene(){
   chatTextBox.y = 360 *compressionSquare - fontSize//TODO 後で治す
   chatTextBox.angle = 2.5
 
+  artistTextBox.x = 1500 * compressionSquare
+  artistTextBox.y = 10 * compressionSquare
+  titleTextBox.x = 1500 * compressionSquare
+  titleTextBox.y = 40 * compressionSquare
+
   //デバッグ用のグリッド線
   const gridHorizontalArray = []
   const gridVerticalArray  = []
@@ -139,9 +144,13 @@ async function setMainScene(){
   //背景を配置する
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
-  mainScene.addChild(currentModel)
+  
   mainScene.addChild( lyricText );
   mainScene.addChild(chatTextBox)
+  mainScene.addChild(artistTextBox)
+  mainScene.addChild(titleTextBox)
+  mainScene.addChild(currentModel)
+  
   for (let i = 0 ; i < gridHorizontalArray.length ; i++){
     mainScene.addChild(gridHorizontalArray[i])
   }
@@ -240,7 +249,6 @@ function changeScene(e){
     sendButton.addEventListener("click",sendButtonOnClick)
 
     musicStartStopButtonDiv.style.zIndex=3
-    mediaInfoDiv.style.zIndex=3
     exitButtonDiv.style.zIndex=3
     seekbar.style.width = (width).toString()+"px"
   }
