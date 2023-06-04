@@ -57,7 +57,10 @@ sendButtonDiv.style.marginTop = (maxmMarginTopNum-(18+28+25)*compressionSquare )
 musicStartStopButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
 //musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
 musicStartButton.style.fontSize = (20*compressionSquare).toString()+"px"
+musicStartButton.style.marginTop = (3*compressionSquare).toString()+"px"
 musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
+musicStopButton.style.marginTop = (3*compressionSquare).toString()+"px"
+
 //exitボタンの位置調整
   //大きさ調整はbuttonParts.js
 //exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"

@@ -4,7 +4,7 @@
 }
   
   
-@import "https://use.fontawesome.com/releases/v5.13.0/css/all.css";
+
   
   
   
@@ -53,6 +53,7 @@ body{
   position:absolute;
   z-index:-3;
 }
+
 
 .mediaInfo{
   position:absolute;
