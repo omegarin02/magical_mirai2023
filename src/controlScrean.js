@@ -18,7 +18,7 @@ let {
 
 //ボタンの定義
 let startButtonDiv = document.getElementById("startButtonDiv")
-let exitButtonDiv = document.getElementById("exitButtonDiv")
+//let exitButtonDiv = document.getElementById("exitButtonDiv")
 let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 let sendButtonDiv = document.getElementById("sendButtonDiv")
@@ -55,12 +55,15 @@ sendButtonDiv.style.marginTop = (maxmMarginTopNum-(18+28+25)*compressionSquare )
 
 //再生ボタンとかの位置調整
 musicStartStopButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
-musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
+//musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
 musicStartButton.style.fontSize = (20*compressionSquare).toString()+"px"
+musicStartButton.style.marginTop = (3*compressionSquare).toString()+"px"
 musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
+musicStopButton.style.marginTop = (3*compressionSquare).toString()+"px"
+
 //exitボタンの位置調整
   //大きさ調整はbuttonParts.js
-exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
+//exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
 
 //seekbar
   //一部はcontrolTextAliveApi.jsで実施
@@ -238,7 +241,7 @@ function changeScene(e){
     let startButton = document.getElementById("startButton")
     startButton.remove()
 
-    exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
+    //exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
     let exitButton = document.getElementById("exitButton")
     exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
     inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
@@ -249,14 +252,11 @@ function changeScene(e){
     sendButton.addEventListener("click",sendButtonOnClick)
 
     musicStartStopButtonDiv.style.zIndex=3
-    exitButtonDiv.style.zIndex=3
     seekbar.style.width = (width).toString()+"px"
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
-    let exitButton = document.getElementById("exitButton")
     let inputChatBox = document.getElementById("inputChatBox")
     let sendButton = document.getElementById("commentSendButton")
-    exitButton.remove()
     inputChatBox.remove()
     sendButton.remove()
 
@@ -265,7 +265,7 @@ function changeScene(e){
     homeButton.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
 
     musicStartStopButtonDiv.style.zIndex=-3
-    mediaInfoDiv.style.zIndex=-3
+    //mediaInfoDiv.style.zIndex=-3
     seekbar.style.Zindex=-3
     seekbar.style.width = (0).toString()+"px"
     player.requestStop();

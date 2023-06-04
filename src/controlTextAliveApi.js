@@ -58,7 +58,7 @@ player.addListener({
       const a = document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
 
-      a.appendChild(document.createTextNode("⏸️"));
+      a.appendChild(document.createTextNode("　⏸️　"));
       playFlag = true;
     },
   
@@ -67,7 +67,7 @@ player.addListener({
       const a =  document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
 
-      a.appendChild(document.createTextNode("▶️"));
+      a.appendChild(document.createTextNode("　▶　"));
       playFlag = false;
 
     },
