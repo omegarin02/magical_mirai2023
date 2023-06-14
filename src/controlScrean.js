@@ -1,10 +1,12 @@
 //index.jsで使うのでスコープを外す
+
 let app;
 let fontSize = 25*compressionSquare
+let textfont = "RocknRoll One"
 let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
-let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize } );
-let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize } );
-let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize } );
+let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
+let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
+let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 
 // PixiJS
 let {
