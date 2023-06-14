@@ -14,7 +14,8 @@ const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
 let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
-//seekbar.style.width = (width).toString()+"px"
+seekbar.style.height = (10*compressionSquare).toString()+"px"
+//seekbar.style.marginTop = (height - 10*compressionSquare).toString()+"px"
 let b, c;
 let playFlag = false;
 let lyrics_id = 0;
@@ -32,7 +33,6 @@ player.addListener({
         document.querySelector("#control").className = "disabled";
       }
       if (!app.songUrl) {
-        document.querySelector("#media").className = "disabled";
         // king妃jack躍 / 宮守文学 feat. 初音ミク
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
@@ -43,6 +43,7 @@ player.addListener({
     onVideoReady(video) {
       // 最後に表示した文字の情報をリセット
       c = null;
+      setMusicInfo()
     },
   
     /* 再生コントロールができるようになったら呼ばれる */
@@ -57,7 +58,7 @@ player.addListener({
       const a = document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
 
-      a.appendChild(document.createTextNode("⏸️"));
+      a.appendChild(document.createTextNode("　⏸️　"));
       playFlag = true;
     },
   
@@ -66,7 +67,7 @@ player.addListener({
       const a =  document.getElementById("musicStartButton")
       while (a.firstChild) a.removeChild(a.firstChild);
 
-      a.appendChild(document.createTextNode("▶️"));
+      a.appendChild(document.createTextNode("　▶　"));
       playFlag = false;
 
     },
@@ -203,6 +204,11 @@ const musicStopWord = [
   ["再生","ストップ"],
 ]
 
+async function setMusicInfo(){
+  artistTextBox.text = "✎："+player.data.song.artist.name
+  titleTextBox.text = "♬："+player.data.song.name
+}
+
 async function checkStartStopWord(input,checkWordList){
   let checkFlag = false
   for (let i = 0 ; i < checkWordList.length ; i++){
@@ -232,6 +238,7 @@ async function checkWantStatStopMusic(input){
       while(player.isLoading){
         await sleep( 1000 );
       }
+      setMusicInfo()
       player.requestPlay();
     }
   }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
@@ -242,5 +249,6 @@ async function checkWantStatStopMusic(input){
       response = musicStopedResponse[Math.floor(Math.random() * musicStopedResponse.length)]
     }
   }
+  console.log(response)
   return response
 }

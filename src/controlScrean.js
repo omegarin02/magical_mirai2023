@@ -1,7 +1,12 @@
 //index.jsで使うのでスコープを外す
+
 let app;
-let lyricText = new PIXI.Text( "Hello World!", { fill: 0xffffff } );
-let chatTextBox = new PIXI.Text( "", { fill: 0xffffff,fontSize: 36*compressionSquare } );
+let fontSize = 25*compressionSquare
+let textfont = "RocknRoll One"
+let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
+let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
+let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
+let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 
 // PixiJS
 let {
@@ -15,11 +20,13 @@ let {
 
 //ボタンの定義
 let startButtonDiv = document.getElementById("startButtonDiv")
-let exitButtonDiv = document.getElementById("exitButtonDiv")
+//let exitButtonDiv = document.getElementById("exitButtonDiv")
 let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 let sendButtonDiv = document.getElementById("sendButtonDiv")
 let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
+let musicStartButton = document.getElementById("musicStartButton")
+let musicStopButton = document.getElementById("musicStopButton")
 //その他のdivの定義
 let mediaInfoDiv = document.getElementById("mediaInfo")
 let canvasDiv = document.getElementById("canvasDiv")
@@ -36,24 +43,35 @@ canvasDiv.style.paddingTop = ((Math.floor(window.innerHeight)-height)/2).toStrin
 
 //startbuttonのサイズ調整
   //buttonParts.jsで実施
+//homebuttonのサイズ調整
+  //buttonParts.jsで実施
 //入力欄のサイズ・位置調整
 let inputTextWidth = 1200*compressionSquare
 inputChatboxDiv.style.width = inputTextWidth.toString()+"px"
 inputChatboxDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
-inputChatboxDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+inputChatboxDiv.style.marginTop = (maxmMarginTopNum-(18+28+30)*compressionSquare ).toString()+"px"//18pxはフォントサイズ
 //送信ボタンの位置調整
-sendButtonDiv.style.marginLeft = (leftMarginNum+10+inputTextWidth+60).toString()+"px"
-sendButtonDiv.style.marginTop = (maxmMarginTopNum-18-28-10 ).toString()+"px"//18pxはフォントサイズ
+  //大きさ調整はbuttonParts.js
+sendButtonDiv.style.marginLeft = (leftMarginNum+inputTextWidth+(20+95)*compressionSquare).toString()+"px"
+sendButtonDiv.style.marginTop = (maxmMarginTopNum-(18+28+25)*compressionSquare ).toString()+"px"//18pxはフォントサイズ
+
 //再生ボタンとかの位置調整
 musicStartStopButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
-musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
+//musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
+musicStartButton.style.fontSize = (20*compressionSquare).toString()+"px"
+musicStartButton.style.marginTop = (3*compressionSquare).toString()+"px"
+musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
+musicStopButton.style.marginTop = (3*compressionSquare).toString()+"px"
+
 //exitボタンの位置調整
-exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
-//media infoの位置調整
-mediaInfoDiv.style.marginLeft = (leftMarginNum+width-260).toString()+"px"
+  //大きさ調整はbuttonParts.js
+//exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
+
 //seekbar
+  //一部はcontrolTextAliveApi.jsで実施
 seekbar.style.marginLeft = (leftMarginNum).toString()+"px"
-seekbar.style.marginTop = (maxmMarginTopNum-10 ).toString()+"px"
+seekbar.style.marginTop = (maxmMarginTopNum-10*compressionSquare ).toString()+"px"
+
 
 //scenes
 let scenes = {}
@@ -83,10 +101,10 @@ async function setMainScene(){
   //Live2Dモデルをロードする
   currentModel = await Live2DModel.from(modelUrl, { autoInteract: false });
 
-  currentModel.scale.set(0.2*compressionSquare);//モデルの大きさ★
+  currentModel.scale.set(0.3*compressionSquare);//モデルの大きさ★
   currentModel.interactive = true;
-  currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
-  currentModel.position.set(window.innerWidth/3, window.innerHeight/3);//モデルの位置★
+  //currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
+  currentModel.position.set(650*compressionSquare,250*compressionSquare)//window.innerWidth/3, window.innerHeight/3);//モデルの位置★
 
   //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.png');
@@ -96,38 +114,48 @@ async function setMainScene(){
   background.y = 0
   background.height = app.screen.height;
   background.width = app.screen.width;
-  chatTextBox.x = 1000 //TODO 後で治す
-  chatTextBox.y = 200 //TODO 後で治す
+  chatTextBox.x = 1080 * compressionSquare  //TODO 後で治す
+  chatTextBox.y = 360 *compressionSquare - fontSize//TODO 後で治す
+  chatTextBox.angle = 2.5
+
+  artistTextBox.x = 1500 * compressionSquare
+  artistTextBox.y = 10 * compressionSquare
+  titleTextBox.x = 1500 * compressionSquare
+  titleTextBox.y = 40 * compressionSquare
 
   //デバッグ用のグリッド線
   const gridHorizontalArray = []
   const gridVerticalArray  = []
-  for (let i = 0 ; i*compressionSquare*50 < height ; i++){
+  for (let i = 0 ; i*50*compressionSquare < height ; i++){
     gridHorizontalArray.push(new PIXI.Graphics())
     if( (i*50) % 250 == 0 ){
       gridHorizontalArray[i].lineStyle(1, 0xFF0000);
     }else{
       gridHorizontalArray[i].lineStyle(1, 0x00FFFF);
     }
-    gridHorizontalArray[i].moveTo(0,i*compressionSquare*50)
-    gridHorizontalArray[i].lineTo(width,i*compressionSquare*50);
+    gridHorizontalArray[i].moveTo(0,i*50*compressionSquare)
+    gridHorizontalArray[i].lineTo(width,i*50*compressionSquare);
   }
-  for (let i = 0 ; i*compressionSquare*50 < width ; i++){
+  for (let i = 0 ; i*50*compressionSquare < width ; i++){
     gridVerticalArray.push(new PIXI.Graphics())
     if( (i*50) % 250 == 0 ){
       gridVerticalArray[i].lineStyle(1, 0xFF0000);
     }else{
       gridVerticalArray[i].lineStyle(1, 0x00FFFF);
     }
-    gridVerticalArray[i].moveTo(i*compressionSquare*50,0)
-    gridVerticalArray[i].lineTo(i*compressionSquare*50,height);
+    gridVerticalArray[i].moveTo(i*50*compressionSquare,0)
+    gridVerticalArray[i].lineTo(i*50*compressionSquare,height);
   }
   //背景を配置する
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
-  mainScene.addChild(currentModel)
+  
   mainScene.addChild( lyricText );
   mainScene.addChild(chatTextBox)
+  mainScene.addChild(artistTextBox)
+  mainScene.addChild(titleTextBox)
+  mainScene.addChild(currentModel)
+  
   for (let i = 0 ; i < gridHorizontalArray.length ; i++){
     mainScene.addChild(gridHorizontalArray[i])
   }
@@ -215,25 +243,22 @@ function changeScene(e){
     let startButton = document.getElementById("startButton")
     startButton.remove()
 
-    exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
+    //exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
     let exitButton = document.getElementById("exitButton")
     exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
     inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
-    
+
+
     sendButtonDiv.insertAdjacentHTML('afterbegin', commentSendButtonHtml);
     let sendButton = document.getElementById("commentSendButton")
     sendButton.addEventListener("click",sendButtonOnClick)
 
     musicStartStopButtonDiv.style.zIndex=3
-    mediaInfoDiv.style.zIndex=3
-    exitButtonDiv.style.zIndex=3
     seekbar.style.width = (width).toString()+"px"
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
-    let exitButton = document.getElementById("exitButton")
     let inputChatBox = document.getElementById("inputChatBox")
     let sendButton = document.getElementById("commentSendButton")
-    exitButton.remove()
     inputChatBox.remove()
     sendButton.remove()
 
@@ -242,7 +267,7 @@ function changeScene(e){
     homeButton.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
 
     musicStartStopButtonDiv.style.zIndex=-3
-    mediaInfoDiv.style.zIndex=-3
+    //mediaInfoDiv.style.zIndex=-3
     seekbar.style.Zindex=-3
     seekbar.style.width = (0).toString()+"px"
     player.requestStop();
