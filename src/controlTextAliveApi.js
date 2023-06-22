@@ -72,7 +72,7 @@ player.addListener({
 
     },
     onStop: () => {
-      ;
+      deleteLryic(true);
     },
     async onTimeUpdate(position) {
       // シークバーの表示を更新
