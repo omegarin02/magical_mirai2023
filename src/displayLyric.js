@@ -27,6 +27,8 @@ let sizeMonitor3 = {"x1":1450*compressionSquare,
                     "height":(300-100)*compressionSquare}
 let lyricNumberId = 0
 let beforeLyricNumberId = 0
+let resetPosition = 0
+let beforePosition = 0
 //compressionSquare
 
 //画面サイズの変動に伴って圧縮率を掛ける
@@ -49,13 +51,61 @@ let beforeLyricNumberId = 0
 //scenes["mainScene"].addChild(テキストボックス名)
 //作ったテキストボックスを追加するとき
 //scenes["mainScene"].removeChild(テキストボックス名)
+async function deleteLryic(allDelete){
+  //削除処理
+  for(let i = 0 ; i < monitor1.length ; i++){
+    if(allDelete){
+    scenes["mainScene"].removeChild(monitor1[i][2])
+    }else if(beforeLyricNumberId >= monitor1[i][3]){//オブジェクトを追加する
+      scenes["mainScene"].removeChild(monitor1[i][2])
+      monitor1.shift()
+      i =- 1
+    }else{
+      break
+    }
+  }
+  for(let i = 0 ; i < monitor2.length ; i++){
+    if(allDelete){
+      scenes["mainScene"].removeChild(monitor2[i][2])
+    }else if(beforeLyricNumberId >= monitor2[i][3]){//オブジェクトを追加する
+      scenes["mainScene"].removeChild(monitor2[i][2])
+      monitor2.shift()
+      i =- 1
+    }else{
+      break
+    }
+  }
+  for(let i = 0 ; i < monitor3.length ; i++){
+    if(allDelete){
+      scenes["mainScene"].removeChild(monitor3[i][2])
+    }else if(beforeLyricNumberId >= monitor3[i][3]){//オブジェクトを追加する
+      scenes["mainScene"].removeChild(monitor3[i][2])
+      monitor3.shift()
+      i =- 1
+    }else{
+      break
+    }
+  }
+}
+
+async function resetLyric(position){
+  await deleteLryic(true)
+  latestLyricEndTime = 0  
+  beforeLatestLyricEndTime = 0
+  screenMode = 0
+  lyricNumberId = 0
+  beforeLyricNumberId = 0
+  monitor1 = []
+  monitor2 = []
+  monitor3 = []
+  resetPosition = position
+}
 
 async function displayLyric(position,playFlag){
   //歌詞の表示を行うための関数
   //positionは再生位置が今どのへんか（ミリ秒)
     //positionは0以上の小数なので普通に四則演算ができる
   //playFlagは今音楽が再生されているか(再生されていたらture,されていなかったらfalse)
-
   //ビート情報の取得
   let beatInfo = player.findBeat(position+nextBuffer)
   //コード情報の取得
@@ -97,7 +147,11 @@ async function displayLyric(position,playFlag){
     //歌詞情報の取りかた
     //wordInfoがnullの時はデータがないのでエラーが出る
     if(wordInfo != null){//次のデータがある
-      if(latestLyricEndTime - position < nextBuffer){//一番最後に表示される歌詞の消えるタイミングとpositionの差が500ms未満
+      console.log("check call",beforePosition,position)
+      if((beforePosition > resetPosition && position > beforePosition && resetPosition > 0)){ //巻き戻しているのに進んでいる →　処理をしない
+        ;
+      } else if(latestLyricEndTime - position < nextBuffer){//一番最後に表示される歌詞の消えるタイミングとpositionの差が500ms未満
+        resetPosition = 0
         beforeLatestLyricEndTime = latestLyricEndTime
         beforeLyricNumberId = lyricNumberId
         lyricNumberId += 1
@@ -190,36 +244,10 @@ async function displayLyric(position,playFlag){
         monitor3[i][0] == null
       }
     }
-    //削除処理
     if(beforeLatestLyricEndTime < position  ){
-      for(let i = 0 ; i < monitor1.length ; i++){
-        if(beforeLyricNumberId >= monitor1[i][3]){//オブジェクトを追加する
-          scenes["mainScene"].removeChild(monitor1[i][2])
-          monitor1.shift()
-          i =- 1
-        }else{
-          break
-        }
-      }
-      for(let i = 0 ; i < monitor2.length ; i++){
-        if(beforeLyricNumberId >= monitor2[i][3]){//オブジェクトを追加する
-          scenes["mainScene"].removeChild(monitor2[i][2])
-          monitor2.shift()
-          i =- 1
-        }else{
-          break
-        }
-      }
-      for(let i = 0 ; i < monitor3.length ; i++){
-        if(beforeLyricNumberId >= monitor3[i][3]){//オブジェクトを追加する
-          scenes["mainScene"].removeChild(monitor3[i][2])
-          monitor3.shift()
-          i =- 1
-        }else{
-          break
-        }
-      }
+      await deleteLryic(false)
     }
+    beforePosition = position
 
 
 

@@ -85,19 +85,15 @@ player.addListener({
   
   });
   //seekbar
-  seekbar.addEventListener("click", (e) => {
+  seekbar.addEventListener("click", async (e) => {
     e.preventDefault();
+    nowPosition = (player.video.duration * e.offsetX) / seekbar.clientWidth 
     if (player) {
       player.requestMediaSeek(
-        (player.video.duration * e.offsetX) / seekbar.clientWidth
+        nowPosition
       );
     }
-    lyrics = player.video.getChar(lyrics_id)
-    if(lyrics.startTime < position){
-      timing_id = 0;
-      lyrics_id = 0;
-    }
-    
+    await resetLyric(nowPosition)//TODO!!移動後のポジションを獲得しているからこれを何とかする
     return false;
   });
   /* 再生・一時停止ボタン */
