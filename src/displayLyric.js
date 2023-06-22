@@ -222,8 +222,96 @@ async function displayLyric(position,playFlag){
               baseY3 += lyricFontSize
             }
           }
+        /*パターン1 左右のmonitorが同じ*/
+        }else if(screenMode == 1){
+          lyricFontSize = 50 * compressionSquare
+          //monitor1用
+          maxColChar1 = sizeMonitor1["width"]/lyricFontSize
+          maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
+          //monitor2用
+          maxColChar2 = sizeMonitor1["width"]/lyricFontSize
+          maxLineChar2 = sizeMonitor1["height"]/lyricFontSize
+          //monitor3用
+          maxColChar3 = sizeMonitor3["width"]/lyricFontSize
+          maxLineChar3 = sizeMonitor3["height"]/lyricFontSize
+
+          maxchar = maxColChar1
+          maxLine = maxLineChar1
+          if(maxColChar1 < maxColChar2 && maxColChar2 < maxColChar3){
+            maxchar = maxColChar3
+          }else if(maxColChar1 < maxColChar2 && maxColChar2 > maxColChar3){
+            maxchar = maxColChar2
+          }
+          if(maxLineChar1 < maxLineChar2 && maxLineChar2 < maxLineChar3 ){
+            maxLine = maxLineChar3
+          }else if(maxLineChar1 < maxLineChar2 && maxLineChar2 > maxLineChar3){
+            maxLine = maxLineChar2
+          }
+          console.log(maxChar,maxLine)
+          baseX1 = sizeMonitor1["x1"]
+          baseY1 = sizeMonitor1["y1"]
+          baseX2 = sizeMonitor2["x1"]
+          baseY2 = sizeMonitor2["y1"]
+          baseX3 = sizeMonitor3["x1"]
+          baseY3 = sizeMonitor3["y1"]
+          while(maxLine > 0){//行数が足りる限り続ける
+            if(onePhrase.length + wordInfo._children.length <= maxchar) {//1行の幅が超えないようにする
+              for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
+                onePhrase+=wordInfo._children[i]._data.char
+                //取得したデータを格納する
+                monitor1.push([wordInfo._children[i]._data.startTime,
+                              wordInfo._children[i]._data.endTime,
+                              new PIXI.Text( 
+                                            wordInfo._children[i]._data.char,
+                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            ),
+                              lyricNumberId])
+                monitor2.push([wordInfo._children[i]._data.startTime,
+                                wordInfo._children[i]._data.endTime,
+                                new PIXI.Text( 
+                                  wordInfo._children[i]._data.char,
+                                  { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                  ),
+                                  lyricNumberId])
+                monitor3.push([wordInfo._children[i]._data.startTime,
+                              wordInfo._children[i]._data.endTime,
+                              new PIXI.Text( 
+                                wordInfo._children[i]._data.char,
+                                { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                ),
+                                lyricNumberId])
+                //初期位置を決める
+                lastIndex = monitor1.length - 1 
+                monitor1[lastIndex][2].x = baseX1
+                monitor1[lastIndex][2].y = baseY1
+
+                monitor2[lastIndex][2].x = baseX2
+                monitor2[lastIndex][2].y = baseY2
+
+                monitor3[lastIndex][2].x = baseX3
+                monitor3[lastIndex][2].y = baseY3
+                //次の表示位置にする
+                baseX1 += lyricFontSize
+                baseX2 += lyricFontSize
+                baseX3 += lyricFontSize
+
+                latestLyricEndTime = wordInfo._children[i]._data.endTime
+              }
+              //取り終わったら次のデータを取ってくる
+              wordInfo = wordInfo._next
+            }else{
+              //１行が終わったら次の行に遷移する
+              onePhrase = ""
+              maxLine -= 1
+              baseX1 = sizeMonitor1["x1"]
+              baseY1 += lyricFontSize
+              baseX2 = sizeMonitor2["x1"]
+              baseY2 += lyricFontSize
+              baseX3 = sizeMonitor3["x1"]
+              baseY3 += lyricFontSize
+            }
+          }
         }
-        console.log(monitor1)
       }
     //画面描画処理
     for(let i = 0 ; i < monitor1.length ; i++){
