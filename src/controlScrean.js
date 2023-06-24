@@ -225,7 +225,7 @@ function sendButtonOnClick(){
   console.log("send")
   let inputText = document.getElementById("inputText")
   console.log(inputText.value)//入力したテキストを取得
-  showChatLog(inputText.value,chatTextBox)
+  showChatLog(inputText.value)
   inputText.value = ""
 }
 
