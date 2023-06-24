@@ -8,6 +8,18 @@ const balloonTimeout = 10
 const checkInterval = 1000
 
 
+function prediction(data){
+  let builder = kuromoji.builder({dicPath: DICT_PATH});
+  builder.build((err, tokenizer)=>{
+    tokens = tokenizer.tokenize(data);// 解析データの取得
+    console.log(tokens)
+  })
+  return "ほげほげ"
+}
+
+
+
+
 async function getMikuChat(input){//chatbotの推論に置き換える時に、外に出す
   //楽曲を再生してほしいとき
   let response = ""
@@ -21,7 +33,7 @@ async function getMikuChat(input){//chatbotの推論に置き換える時に、�
   response = await checkWantStatStopMusic(input)//楽曲を流してほしい時は流す
   //楽曲再生等を行ってない場合は、ミクさんとチャット
   if(response == ""){
-    response = input
+    response = prediction(input)
   }
   return response
 }
