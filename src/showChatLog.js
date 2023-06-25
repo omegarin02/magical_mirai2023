@@ -131,6 +131,7 @@ async function prediction(input){
         chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
         i--
       }
+    Motion(Number(3))
   })
 }
 
@@ -220,11 +221,11 @@ async function makeSpeechBalloon(mikuText){
   speechBalloons[lastIndex][0].drawPolygon(speechBalloonPoint);
   speechBalloons[lastIndex][0].endFill();
   speechBalloons[lastIndex][0].lineStyle();
-  speechBalloons[lastIndex][0].zIndex = 1100;
+  speechBalloons[lastIndex][0].zIndex = 1000;
 
   speechBalloons[lastIndex][1].x = basePointX-balloonWidth/2
   speechBalloons[lastIndex][1].y = basePointY+balloonHeight/10
-  speechBalloons[lastIndex][1].zIndex = 1200;
+  speechBalloons[lastIndex][1].zIndex = 1100;
 
   for(let i = speechBalloons.length-1 ; i > 0  ; i--){
     speechBalloons[i-1][0].y -= speechBalloons[i][3] //吹き出し本体

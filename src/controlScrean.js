@@ -33,7 +33,7 @@ let canvasDiv = document.getElementById("canvasDiv")
 //seekbarの定義はcontrolTextAliveApi.jsで実施
 
 // 1, Live2Dモデルへのパスを指定する
-let modelUrl = "miku2023/miku2023.model3.json";
+let modelUrl = "miku2023/HatsuneMiku.model3.json";
 let currentModel;
 
 
@@ -105,7 +105,7 @@ async function setMainScene(){
   currentModel.interactive = true;
   //currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
   currentModel.position.set(650*compressionSquare,250*compressionSquare)//window.innerWidth/3, window.innerHeight/3);//モデルの位置★
-  currentModel.zIndex = 1000
+  currentModel.zIndex = 1200
 
   //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.png');
@@ -150,12 +150,12 @@ async function setMainScene(){
   //背景を配置する
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
-  
+  mainScene.addChild(currentModel)  
   //mainScene.addChild( lyricText );
   mainScene.addChild(chatTextBox)
   mainScene.addChild(artistTextBox)
   mainScene.addChild(titleTextBox)
-  mainScene.addChild(currentModel)
+
   
   for (let i = 0 ; i < gridHorizontalArray.length ; i++){
     mainScene.addChild(gridHorizontalArray[i])

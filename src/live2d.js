@@ -13,7 +13,7 @@ let {
 
 
 // 1, Live2Dモデルへのパスを指定する
-let modelUrl = "miku2023/miku2023.model3.json";
+let modelUrl = "miku2023/HatsuneMiku.model3.json";
 let currentModel;
 let width = Math.floor(window.innerWidth);
 let height = Math.floor(window.innerHeight);
