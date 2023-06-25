@@ -2,7 +2,7 @@ let chatLog = []
 let speechBalloons = []
 let checkMusicStartFlag = false
 let tmpMusicUrl = []
-const maxLog = 7
+const maxLog = 8
 const maxChar = 20
 const balloonTimeout = 10
 const checkInterval = 1000
@@ -220,9 +220,11 @@ async function makeSpeechBalloon(mikuText){
   speechBalloons[lastIndex][0].drawPolygon(speechBalloonPoint);
   speechBalloons[lastIndex][0].endFill();
   speechBalloons[lastIndex][0].lineStyle();
+  speechBalloons[lastIndex][0].zIndex = 1100;
 
   speechBalloons[lastIndex][1].x = basePointX-balloonWidth/2
   speechBalloons[lastIndex][1].y = basePointY+balloonHeight/10
+  speechBalloons[lastIndex][1].zIndex = 1200;
 
   for(let i = speechBalloons.length-1 ; i > 0  ; i--){
     speechBalloons[i-1][0].y -= speechBalloons[i][3] //吹き出し本体

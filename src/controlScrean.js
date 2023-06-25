@@ -4,7 +4,7 @@ let app;
 let fontSize = 25*compressionSquare
 let textfont = "RocknRoll One"
 let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
-let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
+let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 
@@ -105,6 +105,7 @@ async function setMainScene(){
   currentModel.interactive = true;
   //currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
   currentModel.position.set(650*compressionSquare,250*compressionSquare)//window.innerWidth/3, window.innerHeight/3);//モデルの位置★
+  currentModel.zIndex = 1000
 
   //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.png');
@@ -150,7 +151,7 @@ async function setMainScene(){
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
   
-  mainScene.addChild( lyricText );
+  //mainScene.addChild( lyricText );
   mainScene.addChild(chatTextBox)
   mainScene.addChild(artistTextBox)
   mainScene.addChild(titleTextBox)
@@ -162,7 +163,7 @@ async function setMainScene(){
   for (let i = 0 ; i < gridVerticalArray.length ; i++){
     mainScene.addChild(gridVerticalArray[i])
   }
-
+  mainScene.sortableChildren = true;
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
 }
