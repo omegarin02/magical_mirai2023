@@ -1,0 +1,42 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "HatsuneMiku.moc3",
+		"Textures": [
+			"HatsuneMiku.2048/texture_00.png"
+		],
+		"DisplayInfo": "HatsuneMiku.cdi3.json",
+		"Motions": {
+			"HOGE": [
+				{
+					"File": "moderu/dislike.motion3.json"
+				},
+				{
+					"File": "moderu/happy.motion3.json"
+				},
+				{
+					"File": "moderu/hate.motion3.json"
+				},
+				{
+					"File": "moderu/sleepy.motion3.json"
+				},
+				{
+					"File": "moderu/smile.motion3.json"
+				}
+			]
+		}
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	],
+	"HitAreas": []
+}

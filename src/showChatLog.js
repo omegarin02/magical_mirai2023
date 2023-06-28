@@ -2,10 +2,140 @@ let chatLog = []
 let speechBalloons = []
 let checkMusicStartFlag = false
 let tmpMusicUrl = []
-const maxLog = 7
+const maxLog = 8
 const maxChar = 20
 const balloonTimeout = 10
 const checkInterval = 1000
+
+
+async function prediction(input){
+  let builder = kuromoji.builder({dicPath: DICT_PATH});
+  let tmp = []
+  let genkei = []
+  let syushi = []
+  builder.build((err, tokenizer)=>{
+    tokens = tokenizer.tokenize(input);// 形態素解析
+    tokens.forEach((token)=>{
+      if(token["pos"] == "名詞" || token["pos"] == "動詞" || token["pos"] == "感動詞" || token["pos"] == "形容詞" ){
+        if(token["pos_detail_1"] == "形容動詞語幹" || 
+          token["pos_detail_1"] == "接尾"|| 
+          token["pos_detail_1"] == "代名詞" || 
+          token["pos_detail_2"] == "地域" ||
+          token["pos_detail_2"] == "副詞可能" ||
+          token["pos_detail_1"] == "数" 
+          ){
+            tmp.push(token["basic_form"]);
+            genkei.push(token["reading"])
+        }else if(token["basic_form"]!=="*"){
+          tmp.push(token["basic_form"]);
+          genkei.push(token["reading"])
+        }else if(token["pos_detail_1"] == "固有名詞"){
+          tmp.push(token["surface_form"]);
+          genkei.push(token["reading"])
+        }
+      }
+    })
+    for(let i = 0 ; i < tmp.length ; i++){
+      tokens = tokenizer.tokenize(tmp[i])
+      tokens.forEach((token)=>{
+        syushi.push(token["reading"])
+      })
+    }
+    maxScore = 0
+    maxScoreIndexArray = []//最も精度が高かったindexのリスト
+    incorrectRateArray = []//間違い率のリスト
+    questionCorpusLenArray = []//questionの単語Corpusの長さ
+    inputLength = syushi.length
+    for(let i = 0 ; i <  responseData.length ; i++){
+      correctCounter = 0
+      question = responseData[i]["question"]
+      corpusLength = question.length
+      for(let j = 0 ; j < inputLength;j++){//推論
+        if(question.includes(syushi[j])){
+          correctCounter += 1
+        }
+      }
+      correctScore = correctCounter/inputLength
+      if(correctScore == maxScore){
+        maxScoreIndexArray.push(i)
+        incorrectRateArray.push((corpusLength - correctCounter)/corpusLength)
+        questionCorpusLenArray.push(corpusLength)
+      }else if(correctScore > maxScore){
+        maxScore = correctScore
+        maxScoreIndexArray = []
+        incorrectRateArray = []
+        questionCorpusLenArray = []
+        maxScoreIndexArray.push(i)
+        incorrectRateArray.push((corpusLength - correctCounter)/corpusLength)
+        questionCorpusLenArray.push(corpusLength)
+      } 
+    }
+    result = ""
+    action = ""
+    if( maxScoreIndexArray.length == 1){//最もスコアが高いものが決まったとき
+      result = responseData[maxScoreIndexArray[0]]["answer"]
+      action = responseData[maxScoreIndexArray[0]]["action"]
+    }else{//最もスコアが高いものが２つ以上あった
+      //誤答率で求める
+      let tmpQuestionCorpusLenArray = []
+      let tmpMaxScoreIndexArray = []
+      let minIncorrectRate = 1
+      for (let i = 0 ; i < incorrectRateArray.length ; i++){
+        if(minIncorrectRate == incorrectRateArray[i]){
+          tmpQuestionCorpusLenArray.push(questionCorpusLenArray[i])
+          tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
+        }else if(minIncorrectRate > incorrectRateArray[i]){
+          minIncorrectRate = incorrectRateArray[i]
+          tmpQuestionCorpusLenArray = []
+          tmpMaxScoreIndexArray = []
+          tmpQuestionCorpusLenArray.push(questionCorpusLenArray[i])
+          tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
+        }
+      }
+      maxScoreIndexArray = tmpMaxScoreIndexArray
+      if(maxScoreIndexArray.length == 1){//誤答率で決着が付いたとき
+        result = responseData[maxScoreIndexArray[0]]["answer"]
+        action = responseData[maxScoreIndexArray[0]]["action"]
+      }else{//誤答率で決着が付かなかったとき
+        //Corpusの大きさで評価する(短い方が良いとする)
+        questionCorpusLenArray = tmpQuestionCorpusLenArray
+        maxCorpusLength = Math.max(questionCorpusLenArray)
+        tmpMaxScoreIndexArray = []
+        for (let i = 0 ; i < questionCorpusLenArray.length; i++){
+          if(maxCorpusLength == questionCorpusLenArray[i]){
+            tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
+          }else if(maxCorpusLength > questionCorpusLenArray[i]){
+            maxCorpusLength = questionCorpusLenArray[i]
+            tmpMaxScoreIndexArray = []
+            tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
+          }
+        }
+        maxScoreIndexArray = tmpMaxScoreIndexArray
+        console.log(maxScoreIndexArray)
+        if(maxScoreIndexArray.length == 1){//Corpusの大きさで決着が付いたとき
+          result = responseData[maxScoreIndexArray[0]]["answer"]
+          action = responseData[maxScoreIndexArray[0]]["action"]
+        }else{//ここまでして決まらなかったら乱数
+          index = maxScoreIndexArray[Math.floor(Math.random() * maxScoreIndexArray.length)]
+          console.log(index,maxScoreIndexArray)
+          result = responseData[index]["answer"]
+          action = responseData[index]["action"]
+        }
+      }
+    }
+    makeSpeechBalloon(result)
+    splitMaxChar(result,"MIKU")
+      let i = chatLog.length-1
+      chatTextBox.text=""
+      while( i >= 0 && i > chatLog.length - maxLog ){
+        chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
+        i--
+      }
+    Motion(Number(3))
+  })
+}
+
+
 
 
 async function getMikuChat(input){//chatbotの推論に置き換える時に、外に出す
@@ -21,7 +151,7 @@ async function getMikuChat(input){//chatbotの推論に置き換える時に、�
   response = await checkWantStatStopMusic(input)//楽曲を流してほしい時は流す
   //楽曲再生等を行ってない場合は、ミクさんとチャット
   if(response == ""){
-    response = input
+    prediction(input)
   }
   return response
 }
@@ -91,9 +221,11 @@ async function makeSpeechBalloon(mikuText){
   speechBalloons[lastIndex][0].drawPolygon(speechBalloonPoint);
   speechBalloons[lastIndex][0].endFill();
   speechBalloons[lastIndex][0].lineStyle();
+  speechBalloons[lastIndex][0].zIndex = 1000;
 
   speechBalloons[lastIndex][1].x = basePointX-balloonWidth/2
   speechBalloons[lastIndex][1].y = basePointY+balloonHeight/10
+  speechBalloons[lastIndex][1].zIndex = 1100;
 
   for(let i = speechBalloons.length-1 ; i > 0  ; i--){
     speechBalloons[i-1][0].y -= speechBalloons[i][3] //吹き出し本体
@@ -105,16 +237,19 @@ async function makeSpeechBalloon(mikuText){
 }
 
 
-async function showChatLog(input,textBox){
+async function showChatLog(input){
   if(input!=""){
     splitMaxChar(input,"USER")
     let mikuChat = await getMikuChat(input)
-    makeSpeechBalloon(mikuChat)
-    splitMaxChar(mikuChat,"MIKU")
+    console.log(mikuChat)
+    if(mikuChat !== ""){
+      makeSpeechBalloon(mikuChat)
+      splitMaxChar(mikuChat,"MIKU")
+    }
     let i = chatLog.length-1
-    textBox.text=""
+    chatTextBox.text=""
     while( i >= 0 && i > chatLog.length - maxLog ){
-      textBox.text = chatLog[i] +'\n'+ textBox.text
+      chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
       i--
     }
   }

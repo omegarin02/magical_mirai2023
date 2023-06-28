@@ -4,7 +4,7 @@ let app;
 let fontSize = 25*compressionSquare
 let textfont = "RocknRoll One"
 let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
-let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
+let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 
@@ -33,7 +33,7 @@ let canvasDiv = document.getElementById("canvasDiv")
 //seekbarの定義はcontrolTextAliveApi.jsで実施
 
 // 1, Live2Dモデルへのパスを指定する
-let modelUrl = "miku2023/miku2023.model3.json";
+let modelUrl = "miku2023/HatsuneMiku.model3.json";
 let currentModel;
 
 
@@ -105,6 +105,7 @@ async function setMainScene(){
   currentModel.interactive = true;
   //currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
   currentModel.position.set(650*compressionSquare,250*compressionSquare)//window.innerWidth/3, window.innerHeight/3);//モデルの位置★
+  currentModel.zIndex = 1200
 
   //背景を設定
   let background = PIXI.Sprite.fromImage('img/stage.png');
@@ -149,12 +150,12 @@ async function setMainScene(){
   //背景を配置する
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
-  
-  mainScene.addChild( lyricText );
+  mainScene.addChild(currentModel)  
+  //mainScene.addChild( lyricText );
   mainScene.addChild(chatTextBox)
   mainScene.addChild(artistTextBox)
   mainScene.addChild(titleTextBox)
-  mainScene.addChild(currentModel)
+
   
   for (let i = 0 ; i < gridHorizontalArray.length ; i++){
     mainScene.addChild(gridHorizontalArray[i])
@@ -162,7 +163,7 @@ async function setMainScene(){
   for (let i = 0 ; i < gridVerticalArray.length ; i++){
     mainScene.addChild(gridVerticalArray[i])
   }
-
+  mainScene.sortableChildren = true;
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
 }
@@ -225,7 +226,7 @@ function sendButtonOnClick(){
   console.log("send")
   let inputText = document.getElementById("inputText")
   console.log(inputText.value)//入力したテキストを取得
-  showChatLog(inputText.value,chatTextBox)
+  showChatLog(inputText.value)
   inputText.value = ""
 }
 
