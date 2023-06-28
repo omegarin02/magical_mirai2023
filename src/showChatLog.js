@@ -250,15 +250,20 @@ async function nomarizeText(input){
   return result
 }
 
+
 async function showChatLog(input){
   if(input!=""){
-    text = await nomarizeText(input)
-    splitMaxChar(input,"USER")
-    let mikuChat = await getMikuChat(text)
-    console.log(mikuChat)
-    if(mikuChat !== ""){
-      makeSpeechBalloon(mikuChat)
-      splitMaxChar(mikuChat,"MIKU")
+    if(await checkSwearing(input)){
+      splitMaxChar("不適切な表現のため削除されました","SYSTEM")
+    }else{
+      text = await nomarizeText(input)
+      splitMaxChar(input,"USER")
+      let mikuChat = await getMikuChat(text)
+      console.log(mikuChat)
+      if(mikuChat !== ""){
+        makeSpeechBalloon(mikuChat)
+        splitMaxChar(mikuChat,"MIKU")
+      }
     }
     let i = chatLog.length-1
     chatTextBox.text=""
