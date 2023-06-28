@@ -131,7 +131,7 @@ async function prediction(input){
         chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
         i--
       }
-    Motion(Number(3))
+    Motion(Number(0))
   })
 }
 
@@ -237,10 +237,24 @@ async function makeSpeechBalloon(mikuText){
 }
 
 
+async function nomarizeText(input){
+  
+  let result = zenkaku2Hankaku(input)
+  console.log(result)
+  result = hankana2Zenkana(result)
+  console.log(result)
+  result = nomarizeMiku(result)
+  console.log(result)
+  result = nomarizeFirstPerson(result)
+  console.log(result)
+  return result
+}
+
 async function showChatLog(input){
   if(input!=""){
+    text = await nomarizeText(input)
     splitMaxChar(input,"USER")
-    let mikuChat = await getMikuChat(input)
+    let mikuChat = await getMikuChat(text)
     console.log(mikuChat)
     if(mikuChat !== ""){
       makeSpeechBalloon(mikuChat)
