@@ -192,11 +192,17 @@ function delSpeechBalloon(){
 
 async function makeSpeechBalloon(mikuText){
   console.log(mikuText)
+  maxWidth = 1200
   baseSize = fontSize*1.8
   textLength = mikuText.length
   //fontSizeはcontrolScrean.jsで定義済みのものを使用する
   balloonWidth = baseSize*textLength
-  balloonHeight = baseSize*2
+  balloonHeight = baseSize*2//これをn行分にする
+  if(maxWidth*compressionSquare < balloonWidth){
+    n = Math.ceil(balloonWidth/(1000*compressionSquare))
+    balloonWidth = maxWidth*compressionSquare
+    balloonHeight = baseSize*(2+n)
+  }
   basePointX = 650*compressionSquare + baseSize*2 //ミクの立っている場所のn文字ずらしたところ
   basePointY = 250*compressionSquare - baseSize*2 //ミクが立っている頭の座標から1文字分ずらしたところ
   speechBalloonPoint = [basePointX-balloonWidth/2, basePointY,//p0 
@@ -211,7 +217,7 @@ async function makeSpeechBalloon(mikuText){
   ]
 
   speechBalloons.push([new PIXI.Graphics(),
-                      new PIXI.Text( mikuText, { fill: "white",fontSize: baseSize,fontFamily: textfont } ),
+                      new PIXI.Text( mikuText, { fill: "white",fontSize: baseSize,fontFamily: textfont , wordWrap:true, wordWrapWidth:balloonWidth, breakWords: true} ),
                       balloonTimeout,
                       balloonHeight*1.3])
   lastIndex = speechBalloons.length-1
@@ -222,10 +228,12 @@ async function makeSpeechBalloon(mikuText){
   speechBalloons[lastIndex][0].endFill();
   speechBalloons[lastIndex][0].lineStyle();
   speechBalloons[lastIndex][0].zIndex = 1000;
+  speechBalloons[lastIndex][0].y -= balloonHeight - baseSize*2
 
   speechBalloons[lastIndex][1].x = basePointX-balloonWidth/2
-  speechBalloons[lastIndex][1].y = basePointY+balloonHeight/10
+  speechBalloons[lastIndex][1].y = basePointY+balloonHeight/10 - (balloonHeight - baseSize*2)
   speechBalloons[lastIndex][1].zIndex = 1100;
+
 
   for(let i = speechBalloons.length-1 ; i > 0  ; i--){
     speechBalloons[i-1][0].y -= speechBalloons[i][3] //吹き出し本体
@@ -240,13 +248,9 @@ async function makeSpeechBalloon(mikuText){
 async function nomarizeText(input){
   
   let result = zenkaku2Hankaku(input)
-  console.log(result)
   result = hankana2Zenkana(result)
-  console.log(result)
   result = nomarizeMiku(result)
-  console.log(result)
   result = nomarizeFirstPerson(result)
-  console.log(result)
   return result
 }
 
