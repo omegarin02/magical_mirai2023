@@ -15,4 +15,5 @@ if(compressionWidth > compressionHeight){//幅と比べて高さの方が圧縮�
   compressionSquare = compressionWidth
 }
 let leftMarginNum = ((window.innerWidth-width)/2)
+let topMarginNum =((window.innerHeight-height)/2)
 let maxmMarginTopNum = height
