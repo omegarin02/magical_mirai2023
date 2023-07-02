@@ -164,11 +164,43 @@
 			"Name": "顔"
 		},
 		{
-			"Id": "Part",
+			"Id": "eye0",
+			"Name": "通常の目"
+		},
+		{
+			"Id": "eye3",
+			"Name": "><"
+		},
+		{
+			"Id": "eye2",
+			"Name": "ぐるぐる"
+		},
+		{
+			"Id": "eye1",
+			"Name": "にっこり"
+		},
+		{
+			"Id": "mouth0",
+			"Name": "口とじ"
+		},
+		{
+			"Id": "mouth3",
+			"Name": "口3"
+		},
+		{
+			"Id": "mouth2",
+			"Name": "口2"
+		},
+		{
+			"Id": "mouth1",
+			"Name": "口1"
+		},
+		{
+			"Id": "light_eye",
 			"Name": "左目パーツ"
 		},
 		{
-			"Id": "Part2",
+			"Id": "right_eye",
 			"Name": "右目パーツ"
 		}
 	]

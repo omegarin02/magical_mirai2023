@@ -1,0 +1,41 @@
+{
+	"Type": "Live2D Pose",
+	"Groups": [
+		[
+			{
+				"Id": "eye0",
+				"Link": []
+			},
+			{
+				"Id": "eye3",
+				"Link": []
+			},
+			{
+				"Id": "eye2",
+				"Link": []
+			},
+			{
+				"Id": "eye1",
+				"Link": []
+			}
+		],
+		[
+			{
+				"Id": "mouth0",
+				"Link": []
+			},
+			{
+				"Id": "mouth3",
+				"Link": []
+			},
+			{
+				"Id": "mouth2",
+				"Link": []
+			},
+			{
+				"Id": "mouth1",
+				"Link": []
+			}
+		]
+	]
+}
