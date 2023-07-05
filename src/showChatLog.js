@@ -131,7 +131,7 @@ async function prediction(input){
         chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
         i--
       }
-    Motion(Number(3))
+    Motion(Number(0))
   })
 }
 
@@ -192,11 +192,17 @@ function delSpeechBalloon(){
 
 async function makeSpeechBalloon(mikuText){
   console.log(mikuText)
+  maxWidth = 1200
   baseSize = fontSize*1.8
   textLength = mikuText.length
   //fontSizeはcontrolScrean.jsで定義済みのものを使用する
   balloonWidth = baseSize*textLength
-  balloonHeight = baseSize*2
+  balloonHeight = baseSize*2//これをn行分にする
+  if(maxWidth*compressionSquare < balloonWidth){
+    n = Math.ceil(balloonWidth/(1000*compressionSquare))
+    balloonWidth = maxWidth*compressionSquare
+    balloonHeight = baseSize*(2+n)
+  }
   basePointX = 650*compressionSquare + baseSize*2 //ミクの立っている場所のn文字ずらしたところ
   basePointY = 250*compressionSquare - baseSize*2 //ミクが立っている頭の座標から1文字分ずらしたところ
   speechBalloonPoint = [basePointX-balloonWidth/2, basePointY,//p0 
@@ -211,7 +217,7 @@ async function makeSpeechBalloon(mikuText){
   ]
 
   speechBalloons.push([new PIXI.Graphics(),
-                      new PIXI.Text( mikuText, { fill: "white",fontSize: baseSize,fontFamily: textfont } ),
+                      new PIXI.Text( mikuText, { fill: "white",fontSize: baseSize,fontFamily: textfont , wordWrap:true, wordWrapWidth:balloonWidth, breakWords: true} ),
                       balloonTimeout,
                       balloonHeight*1.3])
   lastIndex = speechBalloons.length-1
@@ -222,10 +228,12 @@ async function makeSpeechBalloon(mikuText){
   speechBalloons[lastIndex][0].endFill();
   speechBalloons[lastIndex][0].lineStyle();
   speechBalloons[lastIndex][0].zIndex = 1000;
+  speechBalloons[lastIndex][0].y -= balloonHeight - baseSize*2
 
   speechBalloons[lastIndex][1].x = basePointX-balloonWidth/2
-  speechBalloons[lastIndex][1].y = basePointY+balloonHeight/10
+  speechBalloons[lastIndex][1].y = basePointY+balloonHeight/10 - (balloonHeight - baseSize*2)
   speechBalloons[lastIndex][1].zIndex = 1100;
+
 
   for(let i = speechBalloons.length-1 ; i > 0  ; i--){
     speechBalloons[i-1][0].y -= speechBalloons[i][3] //吹き出し本体
@@ -237,14 +245,29 @@ async function makeSpeechBalloon(mikuText){
 }
 
 
+async function nomarizeText(input){
+  
+  let result = zenkaku2Hankaku(input)
+  result = hankana2Zenkana(result)
+  result = nomarizeMiku(result)
+  result = nomarizeFirstPerson(result)
+  return result
+}
+
+
 async function showChatLog(input){
   if(input!=""){
-    splitMaxChar(input,"USER")
-    let mikuChat = await getMikuChat(input)
-    console.log(mikuChat)
-    if(mikuChat !== ""){
-      makeSpeechBalloon(mikuChat)
-      splitMaxChar(mikuChat,"MIKU")
+    if(await checkSwearing(input)){
+      splitMaxChar("不適切な表現のため削除されました","SYSTEM")
+    }else{
+      text = await nomarizeText(input)
+      splitMaxChar(input,"USER")
+      let mikuChat = await getMikuChat(text)
+      console.log(mikuChat)
+      if(mikuChat !== ""){
+        makeSpeechBalloon(mikuChat)
+        splitMaxChar(mikuChat,"MIKU")
+      }
     }
     let i = chatLog.length-1
     chatTextBox.text=""
