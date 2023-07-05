@@ -13,7 +13,7 @@ let sizeMonitor1 = {"x1":100*compressionSquare,
                     "y2":300*compressionSquare,
                     "width":(450-100)*compressionSquare,
                     "height":(300-100)*compressionSquare}
-let sizeMonitor2 = {"x1":700*compressionSquare,
+let sizeMonitor2 = {"x1":750*compressionSquare,
                     "y1":100*compressionSquare,
                     "x2":1200*compressionSquare,
                     "y2":300*compressionSquare,
@@ -101,6 +101,34 @@ async function resetLyric(position){
   resetPosition = position
 }
 
+let redColors = ["#ff0000","#dc143c","#c71585","#ff1493","#ff6347"]
+let greenColors = ["#008000","#2e8b57","#008080","#3cb371","#008b8b"]
+let blueColors = ["#0000ff","#1e90ff","#4169e1","#00008b","#000080"]
+let orengeColors = ["#ffa500","#f4a460","#d2691e","#ffd700","#ff4500"]
+let purpleColors = ["#800080","#4b0082","#8a2be2","#9370db","#9932cc"]
+
+function getLryricColor(pos){
+  wordColor = "#eeeeee"
+  colorCodeIndex = Math.floor(Math.random() * redColors.length)
+  if(pos == "N" || pos == "PN"){//名詞 or 代名詞
+    wordColor = redColors[colorCodeIndex]//赤系の色
+  }
+  else if(pos == "V"){//動詞
+    wordColor = greenColors[colorCodeIndex]//緑系の色
+  }
+  else if(pos == "J"){//形容詞
+    wordColor = blueColors[colorCodeIndex]//青系の色
+  }
+  else if(pos == "W"){//感動詞
+    wordColor = orengeColors[colorCodeIndex]//Orange系の色
+  }
+  else if(pos == "S"){//記号
+    wordColor = purpleColors[colorCodeIndex]//紫系の色
+  }
+  //wordColor = [wordColor,wordColor,"#a9a9a9",wordColor,wordColor]
+  return wordColor
+}
+
 async function displayLyric(position,playFlag){
   //歌詞の表示を行うための関数
   //positionは再生位置が今どのへんか（ミリ秒)
@@ -147,7 +175,6 @@ async function displayLyric(position,playFlag){
     //歌詞情報の取りかた
     //wordInfoがnullの時はデータがないのでエラーが出る
     if(wordInfo != null){//次のデータがある
-      console.log("check call",beforePosition,position)
       if((beforePosition > resetPosition && position > beforePosition && resetPosition > 0)){ //巻き戻しているのに進んでいる →　処理をしない
         ;
       } else if(latestLyricEndTime - position < nextBuffer){//一番最後に表示される歌詞の消えるタイミングとpositionの差が500ms未満
@@ -155,7 +182,7 @@ async function displayLyric(position,playFlag){
         beforeLatestLyricEndTime = latestLyricEndTime
         beforeLyricNumberId = lyricNumberId
         lyricNumberId += 1
-        screenMode = 4 //TODO 乱数にする
+        screenMode = 0//Math.floor(Math.random() * 5) //TODO 乱数にする
       /*歌詞の描画情報格納処理*/
         /*パターン0 左右のmonitorが同じ*/
         if(screenMode == 0){
@@ -182,28 +209,37 @@ async function displayLyric(position,playFlag){
           baseY3 = sizeMonitor3["y1"]
           while(maxLine > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxchar) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor1 = getLryricColor(pos)
+              wordColor2 = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
+                console.log(wordInfo)
+                console.log(chordInfo)
                 monitor1.push([wordInfo._children[i]._data.startTime,
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,
+                                              fontSize: lyricFontSize,
+                                              fontFamily: textfont,
+                                            } 
                                             ),
                               lyricNumberId])
                 monitor3.push([wordInfo._children[i]._data.startTime,
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                 wordInfo._children[i]._data.char,
-                                { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                { fill: wordColor2,
+                                  fontSize: lyricFontSize, 
+                                  fontFamily: textfont } 
                                 ),
                                 lyricNumberId])
                 //初期位置を決める
                 lastIndex = monitor1.length - 1 
                 monitor1[lastIndex][2].x = baseX1
                 monitor1[lastIndex][2].y = baseY1
-
                 monitor3[lastIndex][2].x = baseX3
                 monitor3[lastIndex][2].y = baseY3
                 //次の表示位置にする
@@ -227,7 +263,7 @@ async function displayLyric(position,playFlag){
         
         }/*パターン1 すべてのmonitorが同じ*/
           else if(screenMode == 1){
-          lyricFontSize = 50 * compressionSquare
+          lyricFontSize = 60 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -250,7 +286,6 @@ async function displayLyric(position,playFlag){
           }else if(maxLineChar1 < maxLineChar2 && maxLineChar2 > maxLineChar3){
             maxLine = maxLineChar2
           }
-          console.log(maxChar,maxLine)
           baseX1 = sizeMonitor1["x1"]
           baseY1 = sizeMonitor1["y1"]
           baseX2 = sizeMonitor2["x1"]
@@ -259,6 +294,9 @@ async function displayLyric(position,playFlag){
           baseY3 = sizeMonitor3["y1"]
           while(maxLine > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxchar) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor1 = getLryricColor(pos)
+              wordColor2 = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -266,21 +304,21 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill:wordColor1,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 monitor2.push([wordInfo._children[i]._data.startTime,
                                 wordInfo._children[i]._data.endTime,
                                 new PIXI.Text( 
                                   wordInfo._children[i]._data.char,
-                                  { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                  { fill: wordColor2,fontSize: lyricFontSize, fontFamily: textfont } 
                                   ),
                                   lyricNumberId])
                 monitor3.push([wordInfo._children[i]._data.startTime,
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                 wordInfo._children[i]._data.char,
-                                { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                { fill: wordColor1,fontSize: lyricFontSize, fontFamily: textfont } 
                                 ),
                                 lyricNumberId])
                 //初期位置を決める
@@ -317,7 +355,7 @@ async function displayLyric(position,playFlag){
         
         }/*左から順に１，２，３と表示される*/
           else if(screenMode == 2){
-          lyricFontSize = 50 * compressionSquare
+          lyricFontSize = 70 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -336,6 +374,8 @@ async function displayLyric(position,playFlag){
           baseY3 = sizeMonitor3["y1"]
           while(maxLineChar1 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar1) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -343,7 +383,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill:wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -367,6 +407,8 @@ async function displayLyric(position,playFlag){
           }
           while(maxLineChar2 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar2) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -374,7 +416,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -397,6 +439,8 @@ async function displayLyric(position,playFlag){
           }
           while(maxLineChar3 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar3) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -404,7 +448,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -427,7 +471,7 @@ async function displayLyric(position,playFlag){
           }
         }/*右から順に３，２，１と表示される*/
         else if(screenMode == 3){
-          lyricFontSize = 50 * compressionSquare
+          lyricFontSize = 70 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -446,6 +490,8 @@ async function displayLyric(position,playFlag){
           baseY3 = sizeMonitor3["y1"]
           while(maxLineChar3 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar3) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -453,7 +499,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -476,6 +522,8 @@ async function displayLyric(position,playFlag){
           }
           while(maxLineChar2 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar2) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -483,7 +531,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -506,6 +554,8 @@ async function displayLyric(position,playFlag){
           }
           while(maxLineChar1 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar1) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -513,7 +563,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -537,7 +587,7 @@ async function displayLyric(position,playFlag){
           }
         }/*右左中央に１，３，２と表示される*/
         else if(screenMode == 4){
-          lyricFontSize = 50 * compressionSquare
+          lyricFontSize = 70 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -556,6 +606,8 @@ async function displayLyric(position,playFlag){
           baseY3 = sizeMonitor3["y1"]
           while(maxLineChar1 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar1) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -563,7 +615,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -587,6 +639,8 @@ async function displayLyric(position,playFlag){
           }
           while(maxLineChar3 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar3) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -594,7 +648,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
@@ -617,6 +671,8 @@ async function displayLyric(position,playFlag){
           }
           while(maxLineChar2 > 0){//行数が足りる限り続ける
             if(onePhrase.length + wordInfo._children.length <= maxColChar2) {//1行の幅が超えないようにする
+              pos = wordInfo._data.pos
+              wordColor = getLryricColor(pos)
               for(let i = 0 ; i < wordInfo._children.length ; i++){//ワンフレーズごとにデータを取得する
                 onePhrase+=wordInfo._children[i]._data.char
                 //取得したデータを格納する
@@ -624,7 +680,7 @@ async function displayLyric(position,playFlag){
                               wordInfo._children[i]._data.endTime,
                               new PIXI.Text( 
                                             wordInfo._children[i]._data.char,
-                                            { fill: "blue",fontSize: lyricFontSize, fontFamily: textfont } 
+                                            { fill: wordColor,fontSize: lyricFontSize, fontFamily: textfont } 
                                             ),
                               lyricNumberId])
                 //初期位置を決める
