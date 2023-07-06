@@ -198,6 +198,7 @@ const musicStopWord = [
   ["曲","停止"],
   ["曲","ストップ"],
   ["再生","ストップ"],
+  ["ミュージック","ストップ"],
 ]
 
 async function setMusicInfo(){
@@ -230,6 +231,11 @@ async function checkWantStatStopMusic(input){
     if(playFlag && !player.isLoading){
       response = musicStartedResponse[Math.floor(Math.random() * musicStartedResponse.length)]
     }else{
+      //楽曲変更の希望があるか
+      let musicUrl = checkChangeMusic(input)//複数候補がある場合ランダムで１曲選ぶ
+      if(musicUrl[1]){
+        changeMusic(musicUrl[0][1])
+      }
       response = musicStartResponse[Math.floor(Math.random() * musicStartResponse.length)]
       while(player.isLoading){
         await sleep( 1000 );
