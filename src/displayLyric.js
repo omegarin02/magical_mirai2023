@@ -55,7 +55,7 @@ async function deleteLryic(allDelete){
   //削除処理
   for(let i = 0 ; i < monitor1.length ; i++){
     if(allDelete){
-    scenes["mainScene"].removeChild(monitor1[i][2])
+      scenes["mainScene"].removeChild(monitor1[i][2])
     }else if(beforeLyricNumberId >= monitor1[i][3]){//オブジェクトを追加する
       scenes["mainScene"].removeChild(monitor1[i][2])
       monitor1.shift()
@@ -85,6 +85,13 @@ async function deleteLryic(allDelete){
     }else{
       break
     }
+  }
+  if(allDelete){
+    monitor1=[]
+    monitor2=[]
+    monitor3=[]
+    latestLyricEndTime = 0
+    beforeLatestLyricEndTime = 0
   }
 }
 

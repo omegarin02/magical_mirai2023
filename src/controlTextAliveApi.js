@@ -237,6 +237,7 @@ async function checkWantStatStopMusic(input){
         changeMusic(musicUrl[0][1])
       }
       response = musicStartResponse[Math.floor(Math.random() * musicStartResponse.length)]
+      deleteLryic(true);
       while(player.isLoading){
         await sleep( 1000 );
       }
@@ -244,6 +245,7 @@ async function checkWantStatStopMusic(input){
       player.requestPlay();
     }
   }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
+    deleteLryic(true);
     if(playFlag){
       response = musicStopResponse[Math.floor(Math.random() * musicStopResponse.length)]
       player.requestStop();
