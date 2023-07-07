@@ -1,8 +1,26 @@
-let spotLightColor = ["white","blue","green","red","orange"]
+let spotLightColor = [0xffffff]//["white","blue","green","red","orange"]
+let spotLightBrightPattern = [
+															[
+																[0,2,4],[[0,0,0],[0,1,0],[0,1,2]]
+															],
+															[
+																[1,3],[[0,0]]
+															],
+															[
+																[0,1,3,4],[[0,0,1,1],[0,0,0,0],[0,1,1,0]]
+															],
+															[
+																[0,1,2,3,4],[[0,0,0,0,0],[0,0,1,0,0],[0,1,1,1,0],[0,1,0,1,0]]
+															]
+]
 let gain = 0.2
 let sigmoidRenge = 20
 let maxBrightness = 0.8
 let minBrightness = 0.2
+let nowBeatStartTime = 0
+let nowBeatEndTime = 0
+let pattern
+
 function clucAlphaFunc(x){//sigmoid
 	let alpha = 1/(1+Math.exp(1)**(-gain*x))
 	if(alpha > maxBrightness){
@@ -12,8 +30,7 @@ function clucAlphaFunc(x){//sigmoid
 	}
 	return alpha
 }
-let nowBeatStartTime = 0
-let nowBeatEndTime = 0
+
 
 function lightsOut(){
 	for (let i = 0 ; i < spotLightTriangles.length ; i++){
@@ -44,15 +61,38 @@ function controleSpotLight(position,playFlag){
 		}
 		let x =  positionRate * sigmoidRenge - sigmoidRenge/2
 		let brightness = clucAlphaFunc(x)
+		useLightPattern = pattern[0]
+		colorPattern = pattern[1]
+		lightColor1 = spotLightColor[Math.floor(Math.random() * spotLightColor.length)]
+		lightColor2 = spotLightColor[Math.floor(Math.random() * spotLightColor.length)]
+		lightColor3 = spotLightColor[Math.floor(Math.random() * spotLightColor.length)]
 		for (let i = 0 ; i < spotLightTriangles.length ; i++){
-			spotLightTriangles[i].alpha = brightness
-			spotLightTriangles[i].tint = 0xffffff
+			if(useLightPattern.indexOf(i) !== -1){//使うスポットライト
+				spotLightTriangles[i].alpha = brightness
+				colorPatternNum = colorPattern.shift()
+				if(colorPatternNum == 0){
+					spotLightTriangles[i].tint = lightColor1
+				}else if(colorPatternNum == 1){
+					spotLightTriangles[i].tint = lightColor2
+				}else if(colorPatternNum == 2){
+					spotLightTriangles[i].tint = lightColor3
+				}				
+			}else{//使わない電球
+				spotLightTriangles[i].alpha = 0
+			}
 		}
-	}else if(beatInfo?.next?.next !== undefined){//seekbarによって再生位置が操作された場合
-		nowBeatStartTime = beatInfo.startTime
-		nowBeatEndTime = beatInfo.next.next.startTime - 1 
-		//ライトの明るさ変更をする
+	}else if(beatInfo?.next!== undefined){
+		if(beatInfo?.next?.next !== undefined){//seekbarによって再生位置が操作された場合
+			nowBeatStartTime = beatInfo.startTime
+			nowBeatEndTime = beatInfo.next.next.startTime - 1 
+			//ライトの明るさ変更をする
+		}
+		if(beatInfo.position == 1){
+			pattern = spotLightBrightPattern[Math.floor(Math.random() * spotLightBrightPattern.length)]
+		}
 	}
+	
+	
 }
 
     //ビート情報の取り方
