@@ -141,10 +141,6 @@ async function displayLyric(position,playFlag){
   //positionは再生位置が今どのへんか（ミリ秒)
     //positionは0以上の小数なので普通に四則演算ができる
   //playFlagは今音楽が再生されているか(再生されていたらture,されていなかったらfalse)
-  //ビート情報の取得
-  let beatInfo = player.findBeat(position+nextBuffer)
-  //コード情報の取得
-  let chordInfo = player.findChord(position+nextBuffer)
   //歌詞などの情報を取得
   let iVideoInfo = player.video
   let wordInfo = iVideoInfo.findWord(position+nextBuffer)
@@ -153,34 +149,6 @@ async function displayLyric(position,playFlag){
   //音楽が再生されているときの処理
   //console.log(position,playFlag)
   if(playFlag){
-    //ビート情報の取り方
-      //beatInfoにはpositionで指定した時間の情報が全て入っている
-      //console.log(beatInfo)
-        //次の情報(次のbeatInfoが見れる)
-          //console.log(beatInfo.next)
-        //前の情報(前のbeatInfoが見れる)
-          //console.log(beatInfo.previous)
-        //このビートが始まる時間
-          //console.log(beatInfo.startTime)
-        //このビートの長さ(4なら4拍分 多分...)
-          //console.log(beatInfo.length)
-        //何小節目か(多分？)
-          //console.log(beatInfo.index)
-    //コードの取り方
-      //chordtInfoにはpositionで指定した時間の情報が全て入っている
-      //console.log(chordInfo)
-      //次の情報を取る(ない場合はnull)
-        //onsole.log(chordInfo.next)
-      //前の情報を取る(ない場合はnull)
-        //console.log(chordInfo.next)
-      //このコードが開始される時間(ミリ秒)
-        //console.log(chordInfo.startTime)
-      //このコードが終了する時間(ミリ秒)
-        //console.log(chordInfo.endTime)
-      //コードネーム
-        //console.log(chordInfo.name)
-    //歌詞情報の取りかた
-    //wordInfoがnullの時はデータがないのでエラーが出る
     if(wordInfo != null){//次のデータがある
       if((beforePosition > resetPosition && position > beforePosition && resetPosition > 0)){ //巻き戻しているのに進んでいる →　処理をしない
         ;
@@ -193,7 +161,7 @@ async function displayLyric(position,playFlag){
       /*歌詞の描画情報格納処理*/
         /*パターン0 左右のmonitorが同じ*/
         if(screenMode == 0){
-          lyricFontSize = 70 * compressionSquare
+          lyricFontSize = 60 * compressionSquare
           //monitor1用 
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -362,7 +330,7 @@ async function displayLyric(position,playFlag){
           }        
         }/*左から順に１，２，３と表示される*/
           else if(screenMode == 2){
-          lyricFontSize = 70 * compressionSquare
+          lyricFontSize = 60 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -485,7 +453,7 @@ async function displayLyric(position,playFlag){
 
         }/*右から順に３，２，１と表示される*/
         else if(screenMode == 3){
-          lyricFontSize = 70 * compressionSquare
+          lyricFontSize = 60 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -608,7 +576,7 @@ async function displayLyric(position,playFlag){
 
         }/*右左中央に１，３，２と表示される*/
         else if(screenMode == 4){
-          lyricFontSize = 70 * compressionSquare
+          lyricFontSize = 60 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -731,7 +699,7 @@ async function displayLyric(position,playFlag){
 
         }/*中央と左右の順*/
         else if(screenMode==5){
-          lyricFontSize = 70 * compressionSquare
+          lyricFontSize = 60 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize
@@ -845,7 +813,7 @@ async function displayLyric(position,playFlag){
           }
         }//左右から中央
         else if(screenMode==6){
-          lyricFontSize = 80 * compressionSquare
+          lyricFontSize = 60 * compressionSquare
           //monitor1用
           maxColChar1 = sizeMonitor1["width"]/lyricFontSize
           maxLineChar1 = sizeMonitor1["height"]/lyricFontSize

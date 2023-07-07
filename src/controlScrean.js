@@ -7,7 +7,11 @@ let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
 let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
-
+let marginStage = -50*3.5/2
+let lightRadius = 200
+let lightHeight = 1080 - lightRadius/3
+let spotLightInterval = 343
+let spotLightTriangles = []
 // PixiJS
 let {
   Application, live2d: { Live2DModel }
@@ -124,8 +128,24 @@ async function setMainScene(){
   artistTextBox.y = 10 * compressionSquare
   titleTextBox.x = 1500 * compressionSquare
   titleTextBox.y = 40 * compressionSquare
+  //スポットライト
+  for (let i = 1 ; i <= 5 ; i++ ){
+    trianglePoint = [
+        (marginStage+spotLightInterval*i)*compressionSquare,0, //x1,y1
+        (marginStage+spotLightInterval*i - lightRadius)*compressionSquare, lightHeight*compressionSquare,
+        (marginStage+spotLightInterval*i + lightRadius)*compressionSquare, lightHeight*compressionSquare
+      ]
+    triangleGraphic = new PIXI.Graphics()
+    triangleGraphic.beginFill(0xffffff)
+    triangleGraphic.alpha = 0.0
+    triangleGraphic.drawPolygon(trianglePoint)
+    triangleGraphic.endFill()
+    spotLightTriangles.push(triangleGraphic)
+  }
+
 
   //デバッグ用のグリッド線
+  
   const gridHorizontalArray = []
   const gridVerticalArray  = []
   for (let i = 0 ; i*50*compressionSquare < height ; i++){
@@ -148,6 +168,7 @@ async function setMainScene(){
     gridVerticalArray[i].moveTo(i*50*compressionSquare,0)
     gridVerticalArray[i].lineTo(i*50*compressionSquare,height);
   }
+  
   //背景を配置する
   mainScene.addChild(background)
   // 6, Live2Dモデルを配置する
@@ -164,6 +185,13 @@ async function setMainScene(){
   for (let i = 0 ; i < gridVerticalArray.length ; i++){
     mainScene.addChild(gridVerticalArray[i])
   }
+  
+  
+  for (let i = 0 ; i < spotLightTriangles.length ; i++){
+    mainScene.addChild(spotLightTriangles[i])
+  }
+
+
   mainScene.sortableChildren = true;
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene

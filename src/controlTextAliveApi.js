@@ -72,6 +72,7 @@ player.addListener({
 
     },
     onStop: () => {
+      lightsOut()
       deleteLryic(true);
     },
     async onTimeUpdate(position) {
@@ -81,6 +82,7 @@ player.addListener({
       }%`;
       //歌詞情報の更新
       await displayLyric(position,playFlag);
+      controleSpotLight(position,playFlag);
     }
   
   });
@@ -93,7 +95,7 @@ player.addListener({
         nowPosition
       );
     }
-    await resetLyric(nowPosition)//TODO!!移動後のポジションを獲得しているからこれを何とかする
+    await resetLyric(nowPosition)
     return false;
   });
   /* 再生・一時停止ボタン */
@@ -120,6 +122,8 @@ player.addListener({
     e.preventDefault();
     if (player) {
       player.requestStop();
+      lightsOut()
+      deleteLryic(true);
     }
     return false;
   });
@@ -167,6 +171,7 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
       musicUrlTitle.push([musicList[index].title,musicList[index].url])
     }
   }
+  console.log(musicUrlTitle)
   if(musicUrlTitle.length == 0){
     return [[],false]
   }else{
@@ -222,6 +227,7 @@ async function checkStartStopWord(input,checkWordList){
       break
     }
   }
+  console.log(checkFlag)
   return checkFlag
 }
 
@@ -253,6 +259,5 @@ async function checkWantStatStopMusic(input){
       response = musicStopedResponse[Math.floor(Math.random() * musicStopedResponse.length)]
     }
   }
-  console.log(response)
   return response
 }

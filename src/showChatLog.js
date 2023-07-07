@@ -141,14 +141,9 @@ async function prediction(input){
 async function getMikuChat(input){//chatbotの推論に置き換える時に、外に出す
   //楽曲を再生してほしいとき
   let response = ""
-  //楽曲変更の希望があるか
-  let musicUrl = checkChangeMusic(input)//複数候補がある場合ランダムで１曲選ぶ
-  //変更の希望があるときは、楽曲を変更する
-  if(musicUrl[1]){
-    changeMusic(musicUrl[0][1])
-  }
   //楽曲を流してほしいのか
   response = await checkWantStatStopMusic(input)//楽曲を流してほしい時は流す
+  console.log(response)
   //楽曲再生等を行ってない場合は、ミクさんとチャット
   if(response == ""){
     prediction(input)
