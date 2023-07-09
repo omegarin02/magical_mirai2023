@@ -39,6 +39,8 @@ function clucAlphaFunc(x){//sigmoid
 function lightsOut(){
 	for (let i = 0 ; i < spotLightTriangles.length ; i++){
     spotLightTriangles[i].alpha = 0
+		spotLightCirclesBack[i].alpha = 0
+		spotLightCirclesFront[i].alpha = 0
 	}
 }
 

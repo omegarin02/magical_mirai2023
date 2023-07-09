@@ -142,7 +142,7 @@ async function prediction(input){
           chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
           i--
         }
-      Motion(Number(0))
+      Motion(Number(action))
     }
   })
 }
