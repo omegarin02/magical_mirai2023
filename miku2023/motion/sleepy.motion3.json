@@ -5,9 +5,9 @@
 		"Fps": 30.0,
 		"Loop": true,
 		"AreBeziersRestricted": false,
-		"CurveCount": 42,
-		"TotalSegmentCount": 56,
-		"TotalPointCount": 106,
+		"CurveCount": 44,
+		"TotalSegmentCount": 58,
+		"TotalPointCount": 110,
 		"UserDataCount": 0,
 		"TotalUserDataSize": 0
 	},
@@ -95,6 +95,28 @@
 		{
 			"Target": "Parameter",
 			"Id": "ParamEyeLSmile",
+			"Segments": [
+				0,
+				0,
+				0,
+				1.667,
+				0
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Id": "Param9",
+			"Segments": [
+				0,
+				0,
+				0,
+				1.667,
+				0
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Id": "Param10",
 			"Segments": [
 				0,
 				0,

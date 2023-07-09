@@ -37,6 +37,16 @@
 			"Name": "左目　笑顔"
 		},
 		{
+			"Id": "Param9",
+			"GroupId": "",
+			"Name": "左目開閉"
+		},
+		{
+			"Id": "Param10",
+			"GroupId": "",
+			"Name": "右目開閉"
+		},
+		{
 			"Id": "ParamEyeROpen",
 			"GroupId": "",
 			"Name": "両目　開閉"
