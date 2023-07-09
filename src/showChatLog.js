@@ -41,97 +41,109 @@ async function prediction(input){
         syushi.push(token["reading"])
       })
     }
-    maxScore = 0
-    maxScoreIndexArray = []//最も精度が高かったindexのリスト
-    incorrectRateArray = []//間違い率のリスト
-    questionCorpusLenArray = []//questionの単語Corpusの長さ
-    inputLength = syushi.length
-    for(let i = 0 ; i <  responseData.length ; i++){
-      correctCounter = 0
-      question = responseData[i]["question"]
-      corpusLength = question.length
-      for(let j = 0 ; j < inputLength;j++){//推論
-        if(question.includes(syushi[j])){
-          correctCounter += 1
+    if(checkKnowWords(syushi) < 0.8){
+      result = unknownRespons[Math.floor(Math.random() * unknownRespons.length)]
+      makeSpeechBalloon(result)
+      splitMaxChar(result,"MIKU")
+        let i = chatLog.length-1
+        chatTextBox.text=""
+        while( i >= 0 && i > chatLog.length - maxLog ){
+          chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
+          i--
         }
-      }
-      correctScore = correctCounter/inputLength
-      if(correctScore == maxScore){
-        maxScoreIndexArray.push(i)
-        incorrectRateArray.push((corpusLength - correctCounter)/corpusLength)
-        questionCorpusLenArray.push(corpusLength)
-      }else if(correctScore > maxScore){
-        maxScore = correctScore
-        maxScoreIndexArray = []
-        incorrectRateArray = []
-        questionCorpusLenArray = []
-        maxScoreIndexArray.push(i)
-        incorrectRateArray.push((corpusLength - correctCounter)/corpusLength)
-        questionCorpusLenArray.push(corpusLength)
-      } 
-    }
-    result = ""
-    action = ""
-    if( maxScoreIndexArray.length == 1){//最もスコアが高いものが決まったとき
-      result = responseData[maxScoreIndexArray[0]]["answer"]
-      action = responseData[maxScoreIndexArray[0]]["action"]
-    }else{//最もスコアが高いものが２つ以上あった
-      //誤答率で求める
-      let tmpQuestionCorpusLenArray = []
-      let tmpMaxScoreIndexArray = []
-      let minIncorrectRate = 1
-      for (let i = 0 ; i < incorrectRateArray.length ; i++){
-        if(minIncorrectRate == incorrectRateArray[i]){
-          tmpQuestionCorpusLenArray.push(questionCorpusLenArray[i])
-          tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
-        }else if(minIncorrectRate > incorrectRateArray[i]){
-          minIncorrectRate = incorrectRateArray[i]
-          tmpQuestionCorpusLenArray = []
-          tmpMaxScoreIndexArray = []
-          tmpQuestionCorpusLenArray.push(questionCorpusLenArray[i])
-          tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
+      Motion(Number(0))
+    }else{
+      maxScore = 0
+      maxScoreIndexArray = []//最も精度が高かったindexのリスト
+      incorrectRateArray = []//間違い率のリスト
+      questionCorpusLenArray = []//questionの単語Corpusの長さ
+      inputLength = syushi.length
+      for(let i = 0 ; i <  responseData.length ; i++){
+        correctCounter = 0
+        question = responseData[i]["question"]
+        corpusLength = question.length
+        for(let j = 0 ; j < inputLength;j++){//推論
+          if(question.includes(syushi[j])){
+            correctCounter += 1
+          }
         }
+        correctScore = correctCounter/inputLength
+        if(correctScore == maxScore){
+          maxScoreIndexArray.push(i)
+          incorrectRateArray.push((corpusLength - correctCounter)/corpusLength)
+          questionCorpusLenArray.push(corpusLength)
+        }else if(correctScore > maxScore){
+          maxScore = correctScore
+          maxScoreIndexArray = []
+          incorrectRateArray = []
+          questionCorpusLenArray = []
+          maxScoreIndexArray.push(i)
+          incorrectRateArray.push((corpusLength - correctCounter)/corpusLength)
+          questionCorpusLenArray.push(corpusLength)
+        } 
       }
-      maxScoreIndexArray = tmpMaxScoreIndexArray
-      if(maxScoreIndexArray.length == 1){//誤答率で決着が付いたとき
+      result = ""
+      action = ""
+      if( maxScoreIndexArray.length == 1){//最もスコアが高いものが決まったとき
         result = responseData[maxScoreIndexArray[0]]["answer"]
         action = responseData[maxScoreIndexArray[0]]["action"]
-      }else{//誤答率で決着が付かなかったとき
-        //Corpusの大きさで評価する(短い方が良いとする)
-        questionCorpusLenArray = tmpQuestionCorpusLenArray
-        maxCorpusLength = Math.max(questionCorpusLenArray)
-        tmpMaxScoreIndexArray = []
-        for (let i = 0 ; i < questionCorpusLenArray.length; i++){
-          if(maxCorpusLength == questionCorpusLenArray[i]){
+      }else{//最もスコアが高いものが２つ以上あった
+        //誤答率で求める
+        let tmpQuestionCorpusLenArray = []
+        let tmpMaxScoreIndexArray = []
+        let minIncorrectRate = 1
+        for (let i = 0 ; i < incorrectRateArray.length ; i++){
+          if(minIncorrectRate == incorrectRateArray[i]){
+            tmpQuestionCorpusLenArray.push(questionCorpusLenArray[i])
             tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
-          }else if(maxCorpusLength > questionCorpusLenArray[i]){
-            maxCorpusLength = questionCorpusLenArray[i]
+          }else if(minIncorrectRate > incorrectRateArray[i]){
+            minIncorrectRate = incorrectRateArray[i]
+            tmpQuestionCorpusLenArray = []
             tmpMaxScoreIndexArray = []
+            tmpQuestionCorpusLenArray.push(questionCorpusLenArray[i])
             tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
           }
         }
         maxScoreIndexArray = tmpMaxScoreIndexArray
-        console.log(maxScoreIndexArray)
-        if(maxScoreIndexArray.length == 1){//Corpusの大きさで決着が付いたとき
+        console.log(maxScoreIndexArray,tmpQuestionCorpusLenArray)
+        if(maxScoreIndexArray.length == 1){//誤答率で決着が付いたとき
           result = responseData[maxScoreIndexArray[0]]["answer"]
           action = responseData[maxScoreIndexArray[0]]["action"]
-        }else{//ここまでして決まらなかったら乱数
-          index = maxScoreIndexArray[Math.floor(Math.random() * maxScoreIndexArray.length)]
-          console.log(index,maxScoreIndexArray)
-          result = responseData[index]["answer"]
-          action = responseData[index]["action"]
+        }else{//誤答率で決着が付かなかったとき
+          //Corpusの大きさで評価する(短い方が良いとする)
+          questionCorpusLenArray = tmpQuestionCorpusLenArray
+          maxCorpusLength = Math.max(...questionCorpusLenArray)
+          tmpMaxScoreIndexArray = []
+          for (let i = 0 ; i < questionCorpusLenArray.length; i++){
+            if(maxCorpusLength == questionCorpusLenArray[i]){
+              tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
+            }else if(maxCorpusLength > questionCorpusLenArray[i]){
+              maxCorpusLength = questionCorpusLenArray[i]
+              tmpMaxScoreIndexArray = []
+              tmpMaxScoreIndexArray.push(maxScoreIndexArray[i])
+            }
+          }
+          maxScoreIndexArray = tmpMaxScoreIndexArray
+          if(maxScoreIndexArray.length == 1){//Corpusの大きさで決着が付いたとき
+            result = responseData[maxScoreIndexArray[0]]["answer"]
+            action = responseData[maxScoreIndexArray[0]]["action"]
+          }else{//ここまでして決まらなかったら乱数
+            index = maxScoreIndexArray[Math.floor(Math.random() * maxScoreIndexArray.length)]
+            result = responseData[index]["answer"]
+            action = responseData[index]["action"]
+          }
         }
       }
+      makeSpeechBalloon(result)
+      splitMaxChar(result,"MIKU")
+        let i = chatLog.length-1
+        chatTextBox.text=""
+        while( i >= 0 && i > chatLog.length - maxLog ){
+          chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
+          i--
+        }
+      Motion(Number(0))
     }
-    makeSpeechBalloon(result)
-    splitMaxChar(result,"MIKU")
-      let i = chatLog.length-1
-      chatTextBox.text=""
-      while( i >= 0 && i > chatLog.length - maxLog ){
-        chatTextBox.text = chatLog[i] +'\n'+ chatTextBox.text
-        i--
-      }
-    Motion(Number(0))
   })
 }
 

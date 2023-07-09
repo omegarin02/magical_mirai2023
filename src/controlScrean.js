@@ -1,5 +1,4 @@
 //index.jsで使うのでスコープを外す
-
 let app;
 let fontSize = 25*compressionSquare
 let textfont = "RocknRoll One"
