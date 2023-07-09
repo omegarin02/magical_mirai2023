@@ -68,8 +68,12 @@ function controleSpotLight(position,playFlag){
 		for (let i = 0 ; i < spotLightTriangles.length ; i++){
 			if(useLightPattern.indexOf(i) !== -1){//使うスポットライト
 				spotLightTriangles[i].alpha = brightness
+				spotLightCirclesBack[i].alpha = brightness
+				spotLightCirclesFront[i].alpha = brightness
 			}else{//使わない電球
 				spotLightTriangles[i].alpha = 0
+				spotLightCirclesBack[i].alpha = 0
+				spotLightCirclesFront[i].alpha = 0
 			}
 		}
 	}else if(beatInfo?.next?.next !== undefined){//seekbarによって再生位置が操作された場合
@@ -90,10 +94,16 @@ function controleSpotLight(position,playFlag){
 				colorPatternNum = colorPattern[colorCounter]
 				if(colorPatternNum == 0){
 					spotLightTriangles[i].tint = lightColor1
+					spotLightCirclesBack[i].tint = lightColor1
+					spotLightCirclesFront[i].tint = lightColor1
 				}else if(colorPatternNum == 1){
 					spotLightTriangles[i].tint = lightColor2
+					spotLightCirclesBack[i].tint = lightColor2
+					spotLightCirclesFront[i].tint = lightColor2
 				}else if(colorPatternNum == 2){
 					spotLightTriangles[i].tint = lightColor3
+					spotLightCirclesBack[i].tint = lightColor3
+					spotLightCirclesFront[i].tint = lightColor3
 				}
 				colorCounter++
 			}

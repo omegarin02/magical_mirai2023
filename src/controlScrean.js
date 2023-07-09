@@ -9,9 +9,14 @@ let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFam
 let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 let marginStage = -50*3.5/2
 let lightRadius = 200
-let lightHeight = 1080 - lightRadius/3
+let lightHeight = 1080 - lightRadius/2
 let spotLightInterval = 343
 let spotLightTriangles = []
+let spotLightCirclesBack = []
+let spotLightCirclesFront = []
+let sportLightGradationStart = "#808080"
+let sportLightGradationSecond = "#d3d3d3"
+let sportLightGradationEnd = "#FFFFFF"
 // PixiJS
 let {
   Application, live2d: { Live2DModel }
@@ -92,6 +97,28 @@ app = new PIXI.Application({
   height: height
 });
 
+
+async function createGradient (width, height, colorFrom, colorTo){
+  const canvas = document.createElement('canvas')  
+  const ctx = canvas.getContext('2d')
+  const gradient = ctx.createLinearGradient(0, 0, width, 0)
+
+  canvas.setAttribute('width', width)
+  canvas.setAttribute('height', height)
+
+  gradient.addColorStop(0, sportLightGradationStart)
+  gradient.addColorStop(0.2, sportLightGradationSecond)
+  gradient.addColorStop(0.5, sportLightGradationEnd)
+  gradient.addColorStop(0.8, sportLightGradationSecond)
+  gradient.addColorStop(1, sportLightGradationStart)
+
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, width, height)
+
+  return PIXI.Sprite.from(canvas)
+}
+
+
 async function setStartScene(){
   const startScene = new PIXI.Container()
   scenes["startScene"] = startScene
@@ -130,17 +157,51 @@ async function setMainScene(){
   titleTextBox.y = 40 * compressionSquare
   //スポットライト
   for (let i = 1 ; i <= 5 ; i++ ){
+    //スポットライト三角形の部分を定義
     trianglePoint = [
         (marginStage+spotLightInterval*i)*compressionSquare,0, //x1,y1
         (marginStage+spotLightInterval*i - lightRadius)*compressionSquare, lightHeight*compressionSquare,
         (marginStage+spotLightInterval*i + lightRadius)*compressionSquare, lightHeight*compressionSquare
       ]
     triangleGraphic = new PIXI.Graphics()
-    triangleGraphic.beginFill(0xffffff)
-    triangleGraphic.alpha = 0.0
+    // スポットライトの三角形の部分のポリゴンを作成
+    triangleGraphic.beginFill( 0xFFFFFF);
     triangleGraphic.drawPolygon(trianglePoint)
     triangleGraphic.endFill()
-    spotLightTriangles.push(triangleGraphic)
+    //スポットライトの下半分の図形を作成
+    circlesGraphic = new PIXI.Graphics()
+    circlesGraphic.beginFill(0xFF0000);
+    circlesGraphic.drawEllipse((marginStage+spotLightInterval*i)*compressionSquare, 
+                                lightHeight*compressionSquare,
+                                lightRadius*compressionSquare,
+                                lightRadius*compressionSquare/4)
+    circlesGraphic.endFill(); 
+    //作った図形に対してGradationを当てる
+    let spriteGradientTriangle = await createGradient(lightRadius*2*compressionSquare,
+                                                      (lightHeight+lightRadius/4)*compressionSquare,
+                                                      "#000000", "#FFFFFF")
+    let spriteGradientCircleBack = await createGradient(lightRadius*2*compressionSquare,
+                                                    (lightHeight+lightRadius/4)*compressionSquare,
+                                                    "#000000", "#FFFFFF")
+    let spriteGradientCircleFront = await createGradient(lightRadius*2*compressionSquare,
+                                                      lightRadius*compressionSquare/4,
+                                                      "#000000", "#FFFFFF")
+    //三角形の部分のグラデーションを作成
+    spriteGradientTriangle.mask = triangleGraphic
+    spriteGradientTriangle.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
+    spriteGradientTriangle.alpha = 0.0
+    spotLightTriangles.push(spriteGradientTriangle)
+    //円の部分のグラデーションを作成
+    spriteGradientCircleBack.mask = circlesGraphic
+    spriteGradientCircleBack.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
+    spriteGradientCircleBack.alpha = 0.0
+    //薄いので増強
+    spriteGradientCircleFront.mask = circlesGraphic
+    spriteGradientCircleFront.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
+    spriteGradientCircleFront.y = lightHeight*compressionSquare
+    spriteGradientCircleFront.alpha = 0.0
+    spotLightCirclesBack.push(spriteGradientCircleBack)
+    spotLightCirclesFront.push(spriteGradientCircleFront)
   }
 
 
@@ -189,6 +250,8 @@ async function setMainScene(){
   
   for (let i = 0 ; i < spotLightTriangles.length ; i++){
     mainScene.addChild(spotLightTriangles[i])
+    mainScene.addChild(spotLightCirclesBack[i])
+    mainScene.addChild(spotLightCirclesFront[i])
   }
 
 
