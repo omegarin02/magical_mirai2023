@@ -207,8 +207,9 @@ const musicStopWord = [
 ]
 
 async function setMusicInfo(){
-  artistTextBox.text = "✎："+player.data.song.artist.name
-  titleTextBox.text = "♬："+player.data.song.name
+  //artistTextBox.text = "✎："+player.data.song.artist.name
+  //titleTextBox.text = "♬："+player.data.song.name
+  musicInfoBox.text = "✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name
 }
 
 async function checkStartStopWord(input,checkWordList){
