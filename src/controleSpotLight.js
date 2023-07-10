@@ -26,7 +26,7 @@ let lightColor3
 let changedFlag = false
 
 function clucAlphaFunc(x){//sigmoid
-	let alpha = 1/(1+Math.exp(1)**(-gain*x))
+	let alpha = 0.2 + (1/(1+Math.exp(1)**(-gain*x)))*0.2
 	if(alpha > maxBrightness){
 		alpha = maxBrightness
 	}else if(alpha < minBrightness){
