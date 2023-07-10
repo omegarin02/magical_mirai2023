@@ -3,7 +3,7 @@ let app;
 let fontSize = 25*compressionSquare
 let textfont = "RocknRoll One"
 let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
-let chatTextBox = new PIXI.Text( "", { fill: "blue",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
+let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 let marginStage = -50*3.5/2
