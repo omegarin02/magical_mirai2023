@@ -192,6 +192,7 @@ async function setMainScene(){
     spriteGradientTriangle.mask = triangleGraphic
     spriteGradientTriangle.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
     spriteGradientTriangle.alpha = 0.0
+    spriteGradientTriangle.zIndex = 1300
     spotLightTriangles.push(spriteGradientTriangle)
     //円の部分のグラデーションを作成
     spriteGradientCircleBack.mask = circlesGraphic
