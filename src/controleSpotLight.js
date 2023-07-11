@@ -1,4 +1,4 @@
-let spotLightColor = [0xffffff,0x0000ff,0x008000,0xff0000,0xffa500]//[0xffffff]
+let spotLightColor = [0xffffff,0x0000ff,0x33ffcc,0xff0000,0xffa500,0x00ffff,0xffc0cb]//[0xffffff]
 let spotLightBrightPattern = [
 															[
 																[0,2,4],[[0,0,0],[0,1,0],[0,1,2]]
@@ -70,8 +70,8 @@ function controleSpotLight(position,playFlag){
 		for (let i = 0 ; i < spotLightTriangles.length ; i++){
 			if(useLightPattern.indexOf(i) !== -1){//使うスポットライト
 				spotLightTriangles[i].alpha = brightness
-				spotLightCirclesBack[i].alpha = brightness
-				spotLightCirclesFront[i].alpha = brightness
+				spotLightCirclesBack[i].alpha = 0//brightness
+				spotLightCirclesFront[i].alpha = 0.2+brightness
 			}else{//使わない電球
 				spotLightTriangles[i].alpha = 0
 				spotLightCirclesBack[i].alpha = 0

@@ -6,10 +6,11 @@ let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
 let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 //let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 //let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
-let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
+//let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
+let musicInfoTexts = []
 let marginStage = -50*3.5/2
 let lightRadius = 200
-let lightHeight = 1080 - lightRadius/2
+let lightHeight = 880 //- lightRadius/2
 let spotLightInterval = 343
 let spotLightTriangles = []
 let spotLightCirclesBack = []
@@ -17,6 +18,7 @@ let spotLightCirclesFront = []
 let sportLightGradationStart = "#808080"
 let sportLightGradationSecond = "#d3d3d3"
 let sportLightGradationEnd = "#FFFFFF"
+let lightSourceWidth = 20
 // PixiJS
 let {
   Application, live2d: { Live2DModel }
@@ -101,18 +103,27 @@ app = new PIXI.Application({
 async function createGradient (width, height, colorFrom, colorTo){
   const canvas = document.createElement('canvas')  
   const ctx = canvas.getContext('2d')
-  const gradient = ctx.createLinearGradient(0, 0, width, 0)
-
+  const gradient1 = ctx.createLinearGradient(width/2, 0, width/2, height)
+  const gradient2 = ctx.createLinearGradient(0, 0, width, 0)
   canvas.setAttribute('width', width)
   canvas.setAttribute('height', height)
 
-  gradient.addColorStop(0, sportLightGradationStart)
-  gradient.addColorStop(0.2, sportLightGradationSecond)
-  gradient.addColorStop(0.5, sportLightGradationEnd)
-  gradient.addColorStop(0.8, sportLightGradationSecond)
-  gradient.addColorStop(1, sportLightGradationStart)
+  gradient1.addColorStop(0, sportLightGradationStart)
+  gradient1.addColorStop(0.5, sportLightGradationSecond)
+  gradient1.addColorStop(0.8, sportLightGradationEnd)
+  gradient1.addColorStop(1, sportLightGradationEnd)
 
-  ctx.fillStyle = gradient
+  gradient2.addColorStop(0, sportLightGradationStart)
+  gradient2.addColorStop(0.2, sportLightGradationSecond)
+  gradient1.addColorStop(0.5, sportLightGradationEnd)
+  gradient2.addColorStop(0.8, sportLightGradationSecond)
+  gradient2.addColorStop(1, sportLightGradationStart)
+  //gradient.addColorStop(0.8, sportLightGradationSecond)
+  //gradient.addColorStop(1, sportLightGradationStart)
+
+  ctx.fillStyle = gradient1
+  ctx.fillRect(0, 0, width, height)
+  ctx.fillStyle = gradient2
   ctx.fillRect(0, 0, width, height)
 
   return PIXI.Sprite.from(canvas)
@@ -155,15 +166,16 @@ async function setMainScene(){
   //artistTextBox.y = 10 * compressionSquare
   //titleTextBox.x = 1500 * compressionSquare
   //titleTextBox.y = 40 * compressionSquare
-  musicInfoBox.x = 1450 * compressionSquare
-  musicInfoBox.y = 1050 * compressionSquare - fontSize
+  //musicInfoBox.x = 1450 * compressionSquare
+  //musicInfoBox.y = 1050 * compressionSquare - fontSize
   //スポットライト
   for (let i = 1 ; i <= 5 ; i++ ){
     //スポットライト三角形の部分を定義
     trianglePoint = [
-        (marginStage+spotLightInterval*i)*compressionSquare,0, //x1,y1
+        (marginStage+spotLightInterval*i-lightSourceWidth/2)*compressionSquare,0, //x1,y1
         (marginStage+spotLightInterval*i - lightRadius)*compressionSquare, lightHeight*compressionSquare,
-        (marginStage+spotLightInterval*i + lightRadius)*compressionSquare, lightHeight*compressionSquare
+        (marginStage+spotLightInterval*i + lightRadius)*compressionSquare, lightHeight*compressionSquare,
+        (marginStage+spotLightInterval*i+lightSourceWidth/2)*compressionSquare,0,
       ]
     triangleGraphic = new PIXI.Graphics()
     // スポットライトの三角形の部分のポリゴンを作成
@@ -172,28 +184,33 @@ async function setMainScene(){
     triangleGraphic.endFill()
     //スポットライトの下半分の図形を作成
     circlesGraphic = new PIXI.Graphics()
-    circlesGraphic.beginFill(0xFF0000);
+    circlesGraphic.beginFill(0xFFFFFF);
+    circlesGraphic.alpha = 0.0
     circlesGraphic.drawEllipse((marginStage+spotLightInterval*i)*compressionSquare, 
-                                lightHeight*compressionSquare,
+                                (lightHeight+lightRadius/4+25)*compressionSquare,
                                 lightRadius*compressionSquare,
                                 lightRadius*compressionSquare/4)
+
     circlesGraphic.endFill(); 
     //作った図形に対してGradationを当てる
     let spriteGradientTriangle = await createGradient(lightRadius*2*compressionSquare,
                                                       (lightHeight+lightRadius/4)*compressionSquare,
                                                       "#000000", "#FFFFFF")
+    /*
     let spriteGradientCircleBack = await createGradient(lightRadius*2*compressionSquare,
                                                     (lightHeight+lightRadius/4)*compressionSquare,
                                                     "#000000", "#FFFFFF")
     let spriteGradientCircleFront = await createGradient(lightRadius*2*compressionSquare,
                                                       lightRadius*compressionSquare/4,
                                                       "#000000", "#FFFFFF")
+    */
     //三角形の部分のグラデーションを作成
     spriteGradientTriangle.mask = triangleGraphic
     spriteGradientTriangle.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
     spriteGradientTriangle.alpha = 0.0
     spriteGradientTriangle.zIndex = 1300
     spotLightTriangles.push(spriteGradientTriangle)
+    /*
     //円の部分のグラデーションを作成
     spriteGradientCircleBack.mask = circlesGraphic
     spriteGradientCircleBack.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
@@ -203,8 +220,9 @@ async function setMainScene(){
     spriteGradientCircleFront.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
     spriteGradientCircleFront.y = lightHeight*compressionSquare
     spriteGradientCircleFront.alpha = 0.0
-    spotLightCirclesBack.push(spriteGradientCircleBack)
-    spotLightCirclesFront.push(spriteGradientCircleFront)
+    */
+    spotLightCirclesBack.push(circlesGraphic)
+    spotLightCirclesFront.push(circlesGraphic)
   }
 
 
@@ -241,7 +259,7 @@ async function setMainScene(){
   mainScene.addChild(chatTextBox)
   //mainScene.addChild(artistTextBox)
   //mainScene.addChild(titleTextBox)
-  mainScene.addChild(musicInfoBox)
+  //mainScene.addChild(musicInfoBox)
   
 
   for (let i = 0 ; i < gridHorizontalArray.length ; i++){

@@ -24,7 +24,9 @@ let monitor_start_time = 0;
 let timing_id = 0;
 let monitor_timing_id=0;
 let miku_position = 1;
-
+let moveInterval = 100
+let baseMusicInfoX = 1450
+let baseMusicInfoY = 1050
 
 player.addListener({
     /* APIの準備ができたら呼ばれる */
@@ -209,7 +211,20 @@ const musicStopWord = [
 async function setMusicInfo(){
   //artistTextBox.text = "✎："+player.data.song.artist.name
   //titleTextBox.text = "♬："+player.data.song.name
-  musicInfoBox.text = "✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name
+  for (let i = 0; i < musicInfoTexts.length; i++){//楽曲情報の表示を全て削除
+    scenes["mainScene"].removeChild(musicInfoTexts[i])
+  }
+  musicInfoTexts = [];
+  let musicInfo="✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name+ " "
+  let MusicInfoArray = [...musicInfo]
+  for (let i = 0 ; i < MusicInfoArray.length ; i++ ){
+    musicInfoChar = new PIXI.Text( MusicInfoArray[i], { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } )
+    musicInfoChar.x =baseMusicInfoX * compressionSquare + fontSize * i
+    musicInfoChar.y =baseMusicInfoY * compressionSquare - fontSize
+    musicInfoTexts.push(musicInfoChar)
+    scenes["mainScene"].addChild(musicInfoTexts[musicInfoTexts.length-1])
+  }
+  //musicInfoBox.text = "✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name
 }
 
 async function checkStartStopWord(input,checkWordList){
@@ -262,3 +277,20 @@ async function checkWantStatStopMusic(input){
   }
   return response
 }
+
+function moveMusicInfo(){
+  let musicInfoLen = musicInfoTexts.length
+  for(let i = 0; i < musicInfoLen ; i++){
+    if(musicInfoTexts[i].x < baseMusicInfoX * compressionSquare){
+      if(i == 0){
+        musicInfoTexts[i].x = musicInfoTexts[musicInfoLen-1].x + fontSize
+      }else{
+        musicInfoTexts[i].x = musicInfoTexts[i-1].x + fontSize
+      }
+    }else{
+      musicInfoTexts[i].x -= 3* compressionSquare
+    }
+  }
+}
+
+setInterval(moveMusicInfo,moveInterval)
