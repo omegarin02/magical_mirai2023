@@ -6,7 +6,8 @@ let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
 let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 //let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 //let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
-let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
+//let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
+let musicInfoTexts = []
 let marginStage = -50*3.5/2
 let lightRadius = 200
 let lightHeight = 880 //- lightRadius/2
@@ -165,8 +166,8 @@ async function setMainScene(){
   //artistTextBox.y = 10 * compressionSquare
   //titleTextBox.x = 1500 * compressionSquare
   //titleTextBox.y = 40 * compressionSquare
-  musicInfoBox.x = 1450 * compressionSquare
-  musicInfoBox.y = 1050 * compressionSquare - fontSize
+  //musicInfoBox.x = 1450 * compressionSquare
+  //musicInfoBox.y = 1050 * compressionSquare - fontSize
   //スポットライト
   for (let i = 1 ; i <= 5 ; i++ ){
     //スポットライト三角形の部分を定義
@@ -258,7 +259,7 @@ async function setMainScene(){
   mainScene.addChild(chatTextBox)
   //mainScene.addChild(artistTextBox)
   //mainScene.addChild(titleTextBox)
-  mainScene.addChild(musicInfoBox)
+  //mainScene.addChild(musicInfoBox)
   
 
   for (let i = 0 ; i < gridHorizontalArray.length ; i++){
