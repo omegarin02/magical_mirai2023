@@ -70,7 +70,7 @@ function controleSpotLight(position,playFlag){
 		for (let i = 0 ; i < spotLightTriangles.length ; i++){
 			if(useLightPattern.indexOf(i) !== -1){//使うスポットライト
 				spotLightTriangles[i].alpha = brightness
-				spotLightCirclesBack[i].alpha = 0//brightness
+				spotLightCirclesBack[i].alpha = brightness//brightness
 				spotLightCirclesFront[i].alpha = 0.2+brightness
 			}else{//使わない電球
 				spotLightTriangles[i].alpha = 0

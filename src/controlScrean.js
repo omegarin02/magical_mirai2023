@@ -19,6 +19,7 @@ let sportLightGradationStart = "#808080"
 let sportLightGradationSecond = "#d3d3d3"
 let sportLightGradationEnd = "#FFFFFF"
 let lightSourceWidth = 20
+let vanishingPoint = 25
 // PixiJS
 let {
   Application, live2d: { Live2DModel }
@@ -173,8 +174,8 @@ async function setMainScene(){
     //スポットライト三角形の部分を定義
     trianglePoint = [
         (marginStage+spotLightInterval*i-lightSourceWidth/2)*compressionSquare,0, //x1,y1
-        (marginStage+spotLightInterval*i - lightRadius)*compressionSquare, lightHeight*compressionSquare,
-        (marginStage+spotLightInterval*i + lightRadius)*compressionSquare, lightHeight*compressionSquare,
+        (marginStage+spotLightInterval*i - lightRadius*(1-vanishingPoint*3/lightHeight))*compressionSquare, lightHeight*compressionSquare,
+        (marginStage+spotLightInterval*i + lightRadius*(1-vanishingPoint*3/lightHeight))*compressionSquare, lightHeight*compressionSquare,
         (marginStage+spotLightInterval*i+lightSourceWidth/2)*compressionSquare,0,
       ]
     triangleGraphic = new PIXI.Graphics()
@@ -187,19 +188,29 @@ async function setMainScene(){
     circlesGraphic.beginFill(0xFFFFFF);
     circlesGraphic.alpha = 0.0
     circlesGraphic.drawEllipse((marginStage+spotLightInterval*i)*compressionSquare, 
-                                (lightHeight+lightRadius/4+25)*compressionSquare,
+                                (lightHeight+lightRadius/4+vanishingPoint)*compressionSquare,
                                 lightRadius*compressionSquare,
                                 lightRadius*compressionSquare/4)
 
+    circlesGraphicvanishingPoint = new PIXI.Graphics()
+    circlesGraphicvanishingPoint.beginFill(0xFFFFFF);
+    circlesGraphicvanishingPoint.alpha = 0.0
+    circlesGraphicvanishingPoint.drawEllipse((marginStage+spotLightInterval*i)*compressionSquare, 
+                                lightHeight*compressionSquare,
+                                lightRadius*(1-vanishingPoint*3/lightHeight)*compressionSquare,
+                                lightRadius*compressionSquare/4)
+
+                                
     circlesGraphic.endFill(); 
     //作った図形に対してGradationを当てる
     let spriteGradientTriangle = await createGradient(lightRadius*2*compressionSquare,
                                                       (lightHeight+lightRadius/4)*compressionSquare,
                                                       "#000000", "#FFFFFF")
-    /*
+    
     let spriteGradientCircleBack = await createGradient(lightRadius*2*compressionSquare,
                                                     (lightHeight+lightRadius/4)*compressionSquare,
                                                     "#000000", "#FFFFFF")
+    /*
     let spriteGradientCircleFront = await createGradient(lightRadius*2*compressionSquare,
                                                       lightRadius*compressionSquare/4,
                                                       "#000000", "#FFFFFF")
@@ -210,18 +221,20 @@ async function setMainScene(){
     spriteGradientTriangle.alpha = 0.0
     spriteGradientTriangle.zIndex = 1300
     spotLightTriangles.push(spriteGradientTriangle)
-    /*
+    
     //円の部分のグラデーションを作成
-    spriteGradientCircleBack.mask = circlesGraphic
+    spriteGradientCircleBack.mask = circlesGraphicvanishingPoint
     spriteGradientCircleBack.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
+    spriteGradientCircleBack.y = lightHeight*compressionSquare
     spriteGradientCircleBack.alpha = 0.0
+    /*
     //薄いので増強
     spriteGradientCircleFront.mask = circlesGraphic
     spriteGradientCircleFront.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
     spriteGradientCircleFront.y = lightHeight*compressionSquare
     spriteGradientCircleFront.alpha = 0.0
     */
-    spotLightCirclesBack.push(circlesGraphic)
+    spotLightCirclesBack.push(spriteGradientCircleBack)
     spotLightCirclesFront.push(circlesGraphic)
   }
 
