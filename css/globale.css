@@ -73,9 +73,29 @@ body{
   z-index:-3
 }
 
-.configPageDiv{
+.configPageTool{
   position:absolute;
-  z-index:-3
+  z-index:-3;
+}
+.configDecisionButton{
+  position:absolute;
+  width: 100%
+}
+.volumeControllerTool{
+  position:absolute;
+  width: 30%;
+}
+.useGPTCheckboxTool{
+  position:absolute;
+  width: 100%;
+}
+.chatGPTPromptTool{
+  position:absolute;
+  width: 80%;
+}
+.chatGPTPapikeyDivTool{
+  position:absolute;
+  width: 80%;
 }
 
 .inputChatBoxTool{

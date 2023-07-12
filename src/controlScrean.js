@@ -7,6 +7,7 @@ let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compression
 //let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 //let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 //let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
+let nowVolumeTextBox = new PIXI.Text( "", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let musicInfoTexts = []
 let marginStage = -50*3.5/2
 let lightRadius = 200
@@ -21,6 +22,7 @@ let sportLightGradationEnd = "#FFFFFF"
 let lightSourceWidth = 20
 let vanishingPoint = 25
 let afterConfigFlag = false
+let volume = 100
 
 // PixiJS
 let {
@@ -38,11 +40,17 @@ let startButtonDiv = document.getElementById("startButtonDiv")
 let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 let sendButtonDiv = document.getElementById("sendButtonDiv")
+let configPageDiv = document.getElementById("configPageDiv")
+let configDecisionButtonDiv = document.getElementById("configDecisionButtonDiv")
+let volumeControllerDiv = document.getElementById("volumeControllerDiv")
+let useGPTCheckboxDiv = document.getElementById("useGPTCheckboxDiv")
+let chatGPTPromptDiv = document.getElementById("chatGPTPromptDiv")
+let chatGPTPapikeyDiv = document.getElementById("chatGPTPapikeyDiv")
 let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
 let musicStartButton = document.getElementById("musicStartButton")
 let musicStopButton = document.getElementById("musicStopButton")
-let configPageDiv = document.getElementById("configPageDiv")
 let configButton = document.getElementById("configButton")
+let exitButton = document.getElementById("exitButton")
 
 //その他のdivの定義
 let mediaInfoDiv = document.getElementById("mediaInfo")
@@ -77,14 +85,23 @@ musicStartStopButtonDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
 musicStartStopButtonDiv.style.marginTop = (topMarginNum+2).toString()+"px"
 configPageDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
 configPageDiv.style.marginTop = (topMarginNum+2).toString()+"px"
+configPageDiv.style.width = (width).toString()+"px"
 //musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
 musicStartButton.style.fontSize = (20*compressionSquare).toString()+"px"
 musicStartButton.style.marginTop = (3*compressionSquare).toString()+"px"
 musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
 musicStopButton.style.marginTop = (3*compressionSquare).toString()+"px"
-
 configButton.style.fontSize = (20*compressionSquare).toString()+"px"
 configButton.style.marginTop = (3*compressionSquare).toString()+"px"
+
+configDecisionButtonDiv.style.marginTop = (10*compressionSquare ).toString()+"px"
+volumeControllerDiv.style.marginTop = (100*compressionSquare ).toString()+"px"
+useGPTCheckboxDiv.style.marginTop = (200*compressionSquare ).toString()+"px"
+chatGPTPromptDiv.style.marginTop = (350*compressionSquare ).toString()+"px"
+chatGPTPapikeyDiv.style.marginTop = (300*compressionSquare ).toString()+"px"
+
+//configButton.style.fontSize = (20*compressionSquare).toString()+"px"
+//configButton.style.marginTop = (3*compressionSquare).toString()+"px"
 //exitボタンの位置調整
   //大きさ調整はbuttonParts.js
 //exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
@@ -93,6 +110,11 @@ configButton.style.marginTop = (3*compressionSquare).toString()+"px"
   //一部はcontrolTextAliveApi.jsで実施
 seekbar.style.marginLeft = (leftMarginNum).toString()+"px"
 seekbar.style.marginTop = (maxmMarginTopNum-10*compressionSquare ).toString()+"px"
+
+//初回だけExitボタンにイベントをつける
+exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
+//設定ボタンにイベントをつける  
+configButton.addEventListener("click",{scene: "configScene",handleEvent:changeScene})
 
 
 //scenes
@@ -311,6 +333,11 @@ async function setEndScene(){
 
 async function setConfigScene(){
   const configScene = new PIXI.Container()
+  nowVolumeTextBox.x = 20*compressionSquare
+  nowVolumeTextBox.y = 140*compressionSquare
+  nowVolumeTextBox.zIndex = 1000;
+  configScene.addChild(nowVolumeTextBox)
+  app.stage.addChild(configScene)
   scenes["configScene"] = configScene
 }
 //アプリの読み込み
@@ -373,6 +400,14 @@ function sendButtonOnClick(){
   inputText.value = ""
 }
 
+function volumeOnchange(){
+  let tmpVolume =  document.getElementById("volumeControllerInput")
+  volume = tmpVolume.value
+}
+
+function configDecision(){
+  player.volume = volume
+}
 
 function changeScene(e){
   for (let scene in scenes){//画面の切り替え
@@ -384,35 +419,65 @@ function changeScene(e){
   }
   //画面に表示するパーツ類の切り替え
   if(this.scene == "mainScene"){//メイン画面に切り替えたとき
-    if(afterConfigFlag===false){
-      let startButton = document.getElementById("startButton")
+    //ゲームスタートボタンを削除
+    let startButton = document.getElementById("startButton")
+
+
+    if(startButton !== null){
       startButton.remove()
     }
+    //config関連のPartsを非表示にする
+    configPageDiv.style.zIndex=-3
+    let configDecisionButton = document.getElementById("configDecisionButton")
+    if(configDecisionButton !== null){
+      configDecisionButton.remove()
+    }
+    let volumeController = document.getElementById("volumeController")
+    if(volumeController !== null){
+      volumeController.remove()
+    }
+    let useGPTcheckBox = document.getElementById("useGPT")
+    if(useGPTcheckBox !== null){
+      useGPTcheckBox.remove()
+    }
+    let pronptBox = document.getElementById("promptInput")
+    if(pronptBox !== null){
+      pronptBox.remove()
+    }
+    let apikeyBox = document.getElementById("apikeyInput")
+    if(apikeyBox !== null){
+      apikeyBox.remove()
+    }
+    //ボリュームcontrolの入力欄を削除
+    //let volumeController = document.getElementById("volumeController")
+    //volumeController.remove()
 
     //exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
-    let exitButton = document.getElementById("exitButton")
-    exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
+    
+    //チャット入力欄を作成する
     inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
-
-    let configButton = document.getElementById("configButton")
-    configButton.addEventListener("click",{scene: "configScene",handleEvent:changeScene})
+    
 
 
+    //送信ボタンを作成してイベントを作る
     sendButtonDiv.insertAdjacentHTML('afterbegin', commentSendButtonHtml);
     let sendButton = document.getElementById("commentSendButton")
     sendButton.addEventListener("click",sendButtonOnClick)
 
-    configPageDiv.style.zIndex=-3
+    //楽曲再生ボタンを最前面に表示する
     musicStartStopButtonDiv.style.zIndex=3
     seekbar.style.width = (width).toString()+"px"
 
-    afterConfigFlag = false
+
+
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let inputChatBox = document.getElementById("inputChatBox")
     let sendButton = document.getElementById("commentSendButton")
     inputChatBox.remove()
     sendButton.remove()
+
+    configButton.removeEventListener("click",{scene: "configScene",handleEvent:changeScene});
 
     homeButtonDiv.insertAdjacentHTML('afterbegin', homeButtonHtml);
     let homeButton = document.getElementById("homeButton")
@@ -424,7 +489,6 @@ function changeScene(e){
     seekbar.style.width = (0).toString()+"px"
     player.requestStop();
     
-
   }else if(this.scene == "startScene"){
     let homeButton = document.getElementById("homeButton")
     homeButton.remove()
@@ -432,21 +496,40 @@ function changeScene(e){
     startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
     let startButton = document.getElementById("startButton")
     startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
-  
-  }else if(this.scene == "configScene"){
+
+  }else if(this.scene == "configScene"){//設定画面
     let inputChatBox = document.getElementById("inputChatBox")
     let sendButton = document.getElementById("commentSendButton")
-    inputChatBox.remove()
-    sendButton.remove()
+    if(inputChatBox !== null){
+      inputChatBox.remove()
+    }
+    if(sendButton !== null){
+      sendButton.remove()
+    }
+    nowVolumeTextBox.text = "現在の音量："+String(player.volume)
+    console.log(player.volume)
     musicStartStopButtonDiv.style.zIndex=-3
-    //mediaInfoDiv.style.zIndex=-3
     seekbar.style.Zindex=-3
     seekbar.style.width = (0).toString()+"px"
 
     configPageDiv.style.zIndex=3
+
+    //決定ボタンの追加
+    configDecisionButtonDiv.insertAdjacentHTML('afterbegin', configDecisionButtonHtml);
     let configDecisionButton = document.getElementById("configDecisionButton")
     configDecisionButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
-    afterConfigFlag = true
+    configDecisionButton.addEventListener("click",configDecision)
+    //ボリュウーム変更
+    volumeControllerDiv.insertAdjacentHTML('afterbegin', volumeControllerHtml);
+    let volumeController =  document.getElementById("volumeController")
+    volumeController.addEventListener("change",volumeOnchange)
+
+    //chatGPTモードを使うかのcheckbox
+    useGPTCheckboxDiv.insertAdjacentHTML('afterbegin', useGPTCheckboxHtml);
+    //chatGPT用のプロンプト
+    chatGPTPromptDiv.insertAdjacentHTML('afterbegin', promptInputHtml);
+    //chagGPT用のAPIKEY
+    chatGPTPapikeyDiv.insertAdjacentHTML('afterbegin', apikeyInputHtml);
   }
 }
 
