@@ -20,6 +20,8 @@ let sportLightGradationSecond = "#d3d3d3"
 let sportLightGradationEnd = "#FFFFFF"
 let lightSourceWidth = 20
 let vanishingPoint = 25
+let afterConfigFlag = false
+
 // PixiJS
 let {
   Application, live2d: { Live2DModel }
@@ -39,6 +41,9 @@ let sendButtonDiv = document.getElementById("sendButtonDiv")
 let musicStartStopButtonDiv = document.getElementById("musicStartStopButtonDiv")
 let musicStartButton = document.getElementById("musicStartButton")
 let musicStopButton = document.getElementById("musicStopButton")
+let configPageDiv = document.getElementById("configPageDiv")
+let configButton = document.getElementById("configButton")
+
 //その他のdivの定義
 let mediaInfoDiv = document.getElementById("mediaInfo")
 let canvasDiv = document.getElementById("canvasDiv")
@@ -68,14 +73,18 @@ sendButtonDiv.style.marginLeft = (leftMarginNum+inputTextWidth+(20+95)*compressi
 sendButtonDiv.style.marginTop = (maxmMarginTopNum-(18+28+25)*compressionSquare ).toString()+"px"//18pxはフォントサイズ
 
 //再生ボタンとかの位置調整
-musicStartStopButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
-musicStartStopButtonDiv.style.marginTop = (topMarginNum).toString()+"px"
+musicStartStopButtonDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
+musicStartStopButtonDiv.style.marginTop = (topMarginNum+2).toString()+"px"
+configPageDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
+configPageDiv.style.marginTop = (topMarginNum+2).toString()+"px"
 //musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
 musicStartButton.style.fontSize = (20*compressionSquare).toString()+"px"
 musicStartButton.style.marginTop = (3*compressionSquare).toString()+"px"
 musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
 musicStopButton.style.marginTop = (3*compressionSquare).toString()+"px"
 
+configButton.style.fontSize = (20*compressionSquare).toString()+"px"
+configButton.style.marginTop = (3*compressionSquare).toString()+"px"
 //exitボタンの位置調整
   //大きさ調整はbuttonParts.js
 //exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
@@ -299,15 +308,22 @@ async function setEndScene(){
   const endScene = new PIXI.Container()
   scenes["endScene"] = endScene
 }
+
+async function setConfigScene(){
+  const configScene = new PIXI.Container()
+  scenes["configScene"] = configScene
+}
 //アプリの読み込み
 async function setup() { 
   //画面定義
   await setStartScene()//startSceneの定義
   await setMainScene()
   await setEndScene()
+  await setConfigScene()
   scenes["startScene"].visible = true
   scenes["mainScene"].visible = false
   scenes["endScene"].visible = false
+  scenes["configScene"].visible = false
 
   startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
   let startButton = document.getElementById("startButton")
@@ -368,21 +384,29 @@ function changeScene(e){
   }
   //画面に表示するパーツ類の切り替え
   if(this.scene == "mainScene"){//メイン画面に切り替えたとき
-    let startButton = document.getElementById("startButton")
-    startButton.remove()
+    if(afterConfigFlag===false){
+      let startButton = document.getElementById("startButton")
+      startButton.remove()
+    }
 
     //exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
     let exitButton = document.getElementById("exitButton")
     exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
     inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
 
+    let configButton = document.getElementById("configButton")
+    configButton.addEventListener("click",{scene: "configScene",handleEvent:changeScene})
+
 
     sendButtonDiv.insertAdjacentHTML('afterbegin', commentSendButtonHtml);
     let sendButton = document.getElementById("commentSendButton")
     sendButton.addEventListener("click",sendButtonOnClick)
 
+    configPageDiv.style.zIndex=-3
     musicStartStopButtonDiv.style.zIndex=3
     seekbar.style.width = (width).toString()+"px"
+
+    afterConfigFlag = false
   }
   else if (this.scene == "endScene"){//end画面に切り替えたとき
     let inputChatBox = document.getElementById("inputChatBox")
@@ -409,6 +433,20 @@ function changeScene(e){
     let startButton = document.getElementById("startButton")
     startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
   
+  }else if(this.scene == "configScene"){
+    let inputChatBox = document.getElementById("inputChatBox")
+    let sendButton = document.getElementById("commentSendButton")
+    inputChatBox.remove()
+    sendButton.remove()
+    musicStartStopButtonDiv.style.zIndex=-3
+    //mediaInfoDiv.style.zIndex=-3
+    seekbar.style.Zindex=-3
+    seekbar.style.width = (0).toString()+"px"
+
+    configPageDiv.style.zIndex=3
+    let configDecisionButton = document.getElementById("configDecisionButton")
+    configDecisionButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
+    afterConfigFlag = true
   }
 }
 
