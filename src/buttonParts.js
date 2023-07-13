@@ -48,3 +48,8 @@ const commentSendButtonHtml = `
   </div>
   <p>SEND</p>
 </button>`
+
+
+const configDecisionButtonHtml = `
+<button class="knopf pill" id="configDecisionButton" style="font-size:${sendButtonFontSize}">save & return </button>
+`

@@ -7,12 +7,42 @@ const maxChar = 20
 const balloonTimeout = 10
 const checkInterval = 1000
 
+async function callGPT(input){
+  try {
+      const response = await axios.post(
+          GPTURL,
+          {
+              "model": "gpt-3.5-turbo",
+              "messages": [
+                  { "role": "system", "content": userPrompt },
+                  { "role": "user", "content": input }
+              ]
+          },
+          {
+              headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${openAIKey}`,
+              },
+          }
+      );
+      var chatgpt_response = response.data.choices[0].message.content;
+      console.log(chatgpt_response)
+      return chatgpt_response
+  } catch (error) {
+      console.log(error);
+  }
+}
+
 
 async function prediction(input){
   let builder = kuromoji.builder({dicPath: DICT_PATH});
   let tmp = []
   let genkei = []
   let syushi = []
+  let gptResult = ""
+  if(useGPTMode){
+    gptResult = await callGPT(input)
+  }
   builder.build((err, tokenizer)=>{
     tokens = tokenizer.tokenize(input);// 形態素解析
     tokens.forEach((token)=>{
@@ -133,6 +163,9 @@ async function prediction(input){
             action = responseData[index]["action"]
           }
         }
+      }
+      if(useGPTMode){
+        result = gptResult 
       }
       makeSpeechBalloon(result)
       splitMaxChar(result,"MIKU")
