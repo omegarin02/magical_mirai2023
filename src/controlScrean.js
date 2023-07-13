@@ -8,6 +8,8 @@ let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compression
 //let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
 //let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
 let nowVolumeTextBox = new PIXI.Text( "", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
+let openAIKeyLabelText = new PIXI.Text( "OPENAI KEY(自己責任でお願いします)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
+let promptLabelText = new PIXI.Text( "Prompt", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let musicInfoTexts = []
 let marginStage = -50*3.5/2
 let lightRadius = 200
@@ -22,7 +24,7 @@ let sportLightGradationEnd = "#FFFFFF"
 let lightSourceWidth = 20
 let vanishingPoint = 25
 let afterConfigFlag = false
-let volume = 100
+
 
 // PixiJS
 let {
@@ -97,7 +99,7 @@ configButton.style.marginTop = (3*compressionSquare).toString()+"px"
 configDecisionButtonDiv.style.marginTop = (10*compressionSquare ).toString()+"px"
 volumeControllerDiv.style.marginTop = (100*compressionSquare ).toString()+"px"
 useGPTCheckboxDiv.style.marginTop = (200*compressionSquare ).toString()+"px"
-chatGPTPromptDiv.style.marginTop = (350*compressionSquare ).toString()+"px"
+chatGPTPromptDiv.style.marginTop = (500*compressionSquare ).toString()+"px"
 chatGPTPapikeyDiv.style.marginTop = (300*compressionSquare ).toString()+"px"
 
 //configButton.style.fontSize = (20*compressionSquare).toString()+"px"
@@ -336,8 +338,17 @@ async function setConfigScene(){
   nowVolumeTextBox.x = 20*compressionSquare
   nowVolumeTextBox.y = 140*compressionSquare
   nowVolumeTextBox.zIndex = 1000;
+  openAIKeyLabelText.x = 20*compressionSquare
+  openAIKeyLabelText.y = 270*compressionSquare
+  promptLabelText.x = 20*compressionSquare
+  promptLabelText.y = 470*compressionSquare
   configScene.addChild(nowVolumeTextBox)
+  if(disableGPTMode===false){
+    configScene.addChild(openAIKeyLabelText)
+    configScene.addChild(promptLabelText)
+  }
   app.stage.addChild(configScene)
+
   scenes["configScene"] = configScene
 }
 //アプリの読み込み
@@ -400,14 +411,27 @@ function sendButtonOnClick(){
   inputText.value = ""
 }
 
-function volumeOnchange(){
-  let tmpVolume =  document.getElementById("volumeControllerInput")
-  volume = tmpVolume.value
+function useGPTCheckBoxOnchange(){
+  let checkboxFlag = document.getElementById("useGPTCheckBox") 
+  useGPTMode=checkboxFlag.checked
 }
 
-function configDecision(){
-  player.volume = volume
+function GPTPromptOnchange(){
+  let promptBox = document.getElementById("promptInputTextBox")
+  userPrompt = promptBox.value
 }
+
+function apikeyElementOnchange(){
+  let apikeyElement = document.getElementById("apikeyInputTextBox")
+  openAIKey = apikeyElement.value
+}
+
+function volumeOnchange(){
+  let tmpVolume =  document.getElementById("volumeControllerInput")
+  player.volume = tmpVolume.value
+}
+
+
 
 function changeScene(e){
   for (let scene in scenes){//画面の切り替え
@@ -518,18 +542,29 @@ function changeScene(e){
     configDecisionButtonDiv.insertAdjacentHTML('afterbegin', configDecisionButtonHtml);
     let configDecisionButton = document.getElementById("configDecisionButton")
     configDecisionButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
-    configDecisionButton.addEventListener("click",configDecision)
+
     //ボリュウーム変更
     volumeControllerDiv.insertAdjacentHTML('afterbegin', volumeControllerHtml);
     let volumeController =  document.getElementById("volumeController")
     volumeController.addEventListener("change",volumeOnchange)
+    if(disableGPTMode===false){
+      //chatGPTモードを使うかのcheckbox
+      useGPTCheckboxDiv.insertAdjacentHTML('afterbegin', useGPTCheckboxHtml);
+      let useGPTController =  document.getElementById("useGPTCheckBox")
+      useGPTController.checked = useGPTMode
+      useGPTController.addEventListener("change",useGPTCheckBoxOnchange)
 
-    //chatGPTモードを使うかのcheckbox
-    useGPTCheckboxDiv.insertAdjacentHTML('afterbegin', useGPTCheckboxHtml);
-    //chatGPT用のプロンプト
-    chatGPTPromptDiv.insertAdjacentHTML('afterbegin', promptInputHtml);
-    //chagGPT用のAPIKEY
-    chatGPTPapikeyDiv.insertAdjacentHTML('afterbegin', apikeyInputHtml);
+      //chatGPT用のプロンプト
+      chatGPTPromptDiv.insertAdjacentHTML('afterbegin', promptInputHtml);
+      let chatGPTPrompt = document.getElementById("promptInputTextBox")
+      chatGPTPrompt.value = userPrompt
+      chatGPTPrompt.addEventListener("change",GPTPromptOnchange)
+      //chagGPT用のAPIKEY
+      chatGPTPapikeyDiv.insertAdjacentHTML('afterbegin', apikeyInputHtml);
+      let apikeyElement = document.getElementById("apikeyInputTextBox")
+      apikeyElement.value = openAIKey
+      apikeyElement.addEventListener("change",apikeyElementOnchange)
+    }
   }
 }
 

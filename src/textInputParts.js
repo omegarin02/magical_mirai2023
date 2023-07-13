@@ -14,15 +14,15 @@ const useGPTCheckboxHtml = `
 <label style="color:cyan;font-size:${inputChatBoxTextSize}" id="useGPT">
   <input type="checkbox" class="cyber-check  ac-cyan gb-cyan fg-cyan" 
   style="border:2px solid cyan;--checkbox-size:${inputChatBoxTextSize}"
-  id="useGPT"/>&nbsp;&nbsp;GPTモード
+  id="useGPTCheckBox"/>&nbsp;&nbsp;GPTモード
 </label>`
 
 const promptInputHtml = `
 <div class="cyber-input ac-cyan gb-black fg-cyan" id="promptInput" style="font-size:${inputChatBoxTextSize}"> \
-  <input id="inputText" type="text" placeholder="prompt" style="width:100%" /> \
+  <input id="promptInputTextBox" type="text" placeholder="prompt" style="width:100%" /> \
 </div>`
 
 const apikeyInputHtml = `
 <div class="cyber-input ac-cyan gb-black fg-cyan" id="apikeyInput" style="font-size:${inputChatBoxTextSize}"> \
-  <input id="inputText" type="text" placeholder="APIKEY" style="width:100%" /> \
+  <input id="apikeyInputTextBox" type="text" placeholder="APIKEY" style="width:100%" /> \
 </div>`
