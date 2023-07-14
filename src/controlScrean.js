@@ -9,7 +9,8 @@ let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compression
 //let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
 let nowVolumeTextBox = new PIXI.Text( "", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let openAIKeyLabelText = new PIXI.Text( "OPENAI KEY(自己責任でお願いします。※GPTモードは有料です。)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
-let promptLabelText = new PIXI.Text( "Prompt", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
+let promptLabelText = new PIXI.Text( "Prompt(モデル：gpt-3.5-turbo)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
+let requestLabelText = new PIXI.Text( "GPTへのリクエストは[{'system':prompt},{'user':チャット}]。チャットは最新の1会話分", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let musicInfoTexts = []
 let marginStage = -50*3.5/2
 let lightRadius = 200
@@ -342,10 +343,13 @@ async function setConfigScene(){
   openAIKeyLabelText.y = 270*compressionSquare
   promptLabelText.x = 20*compressionSquare
   promptLabelText.y = 470*compressionSquare
+  requestLabelText.x = 20*compressionSquare
+  requestLabelText.y = 570*compressionSquare
   configScene.addChild(nowVolumeTextBox)
   if(disableGPTMode===false){
     configScene.addChild(openAIKeyLabelText)
     configScene.addChild(promptLabelText)
+    configScene.addChild(requestLabelText)
   }
   app.stage.addChild(configScene)
 
