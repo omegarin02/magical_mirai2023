@@ -187,12 +187,16 @@ async function getMikuChat(input){//chatbotの推論に置き換える時に、�
   //楽曲を再生してほしいとき
   let response = ""
   //楽曲を流してほしいのか
-  response = await checkWantStatStopMusic(input)//楽曲を流してほしい時は流す
-  response = await volumeUpDown(input)
+  let response1 = await checkWantStatStopMusic(input)//楽曲を流してほしい時は流す
+  let response2 = await volumeUpDown(input)
   console.log(response)
   //楽曲再生等を行ってない場合は、ミクさんとチャット
-  if(response == ""){
+  if(response1 == "" && response2 == ""){
     prediction(input)
+  }else if(response1 !== "" && response2 === ""){
+    response = response1
+  }else if(response1 === "" && response2 !== ""){
+    response = response2
   }
   return response
 }
