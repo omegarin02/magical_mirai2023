@@ -24,5 +24,5 @@ const promptInputHtml = `
 
 const apikeyInputHtml = `
 <div class="cyber-input ac-cyan gb-black fg-cyan" id="apikeyInput" style="font-size:${inputChatBoxTextSize}"> \
-  <input id="apikeyInputTextBox" type="text" placeholder="OPENAI KEY" style="width:100%" /> \
+  <input id="apikeyInputTextBox" type="password" placeholder="OPENAI KEY" style="width:100%" /> \
 </div>`
