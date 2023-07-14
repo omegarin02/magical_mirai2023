@@ -142,6 +142,8 @@ async function displayLyric(position,playFlag){
     //positionは0以上の小数なので普通に四則演算ができる
   //playFlagは今音楽が再生されているか(再生されていたらture,されていなかったらfalse)
   //歌詞などの情報を取得
+  
+  //console.log( player.getVocalAmplitude(position) )
   let iVideoInfo = player.video
   let wordInfo = iVideoInfo.findWord(position+nextBuffer)
   let onePhrase = ""

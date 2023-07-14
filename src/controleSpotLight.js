@@ -46,7 +46,7 @@ function lightsOut(){
 
 function controleSpotLight(position,playFlag){
   //ビート情報の取得
-  let beatInfo = player.findBeat(position)
+	let beatInfo = player.findBeat(position)
   //コード情報の取得
   let chordInfo = player.findChord(position)
   if(beatInfo?.next === undefined && position >=nowBeatEndTime){

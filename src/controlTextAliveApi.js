@@ -7,8 +7,10 @@ const player = new Player({
   // トークンは https://developer.textalive.jp/profile で取得したものを使う
   app: { token: "8KBfjCmqKXJE1Kut" },
   mediaElement: document.querySelector("#media"),
+  valenceArousalEnabled: true,
+  vocalAmplitudeEnabled: true,
 });
-  
+
 const overlay = document.querySelector("#overlay");
 const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
@@ -85,6 +87,7 @@ player.addListener({
       //歌詞情報の更新
       await displayLyric(position,playFlag);
       controleSpotLight(position,playFlag);
+      danceMotion(position,playFlag);
     }
   
   });
