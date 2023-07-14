@@ -1,0 +1,76 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "HatsuneMiku.moc3",
+		"Textures": [
+			"HatsuneMiku.2048/texture_00.png"
+		],
+		"Pose": "HatsuneMiku.pose3.json",
+		"DisplayInfo": "HatsuneMiku.cdi3.json",
+		"Motions": {
+			"Motion": [
+				{
+					"File": "motion/cry.motion3.json"
+				},
+				{
+					"File": "motion/dislike.motion3.json"
+				},
+				{
+					"File": "motion/happy.motion3.json"
+				},
+				{
+					"File": "motion/hate.motion3.json"
+				},
+				{
+					"File": "motion/nice.motion3.json"
+				},
+				{
+					"File": "motion/nika-smile.motion3.json"
+				},
+				{
+					"File": "motion/nishishi.motion3.json"
+				},
+				{
+					"File": "motion/nod.motion3.json"
+				},
+				{
+					"File": "motion/nomal.motion3.json"
+				},
+				{
+					"File": "motion/panic.motion3.json"
+				},
+				{
+					"File": "motion/satisfaction.motion3.json"
+				},
+				{
+					"File": "motion/sleepy.motion3.json"
+				},
+				{
+					"File": "motion/smile.motion3.json"
+				},
+				{
+					"File": "motion/surprise-no-motion.motion3.json"
+				},
+				{
+					"File": "motion/sway.motion3.json"
+				},
+				{
+					"File": "motion/worry.motion3.json"
+				}
+			]
+		}
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		}
+	],
+	"HitAreas": []
+}

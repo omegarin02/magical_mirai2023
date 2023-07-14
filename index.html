@@ -4,6 +4,8 @@
     <title>ここにタイトルを入れます</title>
     <!-- faviconの読み込み-->
     <link rel="icon" href="./favicon/favicon.ico" />
+    <!--config read-->
+    <script src="src/config.js"></script>
     <!-- Live2D -->
     <script src="src/live2dcubismcore.js"></script>
     <script src="src/live2dcubismcore.js.map"></script>
@@ -30,7 +32,14 @@
     <!-- config etc...-->
     <script src="src/musicList.js"></script>
     <script src="src/responseRules.js"></script>
-
+    <!--kuromoji-->
+    <script src="src/kuromoji.js"></script>
+    <!--nomarize-->
+    <script src="src/nomarize.js"></script>
+    <script src="src/checkSwearing.js"></script>
+    <!--chat data-->
+    <script src="chatData/shushi.js"></script>
+    <script src="src/checkKnowWords.js"></script>
   </head>
   <body>
 
@@ -65,6 +74,16 @@
         <div>
           <button class="knopf pill" id="musicStopButton">　⏹️　</button>
         </div>
+        <div>
+          <button class="knopf pill" id="configButton">　⚙　</button>
+        </div>
+      </div>
+      <div id="configPageDiv" class="configPageTool" >
+        <div id="configDecisionButtonDiv" class="configDecisionButton"></div>
+        <div id="volumeControllerDiv" class="volumeControllerTool"></div>  
+        <div id="useGPTCheckboxDiv" class="useGPTCheckboxTool"></div>
+        <div id="chatGPTPromptDiv" class="chatGPTPromptTool"></div>
+        <div id="chatGPTPapikeyDiv" class="chatGPTPapikeyDivTool"></div>
       </div>
       <!--input text box-->
       <div id="inputChatboxDiv" class="inputChatBoxTool"></div>
@@ -80,7 +99,9 @@
     <script src="src/controlScrean.js"></script>
     <script src="src/showChatLog.js"></script>
     <script src="src/displayLyric.js"></script>
-    <script src="src/index.js"></script> 
+    <script src="src/controleSpotLight.js"></script>
+    <script src="src/motionDecision.js"></script>
+    <script src="src/doMotion.js"></script> 
     <!--text alive apiの動作を制御するスクリプト-->
     <script src="src/controlTextAliveApi.js"></script>
     <svg display="none">

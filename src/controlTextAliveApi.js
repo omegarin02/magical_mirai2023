@@ -7,8 +7,10 @@ const player = new Player({
   // トークンは https://developer.textalive.jp/profile で取得したものを使う
   app: { token: "8KBfjCmqKXJE1Kut" },
   mediaElement: document.querySelector("#media"),
+  valenceArousalEnabled: true,
+  vocalAmplitudeEnabled: true,
 });
-  
+
 const overlay = document.querySelector("#overlay");
 const bar = document.querySelector("#bar");
 const textContainer = document.querySelector("#text");
@@ -24,7 +26,9 @@ let monitor_start_time = 0;
 let timing_id = 0;
 let monitor_timing_id=0;
 let miku_position = 1;
-
+let moveInterval = 100
+let baseMusicInfoX = 1450
+let baseMusicInfoY = 1050
 
 player.addListener({
     /* APIの準備ができたら呼ばれる */
@@ -72,7 +76,8 @@ player.addListener({
 
     },
     onStop: () => {
-      ;
+      lightsOut()
+      deleteLryic(true);
     },
     async onTimeUpdate(position) {
       // シークバーの表示を更新
@@ -81,23 +86,21 @@ player.addListener({
       }%`;
       //歌詞情報の更新
       await displayLyric(position,playFlag);
+      controleSpotLight(position,playFlag);
+      danceMotion(position,playFlag);
     }
   
   });
   //seekbar
-  seekbar.addEventListener("click", (e) => {
+  seekbar.addEventListener("click", async (e) => {
     e.preventDefault();
+    nowPosition = (player.video.duration * e.offsetX) / seekbar.clientWidth 
     if (player) {
       player.requestMediaSeek(
-        (player.video.duration * e.offsetX) / seekbar.clientWidth
+        nowPosition
       );
     }
-    lyrics = player.video.getChar(lyrics_id)
-    if(lyrics.startTime < position){
-      timing_id = 0;
-      lyrics_id = 0;
-    }
-    
+    await resetLyric(nowPosition)
     return false;
   });
   /* 再生・一時停止ボタン */
@@ -124,6 +127,8 @@ player.addListener({
     e.preventDefault();
     if (player) {
       player.requestStop();
+      lightsOut()
+      deleteLryic(true);
     }
     return false;
   });
@@ -171,6 +176,7 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
       musicUrlTitle.push([musicList[index].title,musicList[index].url])
     }
   }
+  console.log(musicUrlTitle)
   if(musicUrlTitle.length == 0){
     return [[],false]
   }else{
@@ -202,11 +208,64 @@ const musicStopWord = [
   ["曲","停止"],
   ["曲","ストップ"],
   ["再生","ストップ"],
+  ["ミュージック","ストップ"],
+]
+
+const volumeUpWord = [
+  ["音量","上げて"],
+  ["音量","あげて"],
+  ["音量","大きく"],
+  ["音量","小さい"],
+  ["ボリューム","上げて"],
+  ["ボリューム","あげて"],
+  ["ボリューム","大きく"],
+  ["ボリューム","小さい"],
+  ["音楽","小さい"],
+  ["音楽","聴こえない"],
+  ["音楽","きこえない"],
+  ["音","上げて"],
+  ["音","あげて"],
+  ["音","大きく"],
+  ["音","小さい"],
+  ["音","聴こえない"],
+  ["音","きこえない"],
+]
+
+const volumeDownWord = [
+  ["音量","下げて"],
+  ["音量","さげて"],
+  ["音量","小さく"],
+  ["音量","大きい"],
+  ["ボリューム","下げて"],
+  ["ボリューム","さげて"],
+  ["ボリューム","小さく"],
+  ["ボリューム","大きい"],
+  ["音楽","でかい"],
+  ["音楽","うるさい"],
+  ["音","下げて"],
+  ["音","さげて"],
+  ["音","小さく"],
+  ["音","大きい"],
+  ["音","うるさい"],
 ]
 
 async function setMusicInfo(){
-  artistTextBox.text = "✎："+player.data.song.artist.name
-  titleTextBox.text = "♬："+player.data.song.name
+  //artistTextBox.text = "✎："+player.data.song.artist.name
+  //titleTextBox.text = "♬："+player.data.song.name
+  for (let i = 0; i < musicInfoTexts.length; i++){//楽曲情報の表示を全て削除
+    scenes["mainScene"].removeChild(musicInfoTexts[i])
+  }
+  musicInfoTexts = [];
+  let musicInfo="✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name+ " "
+  let MusicInfoArray = [...musicInfo]
+  for (let i = 0 ; i < MusicInfoArray.length ; i++ ){
+    musicInfoChar = new PIXI.Text( MusicInfoArray[i], { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } )
+    musicInfoChar.x =baseMusicInfoX * compressionSquare + fontSize * i
+    musicInfoChar.y =baseMusicInfoY * compressionSquare - fontSize
+    musicInfoTexts.push(musicInfoChar)
+    scenes["mainScene"].addChild(musicInfoTexts[musicInfoTexts.length-1])
+  }
+  //musicInfoBox.text = "✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name
 }
 
 async function checkStartStopWord(input,checkWordList){
@@ -225,8 +284,30 @@ async function checkStartStopWord(input,checkWordList){
       break
     }
   }
+  console.log(checkFlag)
   return checkFlag
 }
+
+async function checkVolumeUpDownWord(input,checkWordList){
+  let checkFlag = false
+  for (let i = 0 ; i < checkWordList.length ; i++){
+    let rule = checkWordList[i]
+    for (let j = 0 ; j < rule.length; j++){
+      if(input.indexOf(rule[j]) !== -1){
+        checkFlag = true
+      }else{
+        checkFlag = false
+        break
+      }
+    }
+    if(checkFlag){
+      break
+    }
+  }
+  console.log(checkFlag)
+  return checkFlag
+}
+
 
 async function checkWantStatStopMusic(input){
   response = ""
@@ -234,7 +315,13 @@ async function checkWantStatStopMusic(input){
     if(playFlag && !player.isLoading){
       response = musicStartedResponse[Math.floor(Math.random() * musicStartedResponse.length)]
     }else{
+      //楽曲変更の希望があるか
+      let musicUrl = checkChangeMusic(input)//複数候補がある場合ランダムで１曲選ぶ
+      if(musicUrl[1]){
+        changeMusic(musicUrl[0][1])
+      }
       response = musicStartResponse[Math.floor(Math.random() * musicStartResponse.length)]
+      deleteLryic(true);
       while(player.isLoading){
         await sleep( 1000 );
       }
@@ -242,6 +329,7 @@ async function checkWantStatStopMusic(input){
       player.requestPlay();
     }
   }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
+    deleteLryic(true);
     if(playFlag){
       response = musicStopResponse[Math.floor(Math.random() * musicStopResponse.length)]
       player.requestStop();
@@ -249,6 +337,50 @@ async function checkWantStatStopMusic(input){
       response = musicStopedResponse[Math.floor(Math.random() * musicStopedResponse.length)]
     }
   }
-  console.log(response)
   return response
 }
+
+function moveMusicInfo(){
+  let musicInfoLen = musicInfoTexts.length
+  for(let i = 0; i < musicInfoLen ; i++){
+    if(musicInfoTexts[i].x < baseMusicInfoX * compressionSquare){
+      if(i == 0){
+        musicInfoTexts[i].x = musicInfoTexts[musicInfoLen-1].x + fontSize
+      }else{
+        musicInfoTexts[i].x = musicInfoTexts[i-1].x + fontSize
+      }
+    }else{
+      musicInfoTexts[i].x -= 3* compressionSquare
+    }
+  }
+}
+
+async function volumeUpDown(input){
+  let response = ""
+  let nowVolume = player.volume
+  if(await checkVolumeUpDownWord(input,volumeUpWord)){
+    if(nowVolume == 100){//音量MAXの時
+      response = maxVolumeResponse[Math.floor(Math.random() * maxVolumeResponse.length)]
+    }else if(nowVolume > 90){
+      player.volume = 100
+      response = volumeUpResponse[Math.floor(Math.random() * volumeUpResponse.length)]
+    }else{
+      player.volume += 10
+      response = volumeUpResponse[Math.floor(Math.random() * volumeUpResponse.length)]
+    }
+  }else if(await checkVolumeUpDownWord(input,volumeDownWord)){
+    if(nowVolume == 0){//音量MINの時
+      response = minVolumeResponse[Math.floor(Math.random() * minVolumeResponse.length)]
+    }else if(nowVolume < 10){
+      player.volume = 0
+      response = volumeDownResponse[Math.floor(Math.random() * volumeDownResponse.length)]
+    }else{
+      player.volume -= 10
+      response = volumeDownResponse[Math.floor(Math.random() * volumeDownResponse.length)]
+    }
+  }
+
+  return response
+}
+
+setInterval(moveMusicInfo,moveInterval)
