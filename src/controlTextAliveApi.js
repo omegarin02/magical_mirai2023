@@ -211,6 +211,44 @@ const musicStopWord = [
   ["ミュージック","ストップ"],
 ]
 
+const volumeUpWord = [
+  ["音量","上げて"],
+  ["音量","あげて"],
+  ["音量","大きく"],
+  ["音量","小さい"],
+  ["ボリューム","上げて"],
+  ["ボリューム","あげて"],
+  ["ボリューム","大きく"],
+  ["ボリューム","小さい"],
+  ["音楽","小さい"],
+  ["音楽","聴こえない"],
+  ["音楽","きこえない"],
+  ["音","上げて"],
+  ["音","あげて"],
+  ["音","大きく"],
+  ["音","小さい"],
+  ["音","聴こえない"],
+  ["音","きこえない"],
+]
+
+const volumeDownWord = [
+  ["音量","下げて"],
+  ["音量","さげて"],
+  ["音量","小さく"],
+  ["音量","大きい"],
+  ["ボリューム","下げて"],
+  ["ボリューム","さげて"],
+  ["ボリューム","小さく"],
+  ["ボリューム","大きい"],
+  ["音楽","でかい"],
+  ["音楽","うるさい"],
+  ["音","下げて"],
+  ["音","さげて"],
+  ["音","小さく"],
+  ["音","大きい"],
+  ["音","うるさい"],
+]
+
 async function setMusicInfo(){
   //artistTextBox.text = "✎："+player.data.song.artist.name
   //titleTextBox.text = "♬："+player.data.song.name
@@ -249,6 +287,27 @@ async function checkStartStopWord(input,checkWordList){
   console.log(checkFlag)
   return checkFlag
 }
+
+async function checkVolumeUpDownWord(input,checkWordList){
+  let checkFlag = false
+  for (let i = 0 ; i < checkWordList.length ; i++){
+    let rule = checkWordList[i]
+    for (let j = 0 ; j < rule.length; j++){
+      if(input.indexOf(rule[j]) !== -1){
+        checkFlag = true
+      }else{
+        checkFlag = false
+        break
+      }
+    }
+    if(checkFlag){
+      break
+    }
+  }
+  console.log(checkFlag)
+  return checkFlag
+}
+
 
 async function checkWantStatStopMusic(input){
   response = ""
@@ -294,6 +353,34 @@ function moveMusicInfo(){
       musicInfoTexts[i].x -= 3* compressionSquare
     }
   }
+}
+
+async function volumeUpDown(input){
+  let response = ""
+  let nowVolume = player.volume
+  if(await checkVolumeUpDownWord(input,volumeUpWord)){
+    if(nowVolume == 100){//音量MAXの時
+      response = maxVolumeResponse[Math.floor(Math.random() * maxVolumeResponse.length)]
+    }else if(nowVolume > 90){
+      player.volume = 100
+      response = volumeUpResponse[Math.floor(Math.random() * volumeUpResponse.length)]
+    }else{
+      player.volume += 10
+      response = volumeUpResponse[Math.floor(Math.random() * volumeUpResponse.length)]
+    }
+  }else if(await checkVolumeUpDownWord(input,volumeDownWord)){
+    if(nowVolume == 0){//音量MINの時
+      response = minVolumeResponse[Math.floor(Math.random() * minVolumeResponse.length)]
+    }else if(nowVolume < 10){
+      player.volume = 0
+      response = volumeDownResponse[Math.floor(Math.random() * volumeDownResponse.length)]
+    }else{
+      player.volume -= 10
+      response = volumeDownResponse[Math.floor(Math.random() * volumeDownResponse.length)]
+    }
+  }
+
+  return response
 }
 
 setInterval(moveMusicInfo,moveInterval)

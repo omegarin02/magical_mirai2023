@@ -14,7 +14,7 @@ const useGPTCheckboxHtml = `
 <label style="color:cyan;font-size:${inputChatBoxTextSize}" id="useGPT">
   <input type="checkbox" class="cyber-check  ac-cyan gb-cyan fg-cyan" 
   style="border:2px solid cyan;--checkbox-size:${inputChatBoxTextSize}"
-  id="useGPTCheckBox"/>&nbsp;&nbsp;GPTモード
+  id="useGPTCheckBox"/>&nbsp;&nbsp;GPTモード（<a href="https://platform.openai.com/account/org-settings">OPENAI KEYの取得　OPENAIのページに飛びます</a>）
 </label>`
 
 const promptInputHtml = `
@@ -24,5 +24,5 @@ const promptInputHtml = `
 
 const apikeyInputHtml = `
 <div class="cyber-input ac-cyan gb-black fg-cyan" id="apikeyInput" style="font-size:${inputChatBoxTextSize}"> \
-  <input id="apikeyInputTextBox" type="text" placeholder="APIKEY" style="width:100%" /> \
+  <input id="apikeyInputTextBox" type="password" placeholder="OPENAI KEY" style="width:100%" /> \
 </div>`
