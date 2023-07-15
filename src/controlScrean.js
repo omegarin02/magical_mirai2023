@@ -365,9 +365,14 @@ function volumeOnchange(){
 }
 
 //楽曲の変更を検知して反映する
-function musicOnchange(){
+async function musicOnchange(){
   let musicSelecter =  document.getElementById("musicSelectBox")
   changeMusic(musicList[Number(musicSelecter.value)].url)
+  while(player.isLoading){
+    await sleep( 1000 );
+  }
+  lightsOut()
+  deleteLryic(true);
 }
 
 //画面の切り替え関数
