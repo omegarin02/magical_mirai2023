@@ -429,11 +429,14 @@ function changeScene(e){
 
     //楽曲再生関連に使うボタンを最背面にする
     musicStartStopButtonDiv.style.zIndex=-3
-    //mediaInfoDiv.style.zIndex=-3
     seekbar.style.Zindex=-3
     seekbar.style.width = (0).toString()+"px"
     //音楽の再生を止める
     player.requestStop();
+    //ライトの消灯
+    lightsOut()
+    //歌詞の削除
+    deleteLryic(true);
     
   }else if(this.scene == "startScene"){//start画面に遷移したとき
     //スタートに戻るボタンを削除
