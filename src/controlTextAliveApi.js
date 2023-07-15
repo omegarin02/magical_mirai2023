@@ -247,7 +247,6 @@ function checkChangeMusic(input){
       musicUrlTitle.push([musicList[index].title,musicList[index].url])
     }
   }
-  console.log(musicUrlTitle)
   if(musicUrlTitle.length == 0){
     return [[],false]
   }else{
@@ -289,7 +288,6 @@ async function checkStartStopWord(input,checkWordList){
       break
     }
   }
-  console.log(checkFlag)
   return checkFlag
 }
 
@@ -310,7 +308,6 @@ async function checkVolumeUpDownWord(input,checkWordList){
       break
     }
   }
-  console.log(checkFlag)
   return checkFlag
 }
 

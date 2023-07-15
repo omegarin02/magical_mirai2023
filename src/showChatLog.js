@@ -28,7 +28,6 @@ async function callGPT(input){
           }
       );
       var chatgpt_response = response.data.choices[0].message.content;
-      console.log(chatgpt_response)
       return chatgpt_response
   } catch (error) {
       console.log(error);
@@ -143,7 +142,6 @@ async function prediction(input){
           }
         }
         maxScoreIndexArray = tmpMaxScoreIndexArray
-        console.log(maxScoreIndexArray,tmpQuestionCorpusLenArray)
         if(maxScoreIndexArray.length == 1){//誤答率で決着が付いたとき
           result = responseData[maxScoreIndexArray[0]]["answer"]
           action = responseData[maxScoreIndexArray[0]]["action"]
@@ -197,7 +195,6 @@ async function getMikuChat(input){//chatbotの推論に置き換える時に、�
   let response1 = await checkWantStatStopMusic(input)//controleTextAliveAPI.jsで定義されている
   //楽曲の音量を変更してほしいのか
   let response2 = await volumeUpDown(input)//controleTextAliveAPI.jsで定義されている
-  console.log(response)
   //楽曲再生等を行ってない場合は、ミクさんとチャット
   if(response1 == "" && response2 == ""){
     prediction(input)
@@ -245,7 +242,6 @@ function delSpeechBalloon(){
 
 //吹き出しを作るための関数
 async function makeSpeechBalloon(mikuText){
-  console.log(mikuText)
   maxWidth = 1200
   baseSize = fontSize*1.8
   textLength = mikuText.length
@@ -319,7 +315,6 @@ async function showChatLog(input){
       text = await nomarizeText(input)
       splitMaxChar(input,"USER")
       let mikuChat = await getMikuChat(text)
-      console.log(mikuChat)
       if(mikuChat !== ""){
         makeSpeechBalloon(mikuChat)
         splitMaxChar(mikuChat,"MIKU")

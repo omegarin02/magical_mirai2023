@@ -332,9 +332,7 @@ function screenResize() {
 
 //チャット送信ボタンがクリックされた時の動作を決定
 function sendButtonOnClick(){
-  console.log("send")
   let inputText = document.getElementById("inputText")
-  console.log(inputText.value)//入力したテキストを取得
   showChatLog(inputText.value)//showChatLog.jsを呼び出し
   inputText.value = ""
 }
@@ -460,7 +458,6 @@ function changeScene(e){
     }
     //現在の音量を表示する
     nowVolumeTextBox.text = "現在の音量："+String(player.volume)
-    console.log(player.volume)
     //再生ボタンとかを見えないようにする
     musicStartStopButtonDiv.style.zIndex=-3
     seekbar.style.Zindex=-3

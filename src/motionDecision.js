@@ -39,13 +39,10 @@ function danceMotion(position,playFlag){
 			beatCounter += 1
 			counterFlag = true
 			if(beatCounter == 2){
-				console.log(player.getValenceArousal(position))//a 覚醒度, v 感情価
 				let valenceArousal = player.getValenceArousal(position)
-				console.log(valenceArousal.a,valenceArousal.v)
 				for(let i = 0 ; i < motionDecision.length; i++){
 					let motionD = motionDecision[i]
 					if(motionD.a <= valenceArousal.a && motionD.v <= valenceArousal.v){
-						console.log(motionD)
 						motionArray = motionD["motion"]
 						motionNum = Math.floor(Math.random() * motionArray.length)
 						Motion(motionArray[motionNum])

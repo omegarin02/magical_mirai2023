@@ -131,7 +131,6 @@ async function displayLyric(position,playFlag){
   let onePhrase = ""
   let endPhraseTime = 0
   //音楽が再生されているときの処理
-  //console.log(position,playFlag)
   if(playFlag){
     if(wordInfo != null){//次のデータがある
       if((beforePosition > resetPosition && position > beforePosition && resetPosition > 0)){ //巻き戻しているのに進んでいる →　処理をしない

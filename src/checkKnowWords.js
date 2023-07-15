@@ -15,6 +15,5 @@ function checkKnowWords(input){//知っている単語の数を計算
 			knowCounter += 1
 		}
 	}
-	console.log(knowCounter/input.length)
 	return knowCounter/input.length
 }
