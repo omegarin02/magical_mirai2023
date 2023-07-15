@@ -1,3 +1,4 @@
+//検索用の楽曲情報
 let musicList = [
     {
       title:"king妃jack躍",

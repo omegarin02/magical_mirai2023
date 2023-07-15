@@ -1,3 +1,4 @@
+//input関係のPartsを定義する関数
 let inputChatBoxTextSize = (25 * compressionSquare).toString()+"px"
 
 const inputChatBoxHtml = `

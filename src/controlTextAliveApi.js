@@ -38,6 +38,7 @@ player.addListener({
       }
       if (!app.songUrl) {
         // king妃jack躍 / 宮守文学 feat. 初音ミク
+        //デフォルトの曲目を設定
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
     },
@@ -137,8 +138,9 @@ function changeMusic(url){
   player.createFromSongUrl(url);
 }
 
-
-function checkChangeMusic(input){//TODO検索エンジンの強化
+//テキストによる楽曲検索機能
+//データは、musicList.jsで定義している
+function checkChangeMusic(input){
   musicUrlTitle = []
   maxScoreIndex = []
   maxScore = 0
@@ -150,18 +152,21 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
       maxScoreIndex = []
       break
     }
+    //アーティスト情報が一致するか
     if(input.indexOf(musicList[i].artist) !== -1){
       score++
     }
+    //使用しているボーカロイドが一致するか
     if(input.indexOf(musicList[i].Voc) !== -1){
       score++
     }
-    
+    //あらかじめ登録した楽曲に対するキーワードが一致するか
     for(let j = 0 ; j < musicList[i].keyWord.length ; j++){     
       if(input.indexOf(musicList[i].keyWord[j]) !== -1){
         score++
       }
     }
+    //最も検索スコアが良かったものを検索結果として使用する
     if(maxScore < score){
       maxScore = score
       maxScoreIndex = []
@@ -268,6 +273,7 @@ async function setMusicInfo(){
   //musicInfoBox.text = "✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name
 }
 
+//入力されたテキストに、楽曲の再生・停止命令が含まれているか確認する
 async function checkStartStopWord(input,checkWordList){
   let checkFlag = false
   for (let i = 0 ; i < checkWordList.length ; i++){
@@ -288,6 +294,7 @@ async function checkStartStopWord(input,checkWordList){
   return checkFlag
 }
 
+//入力されたテキストに、音量操作命令が含まれているか確認する
 async function checkVolumeUpDownWord(input,checkWordList){
   let checkFlag = false
   for (let i = 0 ; i < checkWordList.length ; i++){
@@ -309,6 +316,7 @@ async function checkVolumeUpDownWord(input,checkWordList){
 }
 
 
+//入力されたテキストに、楽曲の再生・停止命令が含まれている場合は楽曲を再生・停止する
 async function checkWantStatStopMusic(input){
   response = ""
   if(await checkStartStopWord(input,musicStartWord)){//再生コマンドのバリエーションを増やす
@@ -328,7 +336,7 @@ async function checkWantStatStopMusic(input){
       setMusicInfo()
       player.requestPlay();
     }
-  }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
+  }else if(await checkStartStopWord(input,musicStopWord)){
     deleteLryic(true);
     if(playFlag){
       response = musicStopResponse[Math.floor(Math.random() * musicStopResponse.length)]

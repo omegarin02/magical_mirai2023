@@ -1,3 +1,4 @@
+//画面の縦横比を計算して、圧縮率を計算する
 const default_width = 1920
 const default_height = 1080
 let compressionWidth = window.innerWidth/default_width

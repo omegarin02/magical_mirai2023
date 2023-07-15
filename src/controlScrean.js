@@ -1,30 +1,26 @@
-//index.jsで使うのでスコープを外す
-let app;
-let fontSize = 25*compressionSquare
-let textfont = "RocknRoll One"
-let lyricText = new PIXI.Text( "", { fill: 0xffffff } );
-let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );
-//let artistTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
-//let titleTextBox = new PIXI.Text( "", { fill: "blue",fontSize: fontSize,fontFamily: textfont } );
-//let musicInfoBox = new PIXI.Text( "", { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } );
-let nowVolumeTextBox = new PIXI.Text( "", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
+//画面遷移等を制御する関数
+let app;//画面を格納する変数
+let fontSize = 25*compressionSquare//デフォルトの文字のサイズを定義
+let textfont = "RocknRoll One"//フォント名
+let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );//chatのログの表示用
+let nowVolumeTextBox = new PIXI.Text( "", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );//現在の音量表示用
 let openAIKeyLabelText = new PIXI.Text( "OPENAI KEY(自己責任でお願いします。※GPTモードは有料です。)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let promptLabelText = new PIXI.Text( "Prompt(モデル：gpt-3.5-turbo)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let requestLabelText = new PIXI.Text( "GPTへのリクエストは[{'system':prompt},{'user':チャット}]。チャットは最新の1会話分", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
-let musicInfoTexts = []
-let marginStage = -50*3.5/2
-let lightRadius = 200
-let lightHeight = 880 //- lightRadius/2
-let spotLightInterval = 343
-let spotLightTriangles = []
-let spotLightCirclesBack = []
-let spotLightCirclesFront = []
-let sportLightGradationStart = "#808080"
-let sportLightGradationSecond = "#d3d3d3"
-let sportLightGradationEnd = "#FFFFFF"
-let lightSourceWidth = 20
-let vanishingPoint = 25
-let afterConfigFlag = false
+let musicInfoTexts = []//楽曲情報を格納しておくための配列
+let marginStage = -50*3.5/2 //ステージの位置を調整
+let lightRadius = 200//スポットライトの最大半径
+let lightHeight = 880 //スポットライトの高さ
+let spotLightInterval = 343//スポットライトの左右方向の間隔
+let spotLightTriangles = []//スポットライトの台形の部分を格納する変数
+let spotLightCirclesBack = []//スポットライト三角錐の底の部分
+let spotLightCirclesFront = []//スポットライトの床の光のPartsを格納する関数
+let sportLightGradationStart = "#808080" //スポットライトのGradation開始カラー
+let sportLightGradationSecond = "#d3d3d3"//スポットライトのGradation中間カラー
+let sportLightGradationEnd = "#FFFFFF"//スポットライトのGradation終端カラー
+let lightSourceWidth = 20//光源の太さ
+let vanishingPoint = 25//光の消失点(スポットライト高さからの差分)
+
 
 
 // PixiJS
@@ -96,7 +92,7 @@ musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
 musicStopButton.style.marginTop = (3*compressionSquare).toString()+"px"
 configButton.style.fontSize = (20*compressionSquare).toString()+"px"
 configButton.style.marginTop = (3*compressionSquare).toString()+"px"
-
+//設定モードのボタンの位置調整
 configDecisionButtonDiv.style.marginTop = (10*compressionSquare ).toString()+"px"
 volumeControllerDiv.style.marginTop = (100*compressionSquare ).toString()+"px"
 useGPTCheckboxDiv.style.marginTop = (200*compressionSquare ).toString()+"px"
@@ -120,8 +116,7 @@ exitButton.addEventListener("click",{scene: "endScene",handleEvent:changeScene})
 configButton.addEventListener("click",{scene: "configScene",handleEvent:changeScene})
 
 
-//scenes
-let scenes = {}
+let scenes = {}//画面情報を格納する変数
 
 
 //描画領域を作成する
@@ -135,7 +130,8 @@ app = new PIXI.Application({
 });
 
 
-async function createGradient (width, height, colorFrom, colorTo){
+//Gradationパターンを作成する関数
+async function createGradient (width, height){
   const canvas = document.createElement('canvas')  
   const ctx = canvas.getContext('2d')
   const gradient1 = ctx.createLinearGradient(width/2, 0, width/2, height)
@@ -164,16 +160,13 @@ async function createGradient (width, height, colorFrom, colorTo){
   return PIXI.Sprite.from(canvas)
 }
 
-
+//ゲームのトップ画面を作成する
 async function setStartScene(){
   const startScene = new PIXI.Container()
   scenes["startScene"] = startScene
-
-  //let startButton = document.getElementById('startButton');
-  //ボタンを作る
-
 }
 
+//ゲームのメイン画面を作成する
 async function setMainScene(){
   const mainScene = new PIXI.Container()
   //Live2Dモデルをロードする
@@ -197,13 +190,7 @@ async function setMainScene(){
   chatTextBox.y = 360 *compressionSquare - fontSize//TODO 後で治す
   chatTextBox.angle = 2.5
 
-  //artistTextBox.x = 1500 * compressionSquare
-  //artistTextBox.y = 10 * compressionSquare
-  //titleTextBox.x = 1500 * compressionSquare
-  //titleTextBox.y = 40 * compressionSquare
-  //musicInfoBox.x = 1450 * compressionSquare
-  //musicInfoBox.y = 1050 * compressionSquare - fontSize
-  //スポットライト
+  //スポットライトの作成
   for (let i = 1 ; i <= 5 ; i++ ){
     //スポットライト三角形の部分を定義
     trianglePoint = [
@@ -217,7 +204,7 @@ async function setMainScene(){
     triangleGraphic.beginFill( 0xFFFFFF);
     triangleGraphic.drawPolygon(trianglePoint)
     triangleGraphic.endFill()
-    //スポットライトの下半分の図形を作成
+    //スポットライトの床に映る光の部分を作成
     circlesGraphic = new PIXI.Graphics()
     circlesGraphic.beginFill(0xFFFFFF);
     circlesGraphic.alpha = 0.0
@@ -225,7 +212,7 @@ async function setMainScene(){
                                 (lightHeight+lightRadius/4+vanishingPoint)*compressionSquare,
                                 lightRadius*compressionSquare,
                                 lightRadius*compressionSquare/4)
-
+    //スポットライトの光の消失点の部分を作成
     circlesGraphicvanishingPoint = new PIXI.Graphics()
     circlesGraphicvanishingPoint.beginFill(0xFFFFFF);
     circlesGraphicvanishingPoint.alpha = 0.0
@@ -233,14 +220,14 @@ async function setMainScene(){
                                 lightHeight*compressionSquare,
                                 lightRadius*(1-vanishingPoint*3/lightHeight)*compressionSquare,
                                 lightRadius*compressionSquare/4)
-
                                 
     circlesGraphic.endFill(); 
     //作った図形に対してGradationを当てる
+    //三角形の部分にGradationを当てるための変数を用意
     let spriteGradientTriangle = await createGradient(lightRadius*2*compressionSquare,
                                                       (lightHeight+lightRadius/4)*compressionSquare,
-                                                      "#000000", "#FFFFFF")
-    
+                                                      )
+    //光の消失点にGradationを当てるための変数を用意
     let spriteGradientCircleBack = await createGradient(lightRadius*2*compressionSquare,
                                                     (lightHeight+lightRadius/4)*compressionSquare,
                                                     "#000000", "#FFFFFF")
@@ -300,40 +287,30 @@ async function setMainScene(){
   
   //背景を配置する
   mainScene.addChild(background)
-  // 6, Live2Dモデルを配置する
+  //Live2Dモデルを配置する
   mainScene.addChild(currentModel)  
-  //mainScene.addChild( lyricText );
+  //テキストboxを配置
   mainScene.addChild(chatTextBox)
-  //mainScene.addChild(artistTextBox)
-  //mainScene.addChild(titleTextBox)
-  //mainScene.addChild(musicInfoBox)
-  
-
-  for (let i = 0 ; i < gridHorizontalArray.length ; i++){
-    mainScene.addChild(gridHorizontalArray[i])
-  }
-  for (let i = 0 ; i < gridVerticalArray.length ; i++){
-    mainScene.addChild(gridVerticalArray[i])
-  }
-  
-  
+  //スポットライトを配置
   for (let i = 0 ; i < spotLightTriangles.length ; i++){
     mainScene.addChild(spotLightTriangles[i])
     mainScene.addChild(spotLightCirclesBack[i])
     mainScene.addChild(spotLightCirclesFront[i])
   }
-
-
+  //Zindexを有効化
   mainScene.sortableChildren = true;
+  //メイン画面を追加
   app.stage.addChild(mainScene);
   scenes["mainScene"] = mainScene
 }
 
+//ゲーム終了画面の作成
 async function setEndScene(){
   const endScene = new PIXI.Container()
   scenes["endScene"] = endScene
 }
 
+//設定画面の作成
 async function setConfigScene(){
   const configScene = new PIXI.Container()
   nowVolumeTextBox.x = 20*compressionSquare
@@ -346,7 +323,7 @@ async function setConfigScene(){
   requestLabelText.x = 20*compressionSquare
   requestLabelText.y = 570*compressionSquare
   configScene.addChild(nowVolumeTextBox)
-  if(disableGPTMode===false){
+  if(disableGPTMode===false){//GPTモードが選択できる場合
     configScene.addChild(openAIKeyLabelText)
     configScene.addChild(promptLabelText)
     configScene.addChild(requestLabelText)
@@ -362,11 +339,14 @@ async function setup() {
   await setMainScene()
   await setEndScene()
   await setConfigScene()
+
+  //どの画面を最初に表示ておくかを指定
   scenes["startScene"].visible = true
   scenes["mainScene"].visible = false
   scenes["endScene"].visible = false
   scenes["configScene"].visible = false
 
+  //スタートボタンの配置
   startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
   let startButton = document.getElementById("startButton")
   startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
@@ -404,39 +384,41 @@ function screenResize() {
   
   app.renderer.resize(x, y);//レンダラーをリサイズ
 }
-//画面サイズがリサイズされると発火する関数の定義
-//window.addEventListener('resize',screenResize,false);
 
+//チャット送信ボタンがクリックされた時の動作を決定
 function sendButtonOnClick(){
   console.log("send")
   let inputText = document.getElementById("inputText")
   console.log(inputText.value)//入力したテキストを取得
-  showChatLog(inputText.value)
+  showChatLog(inputText.value)//showChatLog.jsを呼び出し
   inputText.value = ""
 }
 
+//chatGPTモードのON/OFFを検知して反映する
 function useGPTCheckBoxOnchange(){
   let checkboxFlag = document.getElementById("useGPTCheckBox") 
   useGPTMode=checkboxFlag.checked
 }
 
+//chatGPTのプロンプトの変更を検知して反映する
 function GPTPromptOnchange(){
   let promptBox = document.getElementById("promptInputTextBox")
   userPrompt = promptBox.value
 }
 
+//APIkeyの変更を検知するして反映する
 function apikeyElementOnchange(){
   let apikeyElement = document.getElementById("apikeyInputTextBox")
   openAIKey = apikeyElement.value
 }
 
+//volumeの変更を検知して反映する
 function volumeOnchange(){
   let tmpVolume =  document.getElementById("volumeControllerInput")
   player.volume = tmpVolume.value
 }
 
-
-
+//画面の切り替え関数
 function changeScene(e){
   for (let scene in scenes){//画面の切り替え
     if(scene == this.scene){
@@ -460,18 +442,22 @@ function changeScene(e){
     if(configDecisionButton !== null){
       configDecisionButton.remove()
     }
+    //volumeコントローラがあれば削除
     let volumeController = document.getElementById("volumeController")
     if(volumeController !== null){
       volumeController.remove()
     }
+    //GPTを使うかのcheckボタンがあれば削除
     let useGPTcheckBox = document.getElementById("useGPT")
     if(useGPTcheckBox !== null){
       useGPTcheckBox.remove()
     }
+    //プロンプト入力欄があれば削除
     let pronptBox = document.getElementById("promptInput")
     if(pronptBox !== null){
       pronptBox.remove()
     }
+    //apikey入力欄があれば削除
     let apikeyBox = document.getElementById("apikeyInput")
     if(apikeyBox !== null){
       apikeyBox.remove()
@@ -495,37 +481,38 @@ function changeScene(e){
     //楽曲再生ボタンを最前面に表示する
     musicStartStopButtonDiv.style.zIndex=3
     seekbar.style.width = (width).toString()+"px"
-
-
-
-  }
-  else if (this.scene == "endScene"){//end画面に切り替えたとき
+  }else if (this.scene == "endScene"){//end画面に切り替えたとき
+    //チャット入力欄とチャット送信ボタンの削除
     let inputChatBox = document.getElementById("inputChatBox")
     let sendButton = document.getElementById("commentSendButton")
     inputChatBox.remove()
     sendButton.remove()
 
-    configButton.removeEventListener("click",{scene: "configScene",handleEvent:changeScene});
-
+    //スタート画面に戻るためのボタンを作成
     homeButtonDiv.insertAdjacentHTML('afterbegin', homeButtonHtml);
     let homeButton = document.getElementById("homeButton")
     homeButton.addEventListener("click",{scene: "startScene",handleEvent:changeScene})
 
+    //楽曲再生関連に使うボタンを最背面にする
     musicStartStopButtonDiv.style.zIndex=-3
     //mediaInfoDiv.style.zIndex=-3
     seekbar.style.Zindex=-3
     seekbar.style.width = (0).toString()+"px"
+    //音楽の再生を止める
     player.requestStop();
     
-  }else if(this.scene == "startScene"){
+  }else if(this.scene == "startScene"){//start画面に遷移したとき
+    //スタートに戻るボタンを削除
     let homeButton = document.getElementById("homeButton")
     homeButton.remove()
 
+    //スタートボタンを作成
     startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
     let startButton = document.getElementById("startButton")
     startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
 
   }else if(this.scene == "configScene"){//設定画面
+    //チャット入力欄とチャット送信欄を削除する
     let inputChatBox = document.getElementById("inputChatBox")
     let sendButton = document.getElementById("commentSendButton")
     if(inputChatBox !== null){
@@ -534,12 +521,14 @@ function changeScene(e){
     if(sendButton !== null){
       sendButton.remove()
     }
+    //現在の音量を表示する
     nowVolumeTextBox.text = "現在の音量："+String(player.volume)
     console.log(player.volume)
+    //再生ボタンとかを見えないようにする
     musicStartStopButtonDiv.style.zIndex=-3
     seekbar.style.Zindex=-3
     seekbar.style.width = (0).toString()+"px"
-
+    //設定ページのボタンとかを見えるようにする
     configPageDiv.style.zIndex=3
 
     //決定ボタンの追加

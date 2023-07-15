@@ -1,3 +1,5 @@
+//楽曲再生中のmotionを決めるための関数
+//motionはTextAliveAPIから提供される覚醒度と感情価から決定
 let motionDecision = [
 	{"a":0.4,"v":0.3,"motion":[5]},
 	{"a":0.4,"v":0.2,"motion":[14]},
@@ -29,6 +31,7 @@ let motionDecision = [
 let beatCounter = 0
 let counterFlag = false
 
+//2小節の頭でmotionを発火させる
 function danceMotion(position,playFlag){
 	let beatInfo = player.findBeat(position)
 	if(playFlag){

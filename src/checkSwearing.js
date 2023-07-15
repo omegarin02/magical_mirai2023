@@ -1,3 +1,4 @@
+//悪口を言われているか判定をするスクリプト
 async function checkSwearing(input){
 	negativeWord = [
 		"おっぱい",

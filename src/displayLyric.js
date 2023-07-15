@@ -1,24 +1,26 @@
-let monitor1 = [] //(100,100) ~ (450,300) //[[startTime,endTime,Obj]]
-let monitor2 = [] //(700,100) ~ (1200,300)
-let monitor3 = [] //(1450,100) ~ (1800,300)
-let mikuTension = 0
-let screenMode = 0
-let nextBuffer = 50
+let monitor1 = [] //左の歌詞情報を保存するための変数
+let monitor2 = [] //中央の歌詞情報を保存するための変数
+let monitor3 = [] //右の歌詞情報を保存するための変数
+let screenMode = 0//画面の表示方法を格納するための関数
+let nextBuffer = 50//次の歌詞を取得するためのbuffer時間(ms)
 let lyricFontSize = 25*compressionSquare
-let latestLyricEndTime = 0
+let latestLyricEndTime = 0//最後に表示した歌詞が終了する時間
 let beforeLatestLyricEndTime = 0
+//左のモニタの座標情報
 let sizeMonitor1 = {"x1":100*compressionSquare,
                     "y1":100*compressionSquare,
                     "x2":450*compressionSquare,
                     "y2":300*compressionSquare,
                     "width":(450-100)*compressionSquare,
                     "height":(300-100)*compressionSquare}
+//中央のモニタの座標情報
 let sizeMonitor2 = {"x1":750*compressionSquare,
                     "y1":100*compressionSquare,
                     "x2":1200*compressionSquare,
                     "y2":300*compressionSquare,
                     "width":(1200-700)*compressionSquare,
                     "height":(300-100)*compressionSquare}
+//右のモニタの座標情報
 let sizeMonitor3 = {"x1":1450*compressionSquare,
                     "y1":100*compressionSquare,
                     "x2":1800*compressionSquare,
@@ -64,6 +66,7 @@ async function deleteLryic(allDelete){
       break
     }
   }
+  //中央のモニタの処理
   for(let i = 0 ; i < monitor2.length ; i++){
     if(allDelete){
       scenes["mainScene"].removeChild(monitor2[i][2])
@@ -75,6 +78,7 @@ async function deleteLryic(allDelete){
       break
     }
   }
+  //右のモニタの処理
   for(let i = 0 ; i < monitor3.length ; i++){
     if(allDelete){
       scenes["mainScene"].removeChild(monitor3[i][2])
@@ -95,6 +99,7 @@ async function deleteLryic(allDelete){
   }
 }
 
+//再生位置が変わったときに一時的に情報を破棄する
 async function resetLyric(position){
   await deleteLryic(true)
   latestLyricEndTime = 0  
@@ -108,12 +113,14 @@ async function resetLyric(position){
   resetPosition = position
 }
 
+//表示する文字色パレット
 let redColors = ["#ff0000","#dc143c","#c71585","#ff1493","#ff6347"]
 let greenColors = ["#008000","#2e8b57","#008080","#3cb371","#008b8b"]
 let blueColors = ["#0000ff","#1e90ff","#4169e1","#00008b","#000080"]
 let orengeColors = ["#ffa500","#f4a460","#d2691e","#ffd700","#ff4500"]
 let purpleColors = ["#800080","#4b0082","#8a2be2","#9370db","#9932cc"]
 
+//TextAliveAPIから提供する品詞情報をもとに歌詞の色を決める関数
 function getLryricColor(pos){
   wordColor = "#777777"
   colorCodeIndex = Math.floor(Math.random() * redColors.length)
