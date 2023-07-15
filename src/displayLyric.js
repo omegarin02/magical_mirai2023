@@ -115,7 +115,7 @@ let orengeColors = ["#ffa500","#f4a460","#d2691e","#ffd700","#ff4500"]
 let purpleColors = ["#800080","#4b0082","#8a2be2","#9370db","#9932cc"]
 
 function getLryricColor(pos){
-  wordColor = "#eeeeee"
+  wordColor = "#777777"
   colorCodeIndex = Math.floor(Math.random() * redColors.length)
   if(pos == "N" || pos == "PN"){//名詞 or 代名詞
     wordColor = redColors[colorCodeIndex]//赤系の色
