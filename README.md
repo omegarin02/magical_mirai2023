@@ -68,3 +68,71 @@ GPTモード選択機能があることにより、審査に不利益が生じ�
   - チャットのログを見れます
 
 ### 設定画面
+ここでは次の項目を設定できる
+- 音量
+- 再生する楽曲
+- GPTモードのON/OFF
+- GPTモードで使用するためのOpen APIKEY
+- GPTモードONの時のプロンプト
+
+!!FIXME!!画像
+
+### 終了画面
+
+!!FIXME!!画像
+
+# 詳細説明
+## 人工無脳（Chat応答部分）
+## live2Dとの連携
+
+# 実行方法
+1. スクリプトを取得する
+```
+cd ${YOUR_WORKING_DIR}
+git clone 
+```
+ディレクトリ構成は下記の通り
+```
+!!FIXME!!
+```
+
+2. HTTPサーバ状に本スクリプトを配置する
+- 例1：VScodeのliveserverを使用する。
+  - VScodeをダウンロード
+  - Extentionsのサイドタブを開く
+    - liveserverをinstallする
+  - VSCodeで1でcloneしてきたディレクトリを開く
+  - index.htmlを開く
+  - VScodeの画面右下の「Go to live」をクリックする(ない場合はVScodeを再起動)
+  - ブラウザで、http://localhost:5500にアクセスする
+- 例2: nodeのhttp serverを利用する
+
+# 動作確認環境
+- OS
+  - Windows10
+- ブラウザ
+  - vivaldi、chrome
+- 対応端末
+  - PC
+
+# 対応楽曲
+- 
+- 
+- 
+- 
+- 
+- 
+※ただし、`src/musicList.js`に楽曲情報を追加するとSongleで公開されている楽曲すべて利用可能。
+
+# 作品に対する思いなど
+
+# 使用した主なライブラリ
+
+# 開発関係者紹介
+- **オメガりん**
+- **みなみ**
+- **Aoi**
+- **ゆはる**
+- **椿**
+
+# 免責事項・注意事項
