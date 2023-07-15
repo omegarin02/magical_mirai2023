@@ -17,7 +17,6 @@ const textContainer = document.querySelector("#text");
 let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
 seekbar.style.height = (10*compressionSquare).toString()+"px"
-//seekbar.style.marginTop = (height - 10*compressionSquare).toString()+"px"
 let b, c;
 let playFlag = false;
 let lyrics_id = 0;
@@ -53,8 +52,7 @@ player.addListener({
   
     /* 再生コントロールができるようになったら呼ばれる */
     onTimerReady() {
-      //document.querySelector("#control > a#play").className = "";
-      //document.querySelector("#control > a#stop").className = "";
+      ;
     },
   
   
@@ -270,7 +268,6 @@ async function setMusicInfo(){
     musicInfoTexts.push(musicInfoChar)
     scenes["mainScene"].addChild(musicInfoTexts[musicInfoTexts.length-1])
   }
-  //musicInfoBox.text = "✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name
 }
 
 //入力されたテキストに、楽曲の再生・停止命令が含まれているか確認する
@@ -348,21 +345,7 @@ async function checkWantStatStopMusic(input){
   return response
 }
 
-function moveMusicInfo(){
-  let musicInfoLen = musicInfoTexts.length
-  for(let i = 0; i < musicInfoLen ; i++){
-    if(musicInfoTexts[i].x < baseMusicInfoX * compressionSquare){
-      if(i == 0){
-        musicInfoTexts[i].x = musicInfoTexts[musicInfoLen-1].x + fontSize
-      }else{
-        musicInfoTexts[i].x = musicInfoTexts[i-1].x + fontSize
-      }
-    }else{
-      musicInfoTexts[i].x -= 3* compressionSquare
-    }
-  }
-}
-
+//入力されたテキストに、音量調整の命令が含まれている場合は楽曲の音量を調整する
 async function volumeUpDown(input){
   let response = ""
   let nowVolume = player.volume
@@ -390,5 +373,23 @@ async function volumeUpDown(input){
 
   return response
 }
+
+
+//楽曲情報を自動でするための関数
+function moveMusicInfo(){
+  let musicInfoLen = musicInfoTexts.length
+  for(let i = 0; i < musicInfoLen ; i++){
+    if(musicInfoTexts[i].x < baseMusicInfoX * compressionSquare){
+      if(i == 0){
+        musicInfoTexts[i].x = musicInfoTexts[musicInfoLen-1].x + fontSize
+      }else{
+        musicInfoTexts[i].x = musicInfoTexts[i-1].x + fontSize
+      }
+    }else{
+      musicInfoTexts[i].x -= 3* compressionSquare
+    }
+  }
+}
+
 
 setInterval(moveMusicInfo,moveInterval)

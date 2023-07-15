@@ -35,7 +35,6 @@ let {
 
 //ボタンの定義
 let startButtonDiv = document.getElementById("startButtonDiv")
-//let exitButtonDiv = document.getElementById("exitButtonDiv")
 let homeButtonDiv = document.getElementById("homeButtonDiv")
 let inputChatboxDiv = document.getElementById("inputChatboxDiv")
 let sendButtonDiv = document.getElementById("sendButtonDiv")
@@ -85,7 +84,6 @@ musicStartStopButtonDiv.style.marginTop = (topMarginNum+2).toString()+"px"
 configPageDiv.style.marginLeft = (leftMarginNum+10).toString()+"px"
 configPageDiv.style.marginTop = (topMarginNum+2).toString()+"px"
 configPageDiv.style.width = (width).toString()+"px"
-//musicStartStopButtonDiv.style.marginTop = (45).toString()+"px"
 musicStartButton.style.fontSize = (20*compressionSquare).toString()+"px"
 musicStartButton.style.marginTop = (3*compressionSquare).toString()+"px"
 musicStopButton.style.fontSize = (20*compressionSquare).toString()+"px"
@@ -98,12 +96,6 @@ volumeControllerDiv.style.marginTop = (100*compressionSquare ).toString()+"px"
 useGPTCheckboxDiv.style.marginTop = (200*compressionSquare ).toString()+"px"
 chatGPTPromptDiv.style.marginTop = (500*compressionSquare ).toString()+"px"
 chatGPTPapikeyDiv.style.marginTop = (300*compressionSquare ).toString()+"px"
-
-//configButton.style.fontSize = (20*compressionSquare).toString()+"px"
-//configButton.style.marginTop = (3*compressionSquare).toString()+"px"
-//exitボタンの位置調整
-  //大きさ調整はbuttonParts.js
-//exitButtonDiv.style.marginLeft = (leftMarginNum).toString()+"px"
 
 //seekbar
   //一部はcontrolTextAliveApi.jsで実施
@@ -149,8 +141,6 @@ async function createGradient (width, height){
   gradient1.addColorStop(0.5, sportLightGradationEnd)
   gradient2.addColorStop(0.8, sportLightGradationSecond)
   gradient2.addColorStop(1, sportLightGradationStart)
-  //gradient.addColorStop(0.8, sportLightGradationSecond)
-  //gradient.addColorStop(1, sportLightGradationStart)
 
   ctx.fillStyle = gradient1
   ctx.fillRect(0, 0, width, height)
@@ -174,8 +164,7 @@ async function setMainScene(){
 
   currentModel.scale.set(0.3*compressionSquare);//モデルの大きさ★
   currentModel.interactive = true;
-  //currentModel.anchor.set(0.3, 0.3);//モデルのアンカー★
-  currentModel.position.set(650*compressionSquare,250*compressionSquare)//window.innerWidth/3, window.innerHeight/3);//モデルの位置★
+  currentModel.position.set(650*compressionSquare,250*compressionSquare)
   currentModel.zIndex = 1200
 
   //背景を設定
@@ -230,12 +219,7 @@ async function setMainScene(){
     //光の消失点にGradationを当てるための変数を用意
     let spriteGradientCircleBack = await createGradient(lightRadius*2*compressionSquare,
                                                     (lightHeight+lightRadius/4)*compressionSquare,
-                                                    "#000000", "#FFFFFF")
-    /*
-    let spriteGradientCircleFront = await createGradient(lightRadius*2*compressionSquare,
-                                                      lightRadius*compressionSquare/4,
-                                                      "#000000", "#FFFFFF")
-    */
+                                                    )
     //三角形の部分のグラデーションを作成
     spriteGradientTriangle.mask = triangleGraphic
     spriteGradientTriangle.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
@@ -248,41 +232,9 @@ async function setMainScene(){
     spriteGradientCircleBack.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
     spriteGradientCircleBack.y = lightHeight*compressionSquare
     spriteGradientCircleBack.alpha = 0.0
-    /*
-    //薄いので増強
-    spriteGradientCircleFront.mask = circlesGraphic
-    spriteGradientCircleFront.x = (marginStage+spotLightInterval*i - lightRadius)*compressionSquare
-    spriteGradientCircleFront.y = lightHeight*compressionSquare
-    spriteGradientCircleFront.alpha = 0.0
-    */
+
     spotLightCirclesBack.push(spriteGradientCircleBack)
     spotLightCirclesFront.push(circlesGraphic)
-  }
-
-
-  //デバッグ用のグリッド線
-  
-  const gridHorizontalArray = []
-  const gridVerticalArray  = []
-  for (let i = 0 ; i*50*compressionSquare < height ; i++){
-    gridHorizontalArray.push(new PIXI.Graphics())
-    if( (i*50) % 250 == 0 ){
-      gridHorizontalArray[i].lineStyle(1, 0xFF0000);
-    }else{
-      gridHorizontalArray[i].lineStyle(1, 0x00FFFF);
-    }
-    gridHorizontalArray[i].moveTo(0,i*50*compressionSquare)
-    gridHorizontalArray[i].lineTo(width,i*50*compressionSquare);
-  }
-  for (let i = 0 ; i*50*compressionSquare < width ; i++){
-    gridVerticalArray.push(new PIXI.Graphics())
-    if( (i*50) % 250 == 0 ){
-      gridVerticalArray[i].lineStyle(1, 0xFF0000);
-    }else{
-      gridVerticalArray[i].lineStyle(1, 0x00FFFF);
-    }
-    gridVerticalArray[i].moveTo(i*50*compressionSquare,0)
-    gridVerticalArray[i].lineTo(i*50*compressionSquare,height);
   }
   
   //背景を配置する
@@ -332,6 +284,7 @@ async function setConfigScene(){
 
   scenes["configScene"] = configScene
 }
+
 //アプリの読み込み
 async function setup() { 
   //画面定義
@@ -350,14 +303,6 @@ async function setup() {
   startButtonDiv.insertAdjacentHTML('afterbegin', startButtonHtml);
   let startButton = document.getElementById("startButton")
   startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
-
-  /*
-  let startButton = document.createElement("button")
-  startButton.innerHTML = "start"
-  startButtonDiv.appendChild(startButton)
-  startButton.addEventListener("click",{scene: "mainScene",handleEvent:changeScene})
-  startButton.setAttribute("id","startButton")
-  */
 }
 
 //画面サイズを自動的にリサイズ
@@ -431,8 +376,6 @@ function changeScene(e){
   if(this.scene == "mainScene"){//メイン画面に切り替えたとき
     //ゲームスタートボタンを削除
     let startButton = document.getElementById("startButton")
-
-
     if(startButton !== null){
       startButton.remove()
     }
@@ -462,17 +405,8 @@ function changeScene(e){
     if(apikeyBox !== null){
       apikeyBox.remove()
     }
-    //ボリュームcontrolの入力欄を削除
-    //let volumeController = document.getElementById("volumeController")
-    //volumeController.remove()
-
-    //exitButtonDiv.insertAdjacentHTML('afterbegin', exitButtonHtml);
-    
     //チャット入力欄を作成する
     inputChatboxDiv.insertAdjacentHTML('afterbegin', inputChatBoxHtml);
-    
-
-
     //送信ボタンを作成してイベントを作る
     sendButtonDiv.insertAdjacentHTML('afterbegin', commentSendButtonHtml);
     let sendButton = document.getElementById("commentSendButton")
@@ -546,7 +480,6 @@ function changeScene(e){
       let useGPTController =  document.getElementById("useGPTCheckBox")
       useGPTController.checked = useGPTMode
       useGPTController.addEventListener("change",useGPTCheckBoxOnchange)
-
       //chatGPT用のプロンプト
       chatGPTPromptDiv.insertAdjacentHTML('afterbegin', promptInputHtml);
       let chatGPTPrompt = document.getElementById("promptInputTextBox")
@@ -560,7 +493,6 @@ function changeScene(e){
     }
   }
 }
-
 
 //画面情報をセットアップ
 setup()

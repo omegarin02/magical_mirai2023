@@ -31,28 +31,8 @@ let lyricNumberId = 0
 let beforeLyricNumberId = 0
 let resetPosition = 0
 let beforePosition = 0
-//compressionSquare
 
-//画面サイズの変動に伴って圧縮率を掛ける
-//ベースとなる画面の大きさは1920x1080
-//ベースのサイズで40pxサイズの文字を書いていて、縦幅と横幅が半分になったときは
-//40 x 0.5 = 20 px を設定すると思うが毎回それをすると面倒なので
-//40 x compressionSquare で求める。
-//一般化すると、「ベースの時指定したい大きさ×compressionSquare」で必ず計算すること
-
-//新しいテキストボックスの定義の方法
-//let テキストボックス名（変数名） = new PIXI.Text( "デフォルトの文字", { 色の設定など } );
-/* 色の設定などはこんな感じで書く
-{
-  fontFamily: 'Arial',
-  fontSize: 36,
-  fill: ['#000000'],
-}
-*/
-//作ったテキストボックスを追加するとき
-//scenes["mainScene"].addChild(テキストボックス名)
-//作ったテキストボックスを追加するとき
-//scenes["mainScene"].removeChild(テキストボックス名)
+//歌詞の表示を消す
 async function deleteLryic(allDelete){
   //削除処理
   for(let i = 0 ; i < monitor1.length ; i++){
@@ -143,14 +123,8 @@ function getLryricColor(pos){
   return wordColor
 }
 
+//歌詞の表示を行うための関数
 async function displayLyric(position,playFlag){
-  //歌詞の表示を行うための関数
-  //positionは再生位置が今どのへんか（ミリ秒)
-    //positionは0以上の小数なので普通に四則演算ができる
-  //playFlagは今音楽が再生されているか(再生されていたらture,されていなかったらfalse)
-  //歌詞などの情報を取得
-  
-  //console.log( player.getVocalAmplitude(position) )
   let iVideoInfo = player.video
   let wordInfo = iVideoInfo.findWord(position+nextBuffer)
   let onePhrase = ""
@@ -960,52 +934,6 @@ async function displayLyric(position,playFlag){
       await deleteLryic(false)
     }
     beforePosition = position
-
-
-
-
-        //ワンフレーズのデータ
-          //console.log(wordInfo._children)
-        //前のワンフレーズのデータ
-          //console.log(wordInfo._previous)
-        //次のワンフレーズのデータ
-          //console.log(wordInfo._next)
-        //ワンフレーズのデータ全部
-          //console.log(wordInfo._data)
-        //ワンフレーズの品詞情報
-          //console.log(wordInfo._data.rawPoS)
-        //ワンフレーズの終了時間
-          //console.log(wordInfo._data.startTime)
-        //endPhraseTime = wordInfo._data.startTime
-        //ワンフレーズの開始時間
-          //console.log(wordInfo._data.endTime)
-        //ワンフレーズを一文字ずつ取り出す方法１つめ
-        /*
-        for(let i = 0 ; i < wordInfo._children.length ; i++){
-          wordInfo._children[i]._color
-          wordInfo._children[i]._data
-          //歌詞の文字を取り出すには
-          wordInfo._children[i]._data.char
-          //歌詞を発声開始時間を取り出す
-          wordInfo._children[i]._data.startTime
-          //歌詞を発声終了時間を取り出す
-          wordInfo._children[i]._data.endTime
-          onePhrase+=wordInfo._children[i]._data.char
-          //ワンフレーズ最後の時間を取得
-        }
-        */
-        //ワンフレーズを一文字ずつ取り出す方法２つめ
-        /*
-        for(let i = 0 ; i < wordInfo._data.characters.length ; i++){
-          
-          //文字
-            //console.log(wordInfo._data.characters[i].char)
-          //発声開始タイミング
-            //console.log(wordInfo._data.characters[i].startTime)
-          //発声終了タイミング
-            //console.log(wordInfo._data.characters[i].endTime)
-        }
-        */
     }
   }
 }
