@@ -41,6 +41,7 @@ let sendButtonDiv = document.getElementById("sendButtonDiv")
 let configPageDiv = document.getElementById("configPageDiv")
 let configDecisionButtonDiv = document.getElementById("configDecisionButtonDiv")
 let volumeControllerDiv = document.getElementById("volumeControllerDiv")
+let musicSelectDiv = document.getElementById("musicSelectDiv")
 let useGPTCheckboxDiv = document.getElementById("useGPTCheckboxDiv")
 let chatGPTPromptDiv = document.getElementById("chatGPTPromptDiv")
 let chatGPTPapikeyDiv = document.getElementById("chatGPTPapikeyDiv")
@@ -93,6 +94,8 @@ configButton.style.marginTop = (3*compressionSquare).toString()+"px"
 //設定モードのボタンの位置調整
 configDecisionButtonDiv.style.marginTop = (10*compressionSquare ).toString()+"px"
 volumeControllerDiv.style.marginTop = (100*compressionSquare ).toString()+"px"
+musicSelectDiv.style.marginTop = (90*compressionSquare ).toString()+"px"
+musicSelectDiv.style.marginLeft = (800*compressionSquare ).toString()+"px"
 useGPTCheckboxDiv.style.marginTop = (200*compressionSquare ).toString()+"px"
 chatGPTPromptDiv.style.marginTop = (500*compressionSquare ).toString()+"px"
 chatGPTPapikeyDiv.style.marginTop = (300*compressionSquare ).toString()+"px"
@@ -361,6 +364,12 @@ function volumeOnchange(){
   player.volume = tmpVolume.value
 }
 
+//楽曲の変更を検知して反映する
+function musicOnchange(){
+  let musicSelecter =  document.getElementById("musicSelectBox")
+  changeMusic(musicList[Number(musicSelecter.value)].url)
+}
+
 //画面の切り替え関数
 function changeScene(e){
   for (let scene in scenes){//画面の切り替え
@@ -387,6 +396,11 @@ function changeScene(e){
     let volumeController = document.getElementById("volumeController")
     if(volumeController !== null){
       volumeController.remove()
+    }
+    //楽曲セレクターがあれば削除する
+    let musicSelectBoxDiv = document.getElementById("musicSelectBoxDiv")
+    if(musicSelectBoxDiv !== null){
+      musicSelectBoxDiv.remove()
     }
     //GPTを使うかのcheckボタンがあれば削除
     let useGPTcheckBox = document.getElementById("useGPT")
@@ -474,6 +488,12 @@ function changeScene(e){
     volumeControllerDiv.insertAdjacentHTML('afterbegin', volumeControllerHtml);
     let volumeController =  document.getElementById("volumeController")
     volumeController.addEventListener("change",volumeOnchange)
+    //楽曲セレクト
+    musicSelectDiv.insertAdjacentHTML('afterbegin', musicSelectHtml);
+    let musicSelecter =  document.getElementById("musicSelectBox")
+    musicSelecter.addEventListener("change",musicOnchange)
+
+
     if(disableGPTMode===false){
       //chatGPTモードを使うかのcheckbox
       useGPTCheckboxDiv.insertAdjacentHTML('afterbegin', useGPTCheckboxHtml);

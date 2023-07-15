@@ -82,10 +82,21 @@ body{
   position:absolute;
   width: 100%
 }
+
 .volumeControllerTool{
   position:absolute;
   width: 30%;
 }
+
+.musicSelectTool{
+  position:absolute;
+  width: 30%;
+}
+
+.selectContent{
+  background: black;
+}
+
 .useGPTCheckboxTool{
   position:absolute;
   width: 100%;
