@@ -33,13 +33,13 @@ let musicList = [
       artist:"Rin（Kuroneko Lounge）",
       Voc:"初音ミク",
       keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ","Rin","Kuroneko","Lounge"],
-      url:"https://piapro.jp/t/fnhJ/20230131212038"
+      url:"https://piapro.jp/t/Wk83/20230203141007"
     },
     {
       title:"Entrust via 39",
       artist:"ikomai",
       Voc:"初音ミク",
       keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ"],
-      url:"https://piapro.jp/t/fyxI/20230203003935"
+      url:"https://piapro.jp/t/Ya0_/20230201235034"
     },
   ]
