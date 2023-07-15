@@ -35,8 +35,9 @@ let beforePosition = 0
 //歌詞の表示を消す
 async function deleteLryic(allDelete){
   //削除処理
+  //左のモニタの処理
   for(let i = 0 ; i < monitor1.length ; i++){
-    if(allDelete){
+    if(allDelete){//全ての歌詞情報を削除する場合
       scenes["mainScene"].removeChild(monitor1[i][2])
     }else if(beforeLyricNumberId >= monitor1[i][3]){//オブジェクトを追加する
       scenes["mainScene"].removeChild(monitor1[i][2])
