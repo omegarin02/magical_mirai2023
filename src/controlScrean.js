@@ -5,6 +5,7 @@ let textfont = "RocknRoll One"//フォント名
 let chatTextBox = new PIXI.Text( "", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );//chatのログの表示用
 let hallucinationCaution1 = new PIXI.Text( "STARTしたらあなたはバーチャル空間に入ります。バーチャル空間は現実空間と似て非なる空間です。", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );//hallucination対策1
 let hallucinationCaution2 = new PIXI.Text( "なので、現実空間の事実とは異なることをミクさんが発言するかもしれないのでご注意ください。", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );//hallucination対策2
+let fullscreenAttention = new PIXI.Text( "PCの場合、オススメ解像度は1920x1080です。また、全画面表示にしてリロード(F5を押す)ことをオススメします。", { fill: 0x00ac9b,fontSize: 22.5*compressionSquare,fontFamily: textfont } );//フルスクリーンに誘導
 let nowVolumeTextBox = new PIXI.Text( "", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );//現在の音量表示用
 let openAIKeyLabelText = new PIXI.Text( "OPENAI KEY(自己責任でお願いします。※GPTモードは有料です。)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let promptLabelText = new PIXI.Text( "Prompt(モデル：gpt-3.5-turbo)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
@@ -162,8 +163,11 @@ async function setStartScene(){
   hallucinationCaution1.y = 700*compressionSquare
   hallucinationCaution2.x = 500*compressionSquare
   hallucinationCaution2.y = 750*compressionSquare
+  fullscreenAttention.x = 500*compressionSquare
+  fullscreenAttention.y = 850*compressionSquare
   startScene.addChild(hallucinationCaution1)
   startScene.addChild(hallucinationCaution2)
+  startScene.addChild(fullscreenAttention)
   app.stage.addChild(startScene)
   scenes["startScene"] = startScene
 }
