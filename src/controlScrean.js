@@ -494,6 +494,7 @@ function changeScene(e){
     let volumeController =  document.getElementById("volumeController")
     volumeController.addEventListener("change",volumeOnchange)
     //楽曲セレクト
+    updateMusicSerector()
     musicSelectDiv.insertAdjacentHTML('afterbegin', musicSelectHtml);
     let musicSelecter =  document.getElementById("musicSelectBox")
     musicSelecter.addEventListener("change",musicOnchange)

@@ -28,14 +28,25 @@ const apikeyInputHtml = `
   <input id="apikeyInputTextBox" type="password" placeholder="OPENAI KEY" style="width:100%" /> \
 </div>`
 
-let musicSelectHtml = `
-<div class="cyber-select" id="musicSelectBoxDiv">
-    <select id="musicSelectBox" class="cyber-input ac-cyan gb-cyan fg-cyan" style="font-size:${inputChatBoxTextSize};color:cyan">
-`
-for(let i = 0 ; i < musicList.length; i++){
-  musicSelectHtml += `<option value="${i}" class="selectContent" >${musicList[i].title}</option>`
+let nowSongName = ""
+let musicSelectHtml = ""
+
+async function updateMusicSerector(){
+  musicSelectHtml = `
+  <div class="cyber-select" id="musicSelectBoxDiv">
+      <select id="musicSelectBox" class="cyber-input ac-cyan gb-cyan fg-cyan" style="font-size:${inputChatBoxTextSize};color:cyan;width:120%">
+  `  
+  for(let i = 0 ; i < musicList.length; i++){
+    if(nowSongName == musicList[i].title){
+      musicSelectHtml += `<option value="${i}" class="selectContent" selected>${musicList[i].title}</option>`
+    }else{
+      musicSelectHtml += `<option value="${i}" class="selectContent" >${musicList[i].title}</option>`
+    }
+  }
+  musicSelectHtml +=`
+      </select>
+  </div>
+  `
 }
-musicSelectHtml +=`
-    </select>
-</div>
-`
+
+updateMusicSerector()

@@ -262,6 +262,7 @@ async function setMusicInfo(){
   musicInfoTexts = [];
   let musicInfo="✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name+ " "
   let MusicInfoArray = [...musicInfo]
+  nowSongName = player.data.song.name
   for (let i = 0 ; i < MusicInfoArray.length ; i++ ){
     musicInfoChar = new PIXI.Text( MusicInfoArray[i], { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } )
     musicInfoChar.x =baseMusicInfoX * compressionSquare + fontSize * i
