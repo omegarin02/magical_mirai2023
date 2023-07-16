@@ -1,3 +1,4 @@
+//画面上に表示するボタン定義しているスクリプト
 let startButtonWidth = (400 * compressionSquare).toString()+"px"
 let startButtonFontSize = (20 * compressionSquare).toString()+"px"
 let homeButtonWidth = startButtonWidth

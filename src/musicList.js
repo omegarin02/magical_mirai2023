@@ -1,3 +1,4 @@
+//検索用の楽曲情報
 let musicList = [
     {
       title:"king妃jack躍",
@@ -28,17 +29,17 @@ let musicList = [
       url:"https://piapro.jp/t/fyxI/20230203003935"
     },
     {
-      title:"ミュウテイション",
+      title:"ミュウテイション (feat. その名はもちろん初音ミク)",
       artist:"Rin（Kuroneko Lounge）",
       Voc:"初音ミク",
-      keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ","Rin","Kuroneko","Lounge"],
-      url:"https://piapro.jp/t/fnhJ/20230131212038"
+      keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ","Rin","Kuroneko","Lounge","ミュウテイション"],
+      url:"https://piapro.jp/t/Wk83/20230203141007"
     },
     {
       title:"Entrust via 39",
       artist:"ikomai",
       Voc:"初音ミク",
       keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ"],
-      url:"https://piapro.jp/t/fyxI/20230203003935"
+      url:"https://piapro.jp/t/Ya0_/20230201235034"
     },
   ]

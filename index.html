@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ここにタイトルを入れます</title>
+    <title>言葉としぐさで気持ちを紡ぐバーチャル歌姫</title>
     <!-- faviconの読み込み-->
     <link rel="icon" href="./favicon/favicon.ico" />
     <!--config read-->
@@ -25,13 +25,13 @@
     <link rel="stylesheet" href="css/globale.css">
     <link rel="stylesheet" href="css/cyberpunk.css">
     <link rel="stylesheet" href="https://unpkg.com/knopf.css/knopf.min.css">
+    <!-- config etc...-->
+    <script src="src/musicList.js"></script>
+    <script src="src/responseRules.js"></script>
     <!-- parts-->
     <script src="src/culcCompressionRaito.js"></script>
     <script src="src/buttonParts.js"></script>
     <script src="src/textInputParts.js"></script>
-    <!-- config etc...-->
-    <script src="src/musicList.js"></script>
-    <script src="src/responseRules.js"></script>
     <!--kuromoji-->
     <script src="src/kuromoji.js"></script>
     <!--nomarize-->
@@ -45,15 +45,6 @@
 
     
     <div>
-      <!-- 音源 / Audio souce -->
-
-      <!-- アーティストと楽曲の情報の表示/ Artist and song info -->
-      <!--このボタンは後で消す-->
-      <!--
-      <div>
-        <button onclick="Motion(0);">モーション1</button>
-      </div>
-      -->
       <!--start button-->
       <div id="startButtonDiv" class="startButtonDiv"></div>
       <div id="exitButtonDiv" class="exitButtonDiv"></div>
@@ -78,9 +69,11 @@
           <button class="knopf pill" id="configButton">　⚙　</button>
         </div>
       </div>
+      <!-- 設定ページの定義 -->
       <div id="configPageDiv" class="configPageTool" >
         <div id="configDecisionButtonDiv" class="configDecisionButton"></div>
-        <div id="volumeControllerDiv" class="volumeControllerTool"></div>  
+        <div id="volumeControllerDiv" class="volumeControllerTool"></div>
+        <div id="musicSelectDiv" class="musicSelectTool"></div>  
         <div id="useGPTCheckboxDiv" class="useGPTCheckboxTool"></div>
         <div id="chatGPTPromptDiv" class="chatGPTPromptTool"></div>
         <div id="chatGPTPapikeyDiv" class="chatGPTPapikeyDivTool"></div>

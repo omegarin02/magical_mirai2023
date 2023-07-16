@@ -1,3 +1,5 @@
+//楽曲再生中のmotionを決めるための関数
+//motionはTextAliveAPIから提供される覚醒度と感情価から決定
 let motionDecision = [
 	{"a":0.4,"v":0.3,"motion":[5]},
 	{"a":0.4,"v":0.2,"motion":[14]},
@@ -29,6 +31,7 @@ let motionDecision = [
 let beatCounter = 0
 let counterFlag = false
 
+//2小節の頭でmotionを発火させる
 function danceMotion(position,playFlag){
 	let beatInfo = player.findBeat(position)
 	if(playFlag){
@@ -36,13 +39,10 @@ function danceMotion(position,playFlag){
 			beatCounter += 1
 			counterFlag = true
 			if(beatCounter == 2){
-				console.log(player.getValenceArousal(position))//a 覚醒度, v 感情価
 				let valenceArousal = player.getValenceArousal(position)
-				console.log(valenceArousal.a,valenceArousal.v)
 				for(let i = 0 ; i < motionDecision.length; i++){
 					let motionD = motionDecision[i]
 					if(motionD.a <= valenceArousal.a && motionD.v <= valenceArousal.v){
-						console.log(motionD)
 						motionArray = motionD["motion"]
 						motionNum = Math.floor(Math.random() * motionArray.length)
 						Motion(motionArray[motionNum])

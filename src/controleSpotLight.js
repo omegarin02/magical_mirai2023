@@ -1,3 +1,4 @@
+//スポットライトの動きを定義するスクリプト
 let spotLightColor = [0xffffff,0x0000ff,0x33ffcc,0xff0000,0xffa500,0x00ffff,0xffc0cb]//[0xffffff]
 let spotLightBrightPattern = [
 															[
@@ -25,7 +26,7 @@ let lightColor2
 let lightColor3
 let changedFlag = false
 
-function clucAlphaFunc(x){//sigmoid
+function clucAlphaFunc(x){//輝度を決める関数
 	let alpha = 0.2 + (1/(1+Math.exp(1)**(-gain*x)))*0.2
 	if(alpha > maxBrightness){
 		alpha = maxBrightness
@@ -36,7 +37,7 @@ function clucAlphaFunc(x){//sigmoid
 }
 
 
-function lightsOut(){
+function lightsOut(){//ライトを全て消灯する関数
 	for (let i = 0 ; i < spotLightTriangles.length ; i++){
     spotLightTriangles[i].alpha = 0
 		spotLightCirclesBack[i].alpha = 0
@@ -44,7 +45,7 @@ function lightsOut(){
 	}
 }
 
-function controleSpotLight(position,playFlag){
+function controleSpotLight(position,playFlag){//ライトの明るさを調整する関数
   //ビート情報の取得
 	let beatInfo = player.findBeat(position)
   //コード情報の取得
@@ -115,32 +116,3 @@ function controleSpotLight(position,playFlag){
 		changedFlag = false
 	}
 }
-
-    //ビート情報の取り方
-      //beatInfoにはpositionで指定した時間の情報が全て入っている
-      //console.log(beatInfo)
-        //次の情報(次のbeatInfoが見れる)
-          //console.log(beatInfo.next)
-        //前の情報(前のbeatInfoが見れる)
-          //console.log(beatInfo.previous)
-        //このビートが始まる時間
-          //console.log(beatInfo.startTime)
-        //このビートの長さ(4なら4拍分 多分...)
-          //console.log(beatInfo.length)
-        //何小節目か(多分？)
-          //console.log(beatInfo.index)
-    //コードの取り方
-      //chordtInfoにはpositionで指定した時間の情報が全て入っている
-      //console.log(chordInfo)
-      //次の情報を取る(ない場合はnull)
-        //onsole.log(chordInfo.next)
-      //前の情報を取る(ない場合はnull)
-        //console.log(chordInfo.next)
-      //このコードが開始される時間(ミリ秒)
-        //console.log(chordInfo.startTime)
-      //このコードが終了する時間(ミリ秒)
-        //console.log(chordInfo.endTime)
-      //コードネーム
-        //console.log(chordInfo.name)
-    //歌詞情報の取りかた
-    //wordInfoがnullの時はデータがないのでエラーが出る

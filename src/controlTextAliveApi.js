@@ -17,7 +17,6 @@ const textContainer = document.querySelector("#text");
 let seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
 seekbar.style.height = (10*compressionSquare).toString()+"px"
-//seekbar.style.marginTop = (height - 10*compressionSquare).toString()+"px"
 let b, c;
 let playFlag = false;
 let lyrics_id = 0;
@@ -29,6 +28,74 @@ let miku_position = 1;
 let moveInterval = 100
 let baseMusicInfoX = 1450
 let baseMusicInfoY = 1050
+//楽曲を再生するためのワード
+const musicStartWord = [
+  ["音楽","再生"],
+  ["音楽","流して"],
+  ["音楽","ながして"],
+  ["音楽","かけて"],
+  ["音楽","スタート"],
+  ["曲","再生"],
+  ["曲","流して"],
+  ["曲","ながして"],
+  ["曲","かけて"],
+  ["曲","スタート"],
+  ["ミュージック","スタート"],
+  ["再生","スタート"],
+]
+//楽曲を停止するためのワード
+const musicStopWord = [
+  ["音楽","止めて"],
+  ["音楽","とめて"],
+  ["音楽","停止"],
+  ["音楽","ストップ"],
+  ["曲","止めて"],
+  ["曲","とめて"],
+  ["曲","停止"],
+  ["曲","ストップ"],
+  ["再生","ストップ"],
+  ["ミュージック","ストップ"],
+]
+//楽曲の音量を上げるためのワード
+const volumeUpWord = [
+  ["音量","上げて"],
+  ["音量","あげて"],
+  ["音量","大きく"],
+  ["音量","小さい"],
+  ["ボリューム","上げて"],
+  ["ボリューム","あげて"],
+  ["ボリューム","大きく"],
+  ["ボリューム","小さい"],
+  ["音楽","小さい"],
+  ["音楽","聴こえない"],
+  ["音楽","きこえない"],
+  ["音","上げて"],
+  ["音","あげて"],
+  ["音","大きく"],
+  ["音","小さい"],
+  ["音","聴こえない"],
+  ["音","きこえない"],
+]
+//楽曲の音量を下げるためのワード
+const volumeDownWord = [
+  ["音量","下げて"],
+  ["音量","さげて"],
+  ["音量","小さく"],
+  ["音量","大きい"],
+  ["ボリューム","下げて"],
+  ["ボリューム","さげて"],
+  ["ボリューム","小さく"],
+  ["ボリューム","大きい"],
+  ["音楽","でかい"],
+  ["音楽","うるさい"],
+  ["音","下げて"],
+  ["音","さげて"],
+  ["音","小さく"],
+  ["音","大きい"],
+  ["音","うるさい"],
+]
+
+
 
 player.addListener({
     /* APIの準備ができたら呼ばれる */
@@ -38,6 +105,7 @@ player.addListener({
       }
       if (!app.songUrl) {
         // king妃jack躍 / 宮守文学 feat. 初音ミク
+        //デフォルトの曲目を設定
         player.createFromSongUrl("https://piapro.jp/t/ucgN/20230110005414");
       }
     },
@@ -52,8 +120,7 @@ player.addListener({
   
     /* 再生コントロールができるようになったら呼ばれる */
     onTimerReady() {
-      //document.querySelector("#control > a#play").className = "";
-      //document.querySelector("#control > a#stop").className = "";
+      ;
     },
   
   
@@ -137,8 +204,9 @@ function changeMusic(url){
   player.createFromSongUrl(url);
 }
 
-
-function checkChangeMusic(input){//TODO検索エンジンの強化
+//テキストによる楽曲検索機能
+//データは、musicList.jsで定義している
+function checkChangeMusic(input){
   musicUrlTitle = []
   maxScoreIndex = []
   maxScore = 0
@@ -150,18 +218,21 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
       maxScoreIndex = []
       break
     }
+    //アーティスト情報が一致するか
     if(input.indexOf(musicList[i].artist) !== -1){
       score++
     }
+    //使用しているボーカロイドが一致するか
     if(input.indexOf(musicList[i].Voc) !== -1){
       score++
     }
-    
+    //あらかじめ登録した楽曲に対するキーワードが一致するか
     for(let j = 0 ; j < musicList[i].keyWord.length ; j++){     
       if(input.indexOf(musicList[i].keyWord[j]) !== -1){
         score++
       }
     }
+    //最も検索スコアが良かったものを検索結果として使用する
     if(maxScore < score){
       maxScore = score
       maxScoreIndex = []
@@ -176,7 +247,6 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
       musicUrlTitle.push([musicList[index].title,musicList[index].url])
     }
   }
-  console.log(musicUrlTitle)
   if(musicUrlTitle.length == 0){
     return [[],false]
   }else{
@@ -184,80 +254,15 @@ function checkChangeMusic(input){//TODO検索エンジンの強化
   }
 }
 
-const musicStartWord = [
-  ["音楽","再生"],
-  ["音楽","流して"],
-  ["音楽","ながして"],
-  ["音楽","かけて"],
-  ["音楽","スタート"],
-  ["曲","再生"],
-  ["曲","流して"],
-  ["曲","ながして"],
-  ["曲","かけて"],
-  ["曲","スタート"],
-  ["ミュージック","スタート"],
-  ["再生","スタート"],
-]
-const musicStopWord = [
-  ["音楽","止めて"],
-  ["音楽","とめて"],
-  ["音楽","停止"],
-  ["音楽","ストップ"],
-  ["曲","止めて"],
-  ["曲","とめて"],
-  ["曲","停止"],
-  ["曲","ストップ"],
-  ["再生","ストップ"],
-  ["ミュージック","ストップ"],
-]
-
-const volumeUpWord = [
-  ["音量","上げて"],
-  ["音量","あげて"],
-  ["音量","大きく"],
-  ["音量","小さい"],
-  ["ボリューム","上げて"],
-  ["ボリューム","あげて"],
-  ["ボリューム","大きく"],
-  ["ボリューム","小さい"],
-  ["音楽","小さい"],
-  ["音楽","聴こえない"],
-  ["音楽","きこえない"],
-  ["音","上げて"],
-  ["音","あげて"],
-  ["音","大きく"],
-  ["音","小さい"],
-  ["音","聴こえない"],
-  ["音","きこえない"],
-]
-
-const volumeDownWord = [
-  ["音量","下げて"],
-  ["音量","さげて"],
-  ["音量","小さく"],
-  ["音量","大きい"],
-  ["ボリューム","下げて"],
-  ["ボリューム","さげて"],
-  ["ボリューム","小さく"],
-  ["ボリューム","大きい"],
-  ["音楽","でかい"],
-  ["音楽","うるさい"],
-  ["音","下げて"],
-  ["音","さげて"],
-  ["音","小さく"],
-  ["音","大きい"],
-  ["音","うるさい"],
-]
-
+//楽曲情報をセットして画面上に表示する
 async function setMusicInfo(){
-  //artistTextBox.text = "✎："+player.data.song.artist.name
-  //titleTextBox.text = "♬："+player.data.song.name
   for (let i = 0; i < musicInfoTexts.length; i++){//楽曲情報の表示を全て削除
     scenes["mainScene"].removeChild(musicInfoTexts[i])
   }
   musicInfoTexts = [];
   let musicInfo="✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name+ " "
   let MusicInfoArray = [...musicInfo]
+  nowSongName = player.data.song.name
   for (let i = 0 ; i < MusicInfoArray.length ; i++ ){
     musicInfoChar = new PIXI.Text( MusicInfoArray[i], { fill: 0x33ffff,fontSize: fontSize,fontFamily: textfont } )
     musicInfoChar.x =baseMusicInfoX * compressionSquare + fontSize * i
@@ -265,9 +270,9 @@ async function setMusicInfo(){
     musicInfoTexts.push(musicInfoChar)
     scenes["mainScene"].addChild(musicInfoTexts[musicInfoTexts.length-1])
   }
-  //musicInfoBox.text = "✎："+player.data.song.artist.name + " " +"♬："+player.data.song.name
 }
 
+//入力されたテキストに、楽曲の再生・停止命令が含まれているか確認する
 async function checkStartStopWord(input,checkWordList){
   let checkFlag = false
   for (let i = 0 ; i < checkWordList.length ; i++){
@@ -284,10 +289,10 @@ async function checkStartStopWord(input,checkWordList){
       break
     }
   }
-  console.log(checkFlag)
   return checkFlag
 }
 
+//入力されたテキストに、音量操作命令が含まれているか確認する
 async function checkVolumeUpDownWord(input,checkWordList){
   let checkFlag = false
   for (let i = 0 ; i < checkWordList.length ; i++){
@@ -304,11 +309,11 @@ async function checkVolumeUpDownWord(input,checkWordList){
       break
     }
   }
-  console.log(checkFlag)
   return checkFlag
 }
 
 
+//入力されたテキストに、楽曲の再生・停止命令が含まれている場合は楽曲を再生・停止する
 async function checkWantStatStopMusic(input){
   response = ""
   if(await checkStartStopWord(input,musicStartWord)){//再生コマンドのバリエーションを増やす
@@ -328,7 +333,7 @@ async function checkWantStatStopMusic(input){
       setMusicInfo()
       player.requestPlay();
     }
-  }else if(await checkStartStopWord(input,musicStopWord)){//停止コマンドのバリエーションを増やす
+  }else if(await checkStartStopWord(input,musicStopWord)){
     deleteLryic(true);
     if(playFlag){
       response = musicStopResponse[Math.floor(Math.random() * musicStopResponse.length)]
@@ -340,21 +345,7 @@ async function checkWantStatStopMusic(input){
   return response
 }
 
-function moveMusicInfo(){
-  let musicInfoLen = musicInfoTexts.length
-  for(let i = 0; i < musicInfoLen ; i++){
-    if(musicInfoTexts[i].x < baseMusicInfoX * compressionSquare){
-      if(i == 0){
-        musicInfoTexts[i].x = musicInfoTexts[musicInfoLen-1].x + fontSize
-      }else{
-        musicInfoTexts[i].x = musicInfoTexts[i-1].x + fontSize
-      }
-    }else{
-      musicInfoTexts[i].x -= 3* compressionSquare
-    }
-  }
-}
-
+//入力されたテキストに、音量調整の命令が含まれている場合は楽曲の音量を調整する
 async function volumeUpDown(input){
   let response = ""
   let nowVolume = player.volume
@@ -382,5 +373,23 @@ async function volumeUpDown(input){
 
   return response
 }
+
+
+//楽曲情報を自動でするための関数
+function moveMusicInfo(){
+  let musicInfoLen = musicInfoTexts.length
+  for(let i = 0; i < musicInfoLen ; i++){
+    if(musicInfoTexts[i].x < baseMusicInfoX * compressionSquare){
+      if(i == 0){
+        musicInfoTexts[i].x = musicInfoTexts[musicInfoLen-1].x + fontSize
+      }else{
+        musicInfoTexts[i].x = musicInfoTexts[i-1].x + fontSize
+      }
+    }else{
+      musicInfoTexts[i].x -= 3* compressionSquare
+    }
+  }
+}
+
 
 setInterval(moveMusicInfo,moveInterval)
