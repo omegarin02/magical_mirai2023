@@ -23,7 +23,7 @@ let sportLightGradationSecond = "#d3d3d3"//スポットライトのGradation中�
 let sportLightGradationEnd = "#FFFFFF"//スポットライトのGradation終端カラー
 let lightSourceWidth = 20//光源の太さ
 let vanishingPoint = 25//光の消失点(スポットライト高さからの差分)
-
+let mainSceneStartMotions = [4,5,6,10,12]//メインscreen開始時にミクさんが笑顔で迎えてくれる
 
 
 // PixiJS
@@ -154,6 +154,11 @@ async function createGradient (width, height){
   ctx.fillRect(0, 0, width, height)
 
   return PIXI.Sprite.from(canvas)
+}
+
+async function mainSceneCallFirstMotion(){
+  await sleep(200)
+  Motion(mainSceneStartMotions[Math.floor(Math.random() * mainSceneStartMotions.length)])
 }
 
 //ゲームのトップ画面を作成する
@@ -399,6 +404,7 @@ function changeScene(e){
   }
   //画面に表示するパーツ類の切り替え
   if(this.scene == "mainScene"){//メイン画面に切り替えたとき
+    mainSceneCallFirstMotion()
     //ゲームスタートボタンを削除
     let startButton = document.getElementById("startButton")
     if(startButton !== null){
