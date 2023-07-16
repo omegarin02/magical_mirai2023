@@ -1,4 +1,4 @@
-let disableGPTMode = false//Trueの場合GPTモードの選択を可能にする
+let disableGPTMode = false//falseの場合GPTモードの選択を可能にする
 const GPTURL = "https://api.openai.com/v1/chat/completions"//chatGPTへのPOST先
 let useGPTMode = false//GPTモードを使用するか
 let openAIKey = ""
