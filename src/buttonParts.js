@@ -32,7 +32,7 @@ const homeButtonHtml = `
   id="homeButton"
   style="width:${homeButtonWidth};font-size:${homeButtonFontSize}"
 > 
-  Go back to home 
+  return to home 
   <span class="glitchtext"> 
     Some edgy txt
   </span>
