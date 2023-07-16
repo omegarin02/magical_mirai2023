@@ -89,7 +89,7 @@ GPTモード選択機能があることにより、審査に不利益が生じ�
 1. スクリプトを取得する
 ```
 cd ${YOUR_WORKING_DIR}
-git clone 
+git clone https://github.com/Motohiro-Otsuka/magical_mirai2023.git
 ```
 ディレクトリ構成は下記の通り
 ```
@@ -97,15 +97,18 @@ git clone
 ```
 
 2. HTTPサーバ状に本スクリプトを配置する
+次の例を参考にサーバを立てて実行する
 - 例1：VScodeのliveserverを使用する。
   - VScodeをダウンロード
   - Extentionsのサイドタブを開く
     - liveserverをinstallする
-  - VSCodeで1でcloneしてきたディレクトリを開く
-  - index.htmlを開く
-  - VScodeの画面右下の「Go to live」をクリックする(ない場合はVScodeを再起動)
-  - ブラウザで、http://localhost:5500にアクセスする
+  - VSCodeで1でcloneしてきたディレクトリを新たに開く
+    - `code magical_mirai2023` をVSCodeの統合ターミナルに入力してEnterを入力
+    - VScodeのwindowが新たに立ち上がる
+  - 新たに立ち上がったVScodeの画面右下の「Go to live」をクリックする(ない場合はVScodeを再起動)
+  - ブラウザで、http://localhost:5500 にアクセスする(デフォルトではGo To liveをクリックすると自動的に立ち上がる)
 - 例2: nodeのhttp serverを利用する
+  - !!FIXME!!去年のコピペ 
 
 # 動作確認環境
 - OS
