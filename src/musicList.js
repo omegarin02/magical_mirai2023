@@ -15,10 +15,10 @@ let musicList = [
       url:"https://piapro.jp/t/fnhJ/20230131212038"
     },
     {
-      title:"唱明者",
+      title:"唱明者 / KAITO V3",
       artist:"すこやか大聖堂",
       Voc:"KAITO",
-      keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ"],
+      keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ","唱明者","KAITO V3"],
       url:"https://piapro.jp/t/Vfrl/20230120182855"
     },
     {
@@ -36,10 +36,10 @@ let musicList = [
       url:"https://piapro.jp/t/Wk83/20230203141007"
     },
     {
-      title:"Entrust via 39",
+      title:"Entrust via 39 feat.初音ミク",
       artist:"ikomai",
       Voc:"初音ミク",
-      keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ"],
+      keyWord:["2023","マジミラ","準優勝","入賞","楽曲コンテスト","ミク","準グランプリ","Entrust via 39"],
       url:"https://piapro.jp/t/Ya0_/20230201235034"
     },
   ]
