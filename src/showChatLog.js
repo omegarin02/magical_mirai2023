@@ -267,7 +267,7 @@ async function makeSpeechBalloon(mikuText){
     balloonHeight = baseSize*(2+n)
   }
   basePointX = 650*compressionSquare + baseSize*2 //ミクの立っている場所のn文字ずらしたところ
-  basePointY = 250*compressionSquare - baseSize*2 //ミクが立っている頭の座標から1文字分ずらしたところ
+  basePointY = 300*compressionSquare - baseSize*2 //ミクが立っている頭の座標から1文字分ずらしたところ
   //吹き出しの形を定義
   speechBalloonPoint = [basePointX-balloonWidth/2, basePointY,//p0 
                         basePointX+balloonWidth/2, basePointY, //p1

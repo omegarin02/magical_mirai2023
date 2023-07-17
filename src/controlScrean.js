@@ -186,7 +186,7 @@ async function setMainScene(){
 
   currentModel.scale.set(0.3*compressionSquare);//モデルの大きさ★
   currentModel.interactive = true;
-  currentModel.position.set(650*compressionSquare,250*compressionSquare)
+  currentModel.position.set(650*compressionSquare,300*compressionSquare)
   currentModel.zIndex = 1200
 
   //背景を設定
