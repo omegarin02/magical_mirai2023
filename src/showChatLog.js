@@ -35,6 +35,7 @@ async function callGPT(input){
       return chatgpt_response
   } catch (error) {
       console.log(error);
+      return errorGPTResponse[Math.floor(Math.random() * errorGPTResponse.length)]
   }
 }
 
@@ -80,7 +81,7 @@ async function prediction(input){
       })
     }
     //既知の単語が8割り未満で、まともな解答ができないので日本語分からないと答える
-    if(checkKnowWords(syushi) < 0.8){
+    if(checkKnowWords(syushi) < 0.8 && useGPTMode===false){
       result = unknownRespons[Math.floor(Math.random() * unknownRespons.length)]
       makeSpeechBalloon(result)//吹き出しに登録
       splitMaxChar(result,"MIKU")//chatログの画面に収まるようにデータを加工
