@@ -27,7 +27,7 @@ https://youtu.be/JprxzgXKLHw
 本作品はchatGPTを用いなくても動作には問題ないですが  
 GPTモード選択機能があることにより、審査に不利益が生じる場合は、  
 お手数ですが、GPTモード選択機能を無効化の設定を行ったうえで審査をお願いいたします。  
-無効化の設定は[こちら](https://github.com/Motohiro-Otsuka/magical_mirai2023#gpt%E6%A9%9F%E8%83%BD%E8%87%AA%E4%BD%93%E3%81%AE%E7%84%A1%E5%8A%B9%E5%8C%96)  
+無効化の設定は[こちら](https://github.com/Motohiro-Otsuka/magical_mirai2023#gpt%E6%A9%9F%E8%83%BD%E8%87%AA%E4%BD%93%E3%81%AE%E7%84%A1%E5%8A%B9%E5%8C%96)。  
 大変恐れ入りますが、OpenAI keyの用意はございませんので、必要に応じて取得してください。  
 ※Azureは非対応なので、使用されえる際はOpenaiのAPI KEYをご用意ください。  
 
