@@ -10,6 +10,7 @@ let nowVolumeTextBox = new PIXI.Text( "", { fill:"cyan",fontSize: 22.5*compressi
 let openAIKeyLabelText = new PIXI.Text( "OPENAI KEY(自己責任でお願いします。※GPTモードは有料です。)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let promptLabelText = new PIXI.Text( "Prompt(モデル：gpt-3.5-turbo)", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let requestLabelText = new PIXI.Text( "GPTへのリクエストは[{'system':prompt},{'user':チャット}]。チャットは最新の1会話分", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
+let autoOffGPTmodeText = new PIXI.Text( "※アプリを終了すると全ての設定がリセットされます", { fill:"cyan",fontSize: 22.5*compressionSquare,fontFamily: textfont } );
 let musicInfoTexts = []//楽曲情報を格納しておくための配列
 let marginStage = -50*3.5/2 //ステージの位置を調整
 let lightRadius = 200//スポットライトの最大半径
@@ -295,11 +296,14 @@ async function setConfigScene(){
   promptLabelText.y = 470*compressionSquare
   requestLabelText.x = 20*compressionSquare
   requestLabelText.y = 570*compressionSquare
+  autoOffGPTmodeText.x = 20*compressionSquare
+  autoOffGPTmodeText.y = 620*compressionSquare
   configScene.addChild(nowVolumeTextBox)
   if(disableGPTMode===false){//GPTモードが選択できる場合
     configScene.addChild(openAIKeyLabelText)
     configScene.addChild(promptLabelText)
     configScene.addChild(requestLabelText)
+    configScene.addChild(autoOffGPTmodeText)
   }
   app.stage.addChild(configScene)
 
@@ -473,7 +477,21 @@ function changeScene(e){
     lightsOut()
     //歌詞の削除
     deleteLryic(true);
-    
+    //チャットログの削除
+    clearChatLog()
+    chatTextBox.text = ""
+    delSpeechBalloon(true)
+    //GPTモード終了
+    useGPTMode = false
+    //promptリセット
+    userPrompt = defaultPrompt
+    //音楽を元に戻す
+    changeMusic(musicList[0].url)
+    //ボリュームリセット
+    player.volume = 100
+    //APIkeyリセット
+    openAIKey = ""
+
   }else if(this.scene == "startScene"){//start画面に遷移したとき
     //スタートに戻るボタンを削除
     let homeButton = document.getElementById("homeButton")

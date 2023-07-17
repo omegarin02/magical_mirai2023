@@ -8,6 +8,10 @@ const maxChar = 20
 const balloonTimeout = 10
 const checkInterval = 1000
 
+function clearChatLog(){
+  chatLog = []
+}
+
 //GTPにcallする関数
 async function callGPT(input){
   try {
@@ -228,14 +232,22 @@ function splitMaxChar(input,user){
 }
 
 //吹き出しを削除するための関数
-function delSpeechBalloon(){
+function delSpeechBalloon(deleteAll){
+  console.log("call",deleteAll)
   for (let i = 0 ; i < speechBalloons.length; i++){
     speechBalloons[i][2] = speechBalloons[i][2] - checkInterval/1000
-    if(speechBalloons[i][2] <= 0){
+    if(deleteAll){
       scenes["mainScene"].removeChild(speechBalloons[i][0])//balloonを削除
       scenes["mainScene"].removeChild(speechBalloons[i][1])//textを削除
       speechBalloons.shift()
       i -= 1
+    }else{
+      if(speechBalloons[i][2] <= 0){
+        scenes["mainScene"].removeChild(speechBalloons[i][0])//balloonを削除
+        scenes["mainScene"].removeChild(speechBalloons[i][1])//textを削除
+        speechBalloons.shift()
+        i -= 1
+      }
     }
   }
 }
@@ -329,4 +341,4 @@ async function showChatLog(input){
   }
 }
 
-setInterval(delSpeechBalloon,checkInterval)
+setInterval(delSpeechBalloon,checkInterval,false)
